@@ -1,0 +1,245 @@
+---
+title: Fitting growth models using predmicror
+author:
+   - Vasco Cadavez
+   - Ursula Gonzales Barron
+date: 2022/04/30
+output: 
+  rmarkdown::html_vignette:
+     number_sections: yes
+     toc: yes
+vignette: >
+  %\VignetteIndexEntry{Fitting growth models using predmicror}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage{caption, amssymb, amsmath}
+bibliography: predmicro.bib
+csl: apa.csl
+---
+
+<!-- _Kellar and Lu, 2004_: [Modeling microbial responses in food](https://www.crcpress.com/Modeling-Microbial-Responses-in-Food/author/p/book/9780367394653) -->
+
+In this tutorial we will explain how to fit primary growth models to experimental data. For this lab, we will use the `predmicror` R package developed to accommodate all the functions we are being using in predictive microbiology workshops. The `predmicror` package is outside the base R functions, and the first step is load the `predmicror`, package with the principal predictive microbial growth models, and `gslnls` which is a package to fit non-linear models using non-linear least squares.
+
+```{r}
+library(predmicror)
+library(gslnls)
+library(ggplot2)
+```
+
+## Loading data
+
+To conduct statistical analyses, we need to import data into R working environment. The `predmicror` package has incorporated datasets, and we can use the `data()` function to load the example datasets to the working environment. Thus, we will start by fitting a full growth model to experimental data, thus we load the `growthfull.Rda` dataset which is part of the `predmicror` package.
+
+```{r}
+data(growthfull)
+```
+
+Now the dataset is available in the `R` environment, and we can print the entire `dataset` by typing `growthfull` or take a look to the first five lines by using the `head()`.
+
+```{r}
+growthfull
+head(growthfull)
+```
+
+For data outer to `predmicror`package, usually in .csv format, which are flat text files we use the `read.csv()` function to import the CSV file into R environment. Before load a dataset, its good practice to assure that the dataset is located in the working directory, thus to import a CSV file called `growthfull.csv` into the R environment we do it with the next code section.
+
+```{r, eval=FALSE}
+growthfull <- read.csv("growthfull.csv", sep=";", header=TRUE)
+```
+
+We have the dataset in the R environment, thus we can start checking the data proprieties. For example, the `str()` function gives information considering the structure of the variables (numeric, integer, etc.), and the `names()` function show us the variables names.
+
+```{r}
+str(growthfull)
+names(growthfull)
+```
+
+## Plotting data
+
+To check the relationship between `Time` and `lnN`, we might use the function `plot()`, and we can check the data by visual inspection.
+
+```{r}
+plot(lnN ~ Time, data=growthfull,
+     xlab="Time (hours)", ylab="ln N",
+     xlim=c(0,20), ylim=c(0,22))
+```
+
+To save the plot as an `.png` object, we can use the `png()` function.
+
+```{r, eval=FALSE}
+png("growthfull.png")
+plot(lnN ~ Time, data=growthfull,
+    xlab="Time (hours)", ylab="ln N",
+    xlim=c(0,20), ylim=c(0,22))
+dev.off()
+```
+
+## Fitting the Huang full model
+
+We will start by fitting the _Huang_ full growth model to experimental data stored in the `growthfull` dataset. The Huang full growth model function (`Huang()`) from the `predmicror` package and this function will be fitted to data non-linear least squares function `gsl_nls()` implemented in the `gslnls` package.
+First, we need a good guess for the starting values for the fitting procedure:
+
+```{r}
+start_values=list(Y0=0.02, Ymax=22, MUmax=1.6, lag=5)
+```
+
+Now we can fit the model to the data `growthfull`:
+
+```{r}
+fit <- gsl_nls(lnN ~ HuangFM(Time, Y0, Ymax, MUmax, lag),
+             data=growthfull,
+             start=start_values)
+```
+
+Next, we can check the model parameters:
+
+```{r}
+summary(fit)
+coef(fit)
+```
+
+The `predict()` function from the `gslnls` package can be used to produce both confidence and prediction intervals for the prediction of `lnN` for a given `Time`.
+
+
+```{r}
+newTimes <- data.frame(Time=seq(0, 24, by=0.1))
+fits <- data.frame(predict(fit, newdata = newTimes, interval="confidence", level=0.95))
+str(fits)
+preds <- data.frame(predict(fit, newdata = newTimes, interval="prediction", level=0.95))
+str(preds)
+```
+
+Plot the observed data with the fitted values and confidence interval
+
+```{r}
+plot(newTimes$Time, fits$fit, type="l", col="blue",
+     xlab="time (days)", ylab="logN",
+     main="Huang full model")
+points(growthfull$Time, growthfull$lnN)
+lines(newTimes$Time, fits$upr, col="red")
+lines(newTimes$Time, fits$lwr, col="red")
+```
+
+Plot the observed data with the fitted values and prediction interval
+
+```{r}
+plot(newTimes$Time, fits$fit, type="l", col="blue",
+     xlab="time (days)", ylab="logN", ylim=c(-1,22), xlim=c(0,24),
+     main="Huang full model")
+points(growthfull$Time, growthfull$lnN)
+lines(newTimes$Time, preds$upr, col="red")
+lines(newTimes$Time, preds$lwr, col="red")
+```
+
+
+## Fitting the Fang no lag model
+
+First, we want to load the data set:
+
+```{r}
+data(growthnolag)
+growthnolag
+```
+
+Let's start with the Fang model, fit the model to the experimental data using nonlinear least squares function `gsl_nls()` implemented in the `gsl_nls` R package:
+
+```{r}
+start_values=list(Y0=0.01, Ymax=22, MUmax=1.6)
+fit <- gsl_nls(lnN ~ FangNLM(Time, Y0, Ymax, MUmax),
+             data=growthnolag,
+             start=start_values)
+fit
+```
+
+Next, we can check the model parameters:
+
+```{r}
+summary(fit)
+```
+
+Next, we can extract the model parameters and apply the model to new data
+
+```{r}
+newTimes <- data.frame(Time=seq(0, 18, by=0.1))
+fits <- data.frame(predict(fit, newdata = newTimes, interval="confidence", level=0.95))
+str(fits)
+preds <- data.frame(predict(fit, newdata = newTimes, interval="prediction", level=0.95))
+```
+
+Plot the observed data with the fitted values and confidence interval
+
+```{r}
+plot(newTimes$Time, fits$fit, type="l", col="blue",
+     xlab="time (days)", ylab="logN",
+     main="Fang no lag model")
+points(growthnolag$Time, growthnolag$lnN)
+lines(newTimes$Time, fits$upr, col="red")
+lines(newTimes$Time, fits$lwr, col="red")
+```
+
+Plot the observed data with the fitted values and prediction interval
+
+```{r}
+plot(newTimes$Time, fits$fit, type="l", col="blue",
+     xlab="time (days)", ylab="logN", ylim=c(-1,22), xlim=c(0,18),
+     main="Fang no lag model")
+points(growthnolag$Time, growthnolag$lnN)
+lines(newTimes$Time, preds$upr, col="red")
+lines(newTimes$Time, preds$lwr, col="red")
+```
+
+## Fitting the Buchanan reduced model
+
+First, we want to load the data set:
+
+```{r}
+data(growthred)
+growthred
+```
+
+Let's start with the Buchanan model, fit the model to the experimental data using nonlinear least squares function `gsl_nls()` implemented in the `gslnls` R package:
+
+```{r}
+start_values=list(Y0=0.01, MUmax=1.6, lag=5)
+fit <- gsl_nls(lnN ~ BuchananRM(Time, Y0, MUmax, lag),
+             data=growthred,
+             start=start_values)
+```
+
+Next, we can check the model parameters:
+
+```{r}
+summary(fit)
+```
+
+Next, we can extract the model parameters and apply the model to new data
+
+```{r}
+newTimes <- data.frame(Time=seq(0, 16, by=0.1))
+fits <- data.frame(predict(fit, newdata = newTimes, interval="confidence", level=0.95))
+str(fits)
+preds <- data.frame(predict(fit, newdata = newTimes, interval="prediction", level=0.95))
+```
+
+Plot the observed data with the fitted values and confidence interval
+
+```{r}
+plot(newTimes$Time, fits$fit, type="l", col="blue",
+     xlab="time (days)", ylab="logN",
+     main="Buchanan reduced model")
+points(growthred$Time, growthred$lnN)
+lines(newTimes$Time, fits$upr, col="red")
+lines(newTimes$Time, fits$lwr, col="red")
+```
+
+Plot the observed data with the fitted values and prediction interval
+
+```{r}
+plot(newTimes$Time, fits$fit, type="l", col="blue",
+     xlab="time (days)", ylab="logN", ylim=c(-1,22), xlim=c(0,16),
+     main="Buchanan reduced model")
+points(growthred$Time, growthred$lnN)
+lines(newTimes$Time, preds$upr, col="red")
+lines(newTimes$Time, preds$lwr, col="red")
+```

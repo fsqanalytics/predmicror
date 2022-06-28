@@ -1,0 +1,259 @@
+---
+title: "Introduction to predmicror"
+description: >
+  Set of predictive microbiology models to fit to experimental data.
+author: 
+   - Vasco Cadavez 
+   - Ursula Gonzales-Barron
+date: "`r Sys.Date()`"
+output: 
+  rmarkdown::html_vignette:
+     number_sections: yes
+     toc: yes
+vignette: >
+  %\VignetteIndexEntry{Introduction to predmicror}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  \usepackage{caption}
+  \usepackage{amssymb, amsmath}
+csl: apa.csl
+bibliography: predmicro.bib
+---
+
+# Introduction
+
+Predictive Microbiology deals with the development of accurate and, at the same time, versatile mathematical models, able to describe the microbial evolution in food products as a function of environmental conditions, which are assumed to be measurable.
+
+The predmicror [(https://github.com/fsqanalytics/predmicror/)](https://github.com/fsqanalytics/predmicror) is a package for fitting the most widely used predictive microbiology models.
+
+# Primary growth models
+
+The actual version includes primary growth models that describe  microbial concentration as a function of time at constant environmental conditions. The model **inputs** are:
+
+- $t$: time, assuming time zero as the beginning of the experiment; and
+- $Y_{(t)}$: the natural logarithm of the microbial concentration $X_{(t)}$  measured at time $t$.
+
+Users should make sure that the microbial concentration input is entered in natural logarithm, $Y_{(t)} = ln(X_{(t)})$.
+
+The number of model **parameters** is dependent upon the completeness of the microbial growth curve.  The following parameters can be estimated using this web application:
+
+- $Y_0$: the natural logarithm of the initial microbial concentration at $t=0$;
+- $\mu_{max}$: maximum specific growth rate given in time $units^{-1}$;
+- $\lambda$: duration of the lag phase in time units; and
+- $Y_{max}$: the natural logarithm of the maximum concentration reached by the microorganism.
+
+A **full model** should be adjusted to a complete microbial curve, where the lag phase, exponential phase and stationary phase can be identified. The `predmicror` can also fit reduced models. A **no-stationary phase model** is to be adjusted to an experimental microbial curve that presents lag phase and exponential phase, whereas a **no-lag phase model** should be adjusted to an experimental curve composed of exponential phase and stationary phase. An experimental growth curve that presents only exponential phase cannot be analysed using the **predmicror** functions.
+
+## Full growth models
+
+**predmicror** can adjust four nonlinear models to complete microbial growth curves: **Huang model**, **Rosso model**, **Baranyi & Roberts model** and the **Zwietering reparameterised Gompertz model**. 
+
+### Huang model
+
+The Huang growth model was developed by @Huang2008.
+
+$$Y_{(t)} = Y_0 + Y_{max} -log \left( e^{Y_0} + (e^{Y_{max}} - e^{Y_0}) \times e^{-\mu_{max} \times B_{(t)}} \right)$$
+
+
+$$B_{(t)} = t + \frac{1}{\alpha} \times log \left( \frac{1 + e^{-\alpha \times (t-\lambda)} }{1 + e^{\alpha\times \lambda}} \right)$$
+
+After evaluating multiple growth data sets, @Huang2013 recommended fixing the parameter $\alpha$ to 4.0, thus `predmicror` considers $\alpha=4.0$.
+
+### Rosso model
+
+The Rosso growth model is a simple two-phase model proposed by @Rosso1996.
+
+\[
+Y_{(t)} = 
+\begin{cases}
+Y_0                                                                                                  & \text{if t $\leq$ $\lambda$}\\
+Y_{max}-log \left[1 +\left( \frac{e^{Y_{max}}}{e^{Y_0}}-1 \right) e^{-\mu_{max} (t-\lambda)} \right] & \text{if t > $\lambda$}
+\end{cases}
+\]
+
+### Baranyi & Roberts model  
+
+The original Baranyi & Roberts model attributes the lag phase to the need to synthesise an unknown substrate `q` that is critical for growth, whose initial value $q_0$ is a measure of the initial physiological state of the microbial cells (@Baranyi1994).
+
+**predmicror** implements the Baranyi & Roberts model with basis on the transformation  $h_0 = \mu_{max} \times \lambda$, in order to estimate $\lambda$. Thus, the model parameterisation used is:
+
+$$Y_{(t)} = Y_0 + \mu_{max} \times A_{(t)} - \frac{1}{m} \times log \left[ 1 + \frac{exp(m \times \mu_{max}  \times A_{(t)})-1}{exp(m \times (Y_{max}-Y_0)) } \right]$$
+
+$$A_{(t)} = t + \frac{ log \left[ exp(-\mu_{max} \times t) + exp(-\mu_{max} \times \lambda) - exp(-\mu_{max} \times t-\mu_{max} \times \lambda) \right] }{\mu_{max}}$$
+
+Most of the times, the parameter `m`, which characterises the curvature before the stationary phase is assumed to be 1.0. The predmicror simplifies this model by assuming $m=1.0$.
+
+### Zwietering reparameterised Gompertz model
+
+`predmicror` adjusts the Gompertz model, as reparameterised by @Zwietering1990 from the modified Gompertz model.
+
+$$Y_{(t)} = Y_0 + (Y_{max} - Y_0) \times exp \left[-exp \left( \frac{\mu_{max}\times (\lambda -t)}{Y_{max}-Y_0} + 1 \right) \right]$$
+
+
+## No stationary phase growth models
+
+**predmicror** can adjust three nonlinear models to microbial growth curves without stationary phase: reduced Huang model, reduced Baranyi & Roberts model and two-phase linear growth model. 
+
+### Huang model
+
+This model is a special case of the complete Huang model, suitable for experimental growth curves that do not reach stationary phases.
+
+$$Y_{(t)} = Y_0 + \mu_{max} \times \left[ t + 0.25 \times log \left( \frac{1 + e^{-4\times(t-\lambda)}}{1 + e^{4\times\lambda}} \right) \right]$$
+
+### Baranyi & Roberts model
+
+This is a special case of the full Baranyi & Roberts model briefly presented above.
+
+$$Y_{(t)} = Y_0 + \mu_{max} \times t + log \left[exp(-\mu_{max} \times t) + exp(-\mu_{max} \times \lambda) - exp(-\mu_{max} \times t-\mu_{max} \times \lambda) \right]$$
+
+### Two-phase linear model
+
+This model is a reduced model of the three-phase linear growth model proposed by @Buchanan1997.
+
+\[
+Y_{(t)} =
+\begin{cases}
+Y_0,                                  & \text{if t $\leq$ $\lambda$} \\
+Y_0 + \mu_{max} \times (t - \lambda), & \text{if t > $\lambda$}
+\end{cases}
+\]
+
+## No lag phase growth models
+
+`predmicror` can adjust two nonlinear models to microbial growth curves that do not show lag phase: **Richards model** and **Fang model**.
+
+### Richards model
+
+$$Y_{(t)} = Y_0 + \mu_{max} \times t - \frac{1}{m} \times log( 1 + \frac{exp(m \times \mu_{max} \times t) - 1}{exp(m \times(Y_{max}-Y_0))}$$
+
+### Fang  model
+
+@Fang2012 and @Fang2013 integrated the logistic growth model, producing a continuous model that is particularly suitable for growth curves without lag phase.
+
+$$Y_{(t)} = Y_0 + Y_{max} - log \left[ e^{Y_0} + \left( e^{Y_{max}} - e^{Y_0} \right) \times e^{-\mu_{max} \times t} \right]$$
+
+
+# The cardinal parameter model
+
+Predictive Microbiology deals with the development of accurate and versatile mathematical models, able to describe the evolution of microorganisms in food products as a function of environmental conditions, which are assumed to be measurable. Although there are a few classification schemes of predictive microbiology models, they have been traditionally classified into primary and secondary models.
+
+`predmicror` can be used to fit **cardinal parameter models**, which are secondary models that describe the growth rate of microorganisms as a function of extrinsic and/or intrinsic factors. These are models that estimate the optimum growth rate, and the minimum, optimum and maximum values of extrinsic and intrinsic factors (e.g. temperature, pH, water activity) that characterise the growth of a given microbial strain.
+
+The general cardinal parameter model used to describe and predict the effect of different environmental factors on the growth rate of a microorganism is based on a modular approach called the **gamma concept** [@Zwietering1991], described as,
+
+$$
+\mu _{max}=\mu _{opt}\times \gamma \left(T \right)\times \gamma \left(pH\right)\times \gamma
+\left(aw\right)\times \gamma (Inh)
+$$
+where:
+
+- $\mu _{max}$: maximum growth rate ($h^{-1}$ or $day^{-1}$) of the studied bacterial strain
+- $\mu _{opt}$: optimum growth rate ($h^{-1}$ or $day^{-1}$) of the studied bacterial strain
+- $\gamma \left(T\right),\gamma \left(pH\right),\gamma \left(aw\right),\gamma (Inh)$:
+dimensionless functions describing the relative effects of temperature (T), pH, water activity (aw) and different measurable inhibitors (Inh) like undissociated organic acids or $CO_2$. 
+
+The functions  $\gamma \left(T\right),\gamma \left(pH\right),\gamma \left(aw\right),\gamma (inh)$  have a range between 0 and 1,  $\gamma =0$ when growth is fully inhibited and  $\gamma =1$ when growth is not inhibited at all by the factor.
+
+## Cardinal Parameters
+
+Many  $\gamma$-type functions have been proposed for temperature, pH, aw and lactic acid. The `predmicror` adjusts the
+cardinal parameter model using the general equation for $\gamma$ proposed by @Rosso1995.
+
+$$
+\gamma (X)_n=\left\{\begin{matrix} 0, \qquad X \leq X_{min} \\
+\frac{(X-X_{max})\times (X-X_{min})^n}{(X_{opt}-X_{min})^{n-1}\times \left[\begin{matrix}\left(X_{opt}-X_{min}\right)\times \left(X-X_{opt}\right)-\left(X_{opt}-X_{max}\right)\times \\
+\left(\left(n-1\right)\times X_{opt}+X_{min}-n \times X\right)\end{matrix}\right]}, \qquad X_{min}<X<X_{max} \\
+0, \qquad X{\geq}X_{max}\end{matrix}\right.
+$$
+
+
+- $X$: intrinsic or extrinsic factor under study; temperature, pH or aw
+- $X_{min}$: value of the factor below which no growth occurs
+- $X_{max}$: value of the factor above which no growth occurs
+- $X_{opt}$: value at which bacterial growth is optimum
+- $n$: shape parameter ( $n=2$ for temperature and water activity; and  $n=1$ for pH).
+- $X_{min}$,  $X_{max}$ and  $X_{opt}$ are known as cardinal parameters, and are estimated by fitting the cardinal parameter model to growth data from experiments carried out in broth.
+
+More precisely,  $T_{min}$,  $T_{max}$ and  $T_{opt}$ are determined from  
+$\gamma \left(T\right)$;  $pH_{min}$,  $pH_{max}$ and  $pH_{opt}$ are determined from  $\gamma \left(pH\right)$; and  $aw_{min}$,  $aw_{max}$  and  $aw_{opt}$ are determined from  $\gamma \left(aw\right)$. Often, when adjusting the cardinal parameter model for aw, $aw_{max}$ is set to one, because it is in effect the maximum value of the water activity measurement.
+
+
+# Cardinal parameter models available in predmicror
+
+
+## Cardinal parameter model for temperature
+
+The `predimicror` adjusts the Cardinal Temperature Model with Inflection (CTMI) [@Rosso1993] to determine optimum growth rate ( $\mu_{opt}$) and the cardinal parameters  $T_{min}$,  $T_{max}$ and $T_{opt}$.
+
+$$
+\sqrt{\mu _{max}}=\sqrt{\mu _{opt}\times \gamma \left(T\right)} + \varepsilon 
+$$
+
+
+$$
+\gamma (T)=\left\{\begin{matrix} 0, \qquad T \leq T_{min} \\
+\frac{(T-T_{max}) \times (T-T_{min})^2}{\left(T_{opt}-T_{min}\right)\times\left[\begin{matrix}\left(T_{opt}-T_{min}\right)\times \left(T-T_{opt}\right)-\left(T_{opt}-T_{max}\right) \times\\
+\left(T_{opt}+T_{min}-2T\right)\end{matrix}\right]}, \qquad T_{min} < T < T_{max}\\
+0, \qquad T \geq T_{max}\end{matrix}\right.
+$$
+
+To fit this model to the growth data, the response variable, maximum growth rate ( $\mu _{max}$), is
+square-root transformed to reduce heterocedasticity. The residuals are represented by  $\varepsilon$, and are assumed to follow a normal distribution with mean zero and variance  $\sigma^2$.
+
+## Cardinal parameter model for pH
+
+To determine optimum growth rate ($\mu_{opt}$) and the cardinal parameters $pH_{min}$, $pH_{max}$  and  $pH_{opt}$, `predmicror` adjusts the cardinal model for pH proposed by @Lemarc2002.
+
+$$
+\sqrt{\mu _{max}}=\sqrt{\mu _{opt}.\gamma \left(pH\right)}+\varepsilon 
+$$
+
+$$
+\gamma (pH)=\left\{\begin{matrix}0,\qquad
+pH{\leq}pH_{min}\\\frac{(pH-pH_{max}){\times}\left(pH-pH_{min}\right)}{\left[\left(pH_{opt}-pH_{min}\right).\left(pH-pH_{opt}\right)-\left(pH_{opt}-pH_{max}\right).\left(pH_{min}-pH\right)\right]},\qquad
+pH_{min}<pH<pH_{max}\\0,\qquad
+pH{\geq}pH_{max}\end{matrix}\right.
+$$
+
+### Cardinal parameter model for Aw
+
+`predmicror` adjusts the cardinal model for water activity from @Rosso1993 to extract optimum growth rate ($\mu_{opt}$) and the cardinal parameters $aw_{min}$ and 
+$aw_{opt}$.
+
+$$
+\sqrt{\mu _{max}}=\sqrt{\mu _{opt} \times \gamma \left(aw\right)} + \varepsilon 
+$$
+
+$$
+\gamma (aw)=\left\{\begin{matrix} 0, \qquad aw \leq aw_{min} \\
+\frac{(aw-1.0)\times(aw-aw_{min})^2}{\left(aw_{opt}-aw_{min}\right)\times\left[\begin{matrix}\left(aw_{opt}-aw_{min}\right){\times}\left(aw-aw_{opt}\right)-\left(aw_{opt}-1.0\right)\times \\
+\left(aw_{opt}+aw_{min}-2aw\right)\end{matrix}\right]},  \qquad
+aw_{min}<aw<1.0 \\
+0, \qquad aw \geq 1.0 \end{matrix} \right.
+$$
+
+To fit this model to the growth data, the response variable, maximum growth rate ( $\mu_{max}$), is
+square-root transformed to reduce heterocedasticity. The residuals are represented by  $\varepsilon$, and are assumed to follow a normal distribution with mean zero and variance  $\sigma^2$.
+
+### Cardinal parameter model for inhibitory substance
+
+For the inhibitors (Inh) including undissociated organic acids, $CO$ and others, the cardinal parameter model
+proposed by @Lemarc2002)and @Coroller2005 can be fitter by the `predmicror`.
+
+$$
+\sqrt{\mu_{max}}=\sqrt{\mu_{opt} \times \gamma \left(inh\right)}+\varepsilon 
+$$
+
+$$
+\gamma \left(Inh\right)=1-\left(\frac{Inh}{MIC}\right)^\alpha
+$$
+
+- `Inh`: concentration of the inhibiting substance or compound (e.g. undissociated organic acid (mM), CO (\%)
+- `MIC`: Minimum Inhibitory Concentration (mM or \%, accordingly)
+- $\alpha$: shape parameter of the curve ($\alpha=1$ the shape is linear; $\alpha>1$ the shape is downward concave; and $\alpha<1$ the shape is upward concave).
+
+To fit this model to the growth data, the response variable, maximum growth rate ( $\mu_{max}$), is
+square-root transformed to reduce heterocedasticity. The residuals are represented by  $\varepsilon$, and are assumed to follow a normal distribution with mean zero and variance  $\sigma^2$. The model parameters are MIC and $\alpha$.
+
+
+# References

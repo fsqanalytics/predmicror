@@ -1,0 +1,47 @@
+template:
+  bootstrap: 5
+  bootswatch: united
+ 
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [search, github]
+
+reference:
+- title: "Full growth models"
+  desc: "Functions for fitting full growth models."
+  contents:
+  - BaranyiFM
+  - HuangFM
+  - RossoFM
+  - ZwieteringFM
+- title: "No lag growth models"
+  desc: "Functions for fitting no lag growth models."
+  contents:
+  - FangNLM
+  - HuangNLM
+  - RichardsNLM
+- title: "Reduced growth models"
+  desc: "Functions for fitting reduced growth models."
+  contents:
+  - BaranyiRM
+  - BuchananRM
+  - HuangRM
+- title: "Inactivation models"
+  desc: "Functions for fitting inactivation models."
+  contents:
+  - HuangRGS
+  - WeibullM
+  - WeibullMM
+  - WeibullPH
+  - GeeraerdST
+- title: "Cardinal models"
+  desc: "Functions for fitting cardinal models."
+  contents:
+  - CMTI
+  - CMPH
+  - CMAW
+  - CMInh
+home:
+  sidebar:
+    structure: [links, license, community, citation, authors, dev]
