@@ -35,10 +35,11 @@ Users should make sure that the growth rate input is entered after a square root
 \examples{
 library(gslnls)
 data(inh)
-initial_values = list(MIC=0.89, MUopt=1.0, alpha=1)
-fit <- gsl_nls(sqrtGR ~ CMInh(Conce,MIC,MUopt,alpha),
-               data=inh,
-               start =  initial_values)
+initial_values <- list(MIC = 0.89, MUopt = 1.0, alpha = 1)
+fit <- gsl_nls(sqrtGR ~ CMInh(Conce, MIC, MUopt, alpha),
+  data = inh,
+  start = initial_values
+)
 summary(fit)
 
 }

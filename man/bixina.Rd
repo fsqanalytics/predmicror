@@ -3,9 +3,9 @@
 \docType{data}
 \name{bixina}
 \alias{bixina}
-\title{Data of microbial inactivation}
+\title{Data concerning \emph{Staphilococcus aureus} microbial inactivation in beef}
 \format{
-A data frame with 10 rows and 3 variables.
+A data frame with 10 rows and 3 variables:
 \describe{
 \item{Time}{Time in minutes}
 \item{Rep}{Repetition}
@@ -16,6 +16,8 @@ A data frame with 10 rows and 3 variables.
 data(bixina)
 }
 \description{
-A dataset containing
+A dataset containing time (hours), repetition and number of microrganisms (ln N).
 }
-\keyword{datasets}
+\keyword{beef}
+\keyword{bixina}
+\keyword{inactivation}

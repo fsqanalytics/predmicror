@@ -36,10 +36,11 @@ Users should make sure that the growth rate input is entered after a square root
 \examples{
 library(gslnls)
 data(ph)
-initial_values = list(pHmax=9, pHmin=3, MUopt=1.0, pHopt=7)
-fit <- gsl_nls(sqrtGR ~ CMPH(pH,pHmax,pHmin,MUopt,pHopt),
-               data=ph,
-               start =  initial_values)
+initial_values <- list(pHmax = 9, pHmin = 3, MUopt = 1.0, pHopt = 7)
+fit <- gsl_nls(sqrtGR ~ CMPH(pH, pHmax, pHmin, MUopt, pHopt),
+  data = ph,
+  start = initial_values
+)
 summary(fit)
 
 }

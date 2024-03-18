@@ -6,6 +6,8 @@
 \alias{predmicror-package}
 \title{predmicror: predmicror: Fitting predictive microbiology models in r}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 A package for fitting predictive microbiology models to experimental data.
 }
 \seealso{

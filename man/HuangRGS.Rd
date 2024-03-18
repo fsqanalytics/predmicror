@@ -35,15 +35,15 @@ in base 10 logarithm, \code{Y(t) = log10(X(t))}.
 \examples{
 library(gslnls)
 data(bixina)
-initial_values = list(Y0=5.6, k=0.37, M=6.8)
+initial_values <- list(Y0 = 5.6, k = 0.37, M = 6.8)
 fit <- gsl_nls(lnN ~ HuangRGS(Time, Y0, k, M),
-           data=bixina,
-           start =  initial_values)
+  data = bixina,
+  start = initial_values
+)
 summary(fit)
 
-plot(lnN ~ Time, data=bixina)
-lines(bixina$Time, predict(fit), col="blue")
-
+plot(lnN ~ Time, data = bixina)
+lines(bixina$Time, predict(fit), col = "blue")
 
 }
 \references{

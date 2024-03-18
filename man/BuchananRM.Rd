@@ -34,11 +34,12 @@ Users should make sure that the microbial concentration input is entered in natu
 \examples{
 ## Example: Buchanan reduced model
 library(gslnls)
-data(growthred)  # simulated data set.
-initial_values = list(Y0=0, MUmax=1.7, lag=5) # define the initial values
+data(growthred) # simulated data set.
+initial_values <- list(Y0 = 0, MUmax = 1.7, lag = 5) # define the initial values
 fit <- gsl_nls(lnN ~ BuchananRM(Time, Y0, MUmax, lag),
-           data=growthred,
-           start =  initial_values)
+  data = growthred,
+  start = initial_values
+)
 summary(fit)
 
 }

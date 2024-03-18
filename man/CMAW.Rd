@@ -34,10 +34,11 @@ Users should make sure that the growth rate input is entered after a square root
 \examples{
 library(gslnls)
 data(aw)
-initial_values = list(AWmin=0.89, MUopt=1.0, AWopt=0.98)
-fit <- gsl_nls(sqrtGR ~ CMAW(aw,AWmin,MUopt,AWopt),
-               data=aw,
-               start =  initial_values)
+initial_values <- list(AWmin = 0.89, MUopt = 1.0, AWopt = 0.98)
+fit <- gsl_nls(sqrtGR ~ CMAW(aw, AWmin, MUopt, AWopt),
+  data = aw,
+  start = initial_values
+)
 summary(fit)
 
 }

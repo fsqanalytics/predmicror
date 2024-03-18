@@ -36,21 +36,22 @@ Users should make sure that the microbial concentration input is entered in natu
 \examples{
 ## Example: Huang full model
 library(gslnls)
-data(growthfull)  # simulated data set.
-initial_values = list(Y0=0, Ymax=22, MUmax=1.7, lag=5) # define the initial values
+data(growthfull) # simulated data set.
+initial_values <- list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5) # define the initial values
 ## Call the fitting function
 fit <- gsl_nls(lnN ~ HuangFM(Time, Y0, Ymax, MUmax, lag),
-           data=growthfull,
-           start =  initial_values)
+  data = growthfull,
+  start = initial_values
+)
 summary(fit)
 
 confint(fit)
 
 preds <- data.frame(predict(fit, interval = "prediction", level = 0.95))
-plot(lnN ~ Time, data=growthfull, ylim=c(-1,22))
-lines(growthfull$Time, preds$fit, col="blue")
-lines(growthfull$Time, preds$upr, col="red")
-lines(growthfull$Time, preds$lwr, col="red")
+plot(lnN ~ Time, data = growthfull, ylim = c(-1, 22))
+lines(growthfull$Time, preds$fit, col = "blue")
+lines(growthfull$Time, preds$upr, col = "red")
+lines(growthfull$Time, preds$lwr, col = "red")
 
 }
 \references{

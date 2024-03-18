@@ -36,10 +36,11 @@ Users should make sure that the microbial concentration input is entered in natu
 \examples{
 library(gslnls)
 data(growthfull)
-initial_values = list(Y0=-0.1, Ymax=22, MUmax=1.7, lag=5)
+initial_values <- list(Y0 = -0.1, Ymax = 22, MUmax = 1.7, lag = 5)
 fit <- gsl_nls(lnN ~ BaranyiFM(Time, Y0, Ymax, MUmax, lag),
-               data=growthfull,
-               start =  initial_values)
+  data = growthfull,
+  start = initial_values
+)
 summary(fit)
 
 }

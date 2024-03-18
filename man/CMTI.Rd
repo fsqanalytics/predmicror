@@ -36,16 +36,17 @@ Users should make sure that the growth rate input is entered after a square root
 \examples{
 library(gslnls)
 data(salmonella)
-initial_values = list(Tmax=42, Tmin=1, MUopt=1.0, Topt=37)
-fit <- gsl_nls(sqrtGR ~ CMTI(Temp,Tmax,Tmin,MUopt,Topt),
-               data=salmonella,
-               start =  initial_values)
+initial_values <- list(Tmax = 42, Tmin = 1, MUopt = 1.0, Topt = 37)
+fit <- gsl_nls(sqrtGR ~ CMTI(Temp, Tmax, Tmin, MUopt, Topt),
+  data = salmonella,
+  start = initial_values
+)
 summary(fit)
 
 plot(salmonella$Temp, salmonella$sqrtGR^2)
-lines(salmonella$Temp, fitted(fit)^2, col="green")
+lines(salmonella$Temp, fitted(fit)^2, col = "green")
 plot(salmonella$Temp, salmonella$sqrtGR)
-lines(salmonella$Temp, fitted(fit), col="red")
+lines(salmonella$Temp, fitted(fit), col = "red")
 
 }
 \references{

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Vasco Cadavez" />
+<meta name="author" content="Ursula Gonzales-Barron" />
+
+<meta name="date" content="2024-03-18" />
+
+<title>Introduction to predmicror</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+
+
+
+<style type="text/css">
+
+div.csl-bib-body { }
+div.csl-entry {
+clear: both;
+}
+.hanging div.csl-entry {
+margin-left:2em;
+text-indent:-2em;
+}
+div.csl-left-margin {
+min-width:2em;
+float:left;
+}
+div.csl-right-inline {
+margin-left:2em;
+padding-left:1em;
+}
+div.csl-indent {
+margin-left: 2em;
+}
+</style>
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to predmicror</h1>
+<h4 class="author">Vasco Cadavez</h4>
+<h4 class="author">Ursula Gonzales-Barron</h4>
+<h4 class="date">2024-03-18</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a></li>
+<li><a href="#primary-growth-models" id="toc-primary-growth-models"><span class="toc-section-number">2</span>
+Primary growth models</a>
+<ul>
+<li><a href="#full-growth-models" id="toc-full-growth-models"><span class="toc-section-number">2.1</span> Full growth models</a>
+<ul>
+<li><a href="#huang-model" id="toc-huang-model"><span class="toc-section-number">2.1.1</span> Huang model</a></li>
+<li><a href="#rosso-model" id="toc-rosso-model"><span class="toc-section-number">2.1.2</span> Rosso model</a></li>
+<li><a href="#baranyi-roberts-model" id="toc-baranyi-roberts-model"><span class="toc-section-number">2.1.3</span> Baranyi &amp; Roberts
+model</a></li>
+<li><a href="#zwietering-reparameterised-gompertz-model" id="toc-zwietering-reparameterised-gompertz-model"><span class="toc-section-number">2.1.4</span> Zwietering reparameterised
+Gompertz model</a></li>
+</ul></li>
+<li><a href="#no-stationary-phase-growth-models" id="toc-no-stationary-phase-growth-models"><span class="toc-section-number">2.2</span> No stationary phase growth
+models</a>
+<ul>
+<li><a href="#huang-model-1" id="toc-huang-model-1"><span class="toc-section-number">2.2.1</span> Huang model</a></li>
+<li><a href="#baranyi-roberts-model-1" id="toc-baranyi-roberts-model-1"><span class="toc-section-number">2.2.2</span> Baranyi &amp; Roberts
+model</a></li>
+<li><a href="#two-phase-linear-model" id="toc-two-phase-linear-model"><span class="toc-section-number">2.2.3</span> Two-phase linear model</a></li>
+</ul></li>
+<li><a href="#no-lag-phase-growth-models" id="toc-no-lag-phase-growth-models"><span class="toc-section-number">2.3</span> No lag phase growth models</a>
+<ul>
+<li><a href="#richards-model" id="toc-richards-model"><span class="toc-section-number">2.3.1</span> Richards model</a></li>
+<li><a href="#fang-model" id="toc-fang-model"><span class="toc-section-number">2.3.2</span> Fang model</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#the-cardinal-parameter-model" id="toc-the-cardinal-parameter-model"><span class="toc-section-number">3</span> The cardinal parameter model</a>
+<ul>
+<li><a href="#cardinal-parameters" id="toc-cardinal-parameters"><span class="toc-section-number">3.1</span> Cardinal Parameters</a></li>
+</ul></li>
+<li><a href="#cardinal-parameter-models-available-in-predmicror" id="toc-cardinal-parameter-models-available-in-predmicror"><span class="toc-section-number">4</span> Cardinal parameter models available
+in predmicror</a>
+<ul>
+<li><a href="#cardinal-parameter-model-for-temperature" id="toc-cardinal-parameter-model-for-temperature"><span class="toc-section-number">4.1</span> Cardinal parameter model for
+temperature</a></li>
+<li><a href="#cardinal-parameter-model-for-ph" id="toc-cardinal-parameter-model-for-ph"><span class="toc-section-number">4.2</span> Cardinal parameter model for
+pH</a>
+<ul>
+<li><a href="#cardinal-parameter-model-for-aw" id="toc-cardinal-parameter-model-for-aw"><span class="toc-section-number">4.2.1</span> Cardinal parameter model for
+Aw</a></li>
+<li><a href="#cardinal-parameter-model-for-inhibitory-substance" id="toc-cardinal-parameter-model-for-inhibitory-substance"><span class="toc-section-number">4.2.2</span> Cardinal parameter model for
+inhibitory substance</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#references" id="toc-references">References</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>Predictive Microbiology deals with the development of accurate and,
+at the same time, versatile mathematical models, able to describe the
+microbial evolution in food products as a function of environmental
+conditions, which are assumed to be measurable.</p>
+<p>The predmicror <a href="https://github.com/fsqanalytics/predmicror">(https://github.com/fsqanalytics/predmicror/)</a>
+is a package for fitting the most widely used predictive microbiology
+models.</p>
+</div>
+<div id="primary-growth-models" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Primary growth
+models</h1>
+<p>The actual version includes primary growth models that describe
+microbial concentration as a function of time at constant environmental
+conditions. The model <strong>inputs</strong> are:</p>
+<ul>
+<li><span class="math inline">\(t\)</span>: time, assuming time zero as
+the beginning of the experiment; and</li>
+<li><span class="math inline">\(Y_{(t)}\)</span>: the natural logarithm
+of the microbial concentration <span class="math inline">\(X_{(t)}\)</span> measured at time <span class="math inline">\(t\)</span>.</li>
+</ul>
+<p>Users should make sure that the microbial concentration input is
+entered in natural logarithm, <span class="math inline">\(Y_{(t)} =
+ln(X_{(t)})\)</span>.</p>
+<p>The number of model <strong>parameters</strong> is dependent upon the
+completeness of the microbial growth curve. The following parameters can
+be estimated using this web application:</p>
+<ul>
+<li><span class="math inline">\(Y_0\)</span>: the natural logarithm of
+the initial microbial concentration at <span class="math inline">\(t=0\)</span>;</li>
+<li><span class="math inline">\(\mu_{max}\)</span>: maximum specific
+growth rate given in time <span class="math inline">\(units^{-1}\)</span>;</li>
+<li><span class="math inline">\(\lambda\)</span>: duration of the lag
+phase in time units; and</li>
+<li><span class="math inline">\(Y_{max}\)</span>: the natural logarithm
+of the maximum concentration reached by the microorganism.</li>
+</ul>
+<p>A <strong>full model</strong> should be adjusted to a complete
+microbial curve, where the lag phase, exponential phase and stationary
+phase can be identified. The <code>predmicror</code> can also fit
+reduced models. A <strong>no-stationary phase model</strong> is to be
+adjusted to an experimental microbial curve that presents lag phase and
+exponential phase, whereas a <strong>no-lag phase model</strong> should
+be adjusted to an experimental curve composed of exponential phase and
+stationary phase. An experimental growth curve that presents only
+exponential phase cannot be analysed using the
+<strong>predmicror</strong> functions.</p>
+<div id="full-growth-models" class="section level2" number="2.1">
+<h2><span class="header-section-number">2.1</span> Full growth
+models</h2>
+<p><strong>predmicror</strong> can adjust four nonlinear models to
+complete microbial growth curves: <strong>Huang model</strong>,
+<strong>Rosso model</strong>, <strong>Baranyi &amp; Roberts
+model</strong> and the <strong>Zwietering reparameterised Gompertz
+model</strong>.</p>
+<div id="huang-model" class="section level3" number="2.1.1">
+<h3><span class="header-section-number">2.1.1</span> Huang model</h3>
+<p>The Huang growth model was developed by <span class="citation">Huang
+(2008)</span>.</p>
+<p><span class="math display">\[Y_{(t)} = Y_0 + Y_{max} -log \left(
+e^{Y_0} + (e^{Y_{max}} - e^{Y_0}) \times e^{-\mu_{max} \times B_{(t)}}
+\right)\]</span></p>
+<p><span class="math display">\[B_{(t)} = t + \frac{1}{\alpha} \times
+log \left( \frac{1 + e^{-\alpha \times (t-\lambda)} }{1 +
+e^{\alpha\times \lambda}} \right)\]</span></p>
+<p>After evaluating multiple growth data sets, <span class="citation">Huang (2013)</span> recommended fixing the parameter
+<span class="math inline">\(\alpha\)</span> to 4.0, thus
+<code>predmicror</code> considers <span class="math inline">\(\alpha=4.0\)</span>.</p>
+</div>
+<div id="rosso-model" class="section level3" number="2.1.2">
+<h3><span class="header-section-number">2.1.2</span> Rosso model</h3>
+<p>The Rosso growth model is a simple two-phase model proposed by <span class="citation">Rosso et al. (1996)</span>.</p>
+<p><span class="math display">\[
+Y_{(t)} =
+\begin{cases}
+Y_0                                                                                                  &amp;
+\text{if t $\leq$ $\lambda$}\\
+Y_{max}-log \left[1 +\left( \frac{e^{Y_{max}}}{e^{Y_0}}-1 \right)
+e^{-\mu_{max} (t-\lambda)} \right] &amp; \text{if t &gt; $\lambda$}
+\end{cases}
+\]</span></p>
+</div>
+<div id="baranyi-roberts-model" class="section level3" number="2.1.3">
+<h3><span class="header-section-number">2.1.3</span> Baranyi &amp;
+Roberts model</h3>
+<p>The original Baranyi &amp; Roberts model attributes the lag phase to
+the need to synthesise an unknown substrate <code>q</code> that is
+critical for growth, whose initial value <span class="math inline">\(q_0\)</span> is a measure of the initial
+physiological state of the microbial cells (<span class="citation">Baranyi &amp; Roberts (1994)</span>).</p>
+<p><strong>predmicror</strong> implements the Baranyi &amp; Roberts
+model with basis on the transformation <span class="math inline">\(h_0 =
+\mu_{max} \times \lambda\)</span>, in order to estimate <span class="math inline">\(\lambda\)</span>. Thus, the model parameterisation
+used is:</p>
+<p><span class="math display">\[Y_{(t)} = Y_0 + \mu_{max} \times A_{(t)}
+- \frac{1}{m} \times log \left[ 1 + \frac{exp(m \times \mu_{max}  \times
+A_{(t)})-1}{exp(m \times (Y_{max}-Y_0)) } \right]\]</span></p>
+<p><span class="math display">\[A_{(t)} = t + \frac{ log \left[
+exp(-\mu_{max} \times t) + exp(-\mu_{max} \times \lambda) -
+exp(-\mu_{max} \times t-\mu_{max} \times \lambda) \right]
+}{\mu_{max}}\]</span></p>
+<p>Most of the times, the parameter <code>m</code>, which characterises
+the curvature before the stationary phase is assumed to be 1.0. The
+predmicror simplifies this model by assuming <span class="math inline">\(m=1.0\)</span>.</p>
+</div>
+<div id="zwietering-reparameterised-gompertz-model" class="section level3" number="2.1.4">
+<h3><span class="header-section-number">2.1.4</span> Zwietering
+reparameterised Gompertz model</h3>
+<p><code>predmicror</code> adjusts the Gompertz model, as
+reparameterised by <span class="citation">Zwietering et al.
+(1990)</span> from the modified Gompertz model.</p>
+<p><span class="math display">\[Y_{(t)} = Y_0 + (Y_{max} - Y_0) \times
+exp \left[-exp \left( \frac{\mu_{max}\times (\lambda -t)}{Y_{max}-Y_0} +
+1 \right) \right]\]</span></p>
+</div>
+</div>
+<div id="no-stationary-phase-growth-models" class="section level2" number="2.2">
+<h2><span class="header-section-number">2.2</span> No stationary phase
+growth models</h2>
+<p><strong>predmicror</strong> can adjust three nonlinear models to
+microbial growth curves without stationary phase: reduced Huang model,
+reduced Baranyi &amp; Roberts model and two-phase linear growth
+model.</p>
+<div id="huang-model-1" class="section level3" number="2.2.1">
+<h3><span class="header-section-number">2.2.1</span> Huang model</h3>
+<p>This model is a special case of the complete Huang model, suitable
+for experimental growth curves that do not reach stationary phases.</p>
+<p><span class="math display">\[Y_{(t)} = Y_0 + \mu_{max} \times \left[
+t + 0.25 \times log \left( \frac{1 + e^{-4\times(t-\lambda)}}{1 +
+e^{4\times\lambda}} \right) \right]\]</span></p>
+</div>
+<div id="baranyi-roberts-model-1" class="section level3" number="2.2.2">
+<h3><span class="header-section-number">2.2.2</span> Baranyi &amp;
+Roberts model</h3>
+<p>This is a special case of the full Baranyi &amp; Roberts model
+briefly presented above.</p>
+<p><span class="math display">\[Y_{(t)} = Y_0 + \mu_{max} \times t + log
+\left[exp(-\mu_{max} \times t) + exp(-\mu_{max} \times \lambda) -
+exp(-\mu_{max} \times t-\mu_{max} \times \lambda) \right]\]</span></p>
+</div>
+<div id="two-phase-linear-model" class="section level3" number="2.2.3">
+<h3><span class="header-section-number">2.2.3</span> Two-phase linear
+model</h3>
+<p>This model is a reduced model of the three-phase linear growth model
+proposed by <span class="citation">Buchanan et al. (1997)</span>.</p>
+<p><span class="math display">\[
+Y_{(t)} =
+\begin{cases}
+Y_0,                                  &amp; \text{if t $\leq$ $\lambda$}
+\\
+Y_0 + \mu_{max} \times (t - \lambda), &amp; \text{if t &gt; $\lambda$}
+\end{cases}
+\]</span></p>
+</div>
+</div>
+<div id="no-lag-phase-growth-models" class="section level2" number="2.3">
+<h2><span class="header-section-number">2.3</span> No lag phase growth
+models</h2>
+<p><code>predmicror</code> can adjust two nonlinear models to microbial
+growth curves that do not show lag phase: <strong>Richards
+model</strong> and <strong>Fang model</strong>.</p>
+<div id="richards-model" class="section level3" number="2.3.1">
+<h3><span class="header-section-number">2.3.1</span> Richards model</h3>
+<p><span class="math display">\[Y_{(t)} = Y_0 + \mu_{max} \times t -
+\frac{1}{m} \times log( 1 + \frac{exp(m \times \mu_{max} \times t) -
+1}{exp(m \times(Y_{max}-Y_0))}\]</span></p>
+</div>
+<div id="fang-model" class="section level3" number="2.3.2">
+<h3><span class="header-section-number">2.3.2</span> Fang model</h3>
+<p><span class="citation">Fang et al. (2012)</span> and <span class="citation">Fang et al. (2013)</span> integrated the logistic
+growth model, producing a continuous model that is particularly suitable
+for growth curves without lag phase.</p>
+<p><span class="math display">\[Y_{(t)} = Y_0 + Y_{max} - log \left[
+e^{Y_0} + \left( e^{Y_{max}} - e^{Y_0} \right) \times e^{-\mu_{max}
+\times t} \right]\]</span></p>
+</div>
+</div>
+</div>
+<div id="the-cardinal-parameter-model" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> The cardinal parameter
+model</h1>
+<p>Predictive Microbiology deals with the development of accurate and
+versatile mathematical models, able to describe the evolution of
+microorganisms in food products as a function of environmental
+conditions, which are assumed to be measurable. Although there are a few
+classification schemes of predictive microbiology models, they have been
+traditionally classified into primary and secondary models.</p>
+<p><code>predmicror</code> can be used to fit <strong>cardinal parameter
+models</strong>, which are secondary models that describe the growth
+rate of microorganisms as a function of extrinsic and/or intrinsic
+factors. These are models that estimate the optimum growth rate, and the
+minimum, optimum and maximum values of extrinsic and intrinsic factors
+(e.g. temperature, pH, water activity) that characterise the growth of a
+given microbial strain.</p>
+<p>The general cardinal parameter model used to describe and predict the
+effect of different environmental factors on the growth rate of a
+microorganism is based on a modular approach called the <strong>gamma
+concept</strong> <span class="citation">(Zwietering et al.,
+1991)</span>, described as,</p>
+<p><span class="math display">\[
+\mu _{max}=\mu _{opt}\times \gamma \left(T \right)\times \gamma
+\left(pH\right)\times \gamma
+\left(aw\right)\times \gamma (Inh)
+\]</span> where:</p>
+<ul>
+<li><span class="math inline">\(\mu _{max}\)</span>: maximum growth rate
+(<span class="math inline">\(h^{-1}\)</span> or <span class="math inline">\(day^{-1}\)</span>) of the studied bacterial
+strain</li>
+<li><span class="math inline">\(\mu _{opt}\)</span>: optimum growth rate
+(<span class="math inline">\(h^{-1}\)</span> or <span class="math inline">\(day^{-1}\)</span>) of the studied bacterial
+strain</li>
+<li><span class="math inline">\(\gamma \left(T\right),\gamma
+\left(pH\right),\gamma \left(aw\right),\gamma (Inh)\)</span>:
+dimensionless functions describing the relative effects of temperature
+(T), pH, water activity (aw) and different measurable inhibitors (Inh)
+like undissociated organic acids or <span class="math inline">\(CO_2\)</span>.</li>
+</ul>
+<p>The functions <span class="math inline">\(\gamma
+\left(T\right),\gamma \left(pH\right),\gamma \left(aw\right),\gamma
+(inh)\)</span> have a range between 0 and 1, <span class="math inline">\(\gamma =0\)</span> when growth is fully inhibited
+and <span class="math inline">\(\gamma =1\)</span> when growth is not
+inhibited at all by the factor.</p>
+<div id="cardinal-parameters" class="section level2" number="3.1">
+<h2><span class="header-section-number">3.1</span> Cardinal
+Parameters</h2>
+<p>Many <span class="math inline">\(\gamma\)</span>-type functions have
+been proposed for temperature, pH, aw and lactic acid. The
+<code>predmicror</code> adjusts the cardinal parameter model using the
+general equation for <span class="math inline">\(\gamma\)</span>
+proposed by <span class="citation">Rosso et al. (1995)</span>.</p>
+<p><span class="math display">\[
+\gamma (X)_n=\left\{\begin{matrix} 0, \qquad X \leq X_{min} \\
+\frac{(X-X_{max})\times (X-X_{min})^n}{(X_{opt}-X_{min})^{n-1}\times
+\left[\begin{matrix}\left(X_{opt}-X_{min}\right)\times
+\left(X-X_{opt}\right)-\left(X_{opt}-X_{max}\right)\times \\
+\left(\left(n-1\right)\times X_{opt}+X_{min}-n \times
+X\right)\end{matrix}\right]}, \qquad X_{min}&lt;X&lt;X_{max} \\
+0, \qquad X{\geq}X_{max}\end{matrix}\right.
+\]</span></p>
+<ul>
+<li><span class="math inline">\(X\)</span>: intrinsic or extrinsic
+factor under study; temperature, pH or aw</li>
+<li><span class="math inline">\(X_{min}\)</span>: value of the factor
+below which no growth occurs</li>
+<li><span class="math inline">\(X_{max}\)</span>: value of the factor
+above which no growth occurs</li>
+<li><span class="math inline">\(X_{opt}\)</span>: value at which
+bacterial growth is optimum</li>
+<li><span class="math inline">\(n\)</span>: shape parameter ( <span class="math inline">\(n=2\)</span> for temperature and water activity;
+and <span class="math inline">\(n=1\)</span> for pH).</li>
+<li><span class="math inline">\(X_{min}\)</span>, <span class="math inline">\(X_{max}\)</span> and <span class="math inline">\(X_{opt}\)</span> are known as cardinal parameters,
+and are estimated by fitting the cardinal parameter model to growth data
+from experiments carried out in broth.</li>
+</ul>
+<p>More precisely, <span class="math inline">\(T_{min}\)</span>, <span class="math inline">\(T_{max}\)</span> and <span class="math inline">\(T_{opt}\)</span> are determined from<br />
+<span class="math inline">\(\gamma \left(T\right)\)</span>; <span class="math inline">\(pH_{min}\)</span>, <span class="math inline">\(pH_{max}\)</span> and <span class="math inline">\(pH_{opt}\)</span> are determined from <span class="math inline">\(\gamma \left(pH\right)\)</span>; and <span class="math inline">\(aw_{min}\)</span>, <span class="math inline">\(aw_{max}\)</span> and <span class="math inline">\(aw_{opt}\)</span> are determined from <span class="math inline">\(\gamma \left(aw\right)\)</span>. Often, when
+adjusting the cardinal parameter model for aw, <span class="math inline">\(aw_{max}\)</span> is set to one, because it is in
+effect the maximum value of the water activity measurement.</p>
+</div>
+</div>
+<div id="cardinal-parameter-models-available-in-predmicror" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Cardinal parameter
+models available in predmicror</h1>
+<div id="cardinal-parameter-model-for-temperature" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Cardinal parameter
+model for temperature</h2>
+<p>The <code>predimicror</code> adjusts the Cardinal Temperature Model
+with Inflection (CTMI) <span class="citation">(<strong>Rosso1993?</strong>)</span> to determine
+optimum growth rate ( <span class="math inline">\(\mu_{opt}\)</span>)
+and the cardinal parameters <span class="math inline">\(T_{min}\)</span>, <span class="math inline">\(T_{max}\)</span> and <span class="math inline">\(T_{opt}\)</span>.</p>
+<p><span class="math display">\[
+\sqrt{\mu _{max}}=\sqrt{\mu _{opt}\times \gamma \left(T\right)} +
+\varepsilon
+\]</span></p>
+<p><span class="math display">\[
+\gamma (T)=\left\{\begin{matrix} 0, \qquad T \leq T_{min} \\
+\frac{(T-T_{max}) \times
+(T-T_{min})^2}{\left(T_{opt}-T_{min}\right)\times\left[\begin{matrix}\left(T_{opt}-T_{min}\right)\times
+\left(T-T_{opt}\right)-\left(T_{opt}-T_{max}\right) \times\\
+\left(T_{opt}+T_{min}-2T\right)\end{matrix}\right]}, \qquad T_{min} &lt;
+T &lt; T_{max}\\
+0, \qquad T \geq T_{max}\end{matrix}\right.
+\]</span></p>
+<p>To fit this model to the growth data, the response variable, maximum
+growth rate ( <span class="math inline">\(\mu _{max}\)</span>), is
+square-root transformed to reduce heterocedasticity. The residuals are
+represented by <span class="math inline">\(\varepsilon\)</span>, and are
+assumed to follow a normal distribution with mean zero and variance
+<span class="math inline">\(\sigma^2\)</span>.</p>
+</div>
+<div id="cardinal-parameter-model-for-ph" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Cardinal parameter
+model for pH</h2>
+<p>To determine optimum growth rate (<span class="math inline">\(\mu_{opt}\)</span>) and the cardinal parameters
+<span class="math inline">\(pH_{min}\)</span>, <span class="math inline">\(pH_{max}\)</span> and <span class="math inline">\(pH_{opt}\)</span>, <code>predmicror</code> adjusts
+the cardinal model for pH proposed by <span class="citation">(<strong>Lemarc2002?</strong>)</span>.</p>
+<p><span class="math display">\[
+\sqrt{\mu _{max}}=\sqrt{\mu _{opt}.\gamma \left(pH\right)}+\varepsilon
+\]</span></p>
+<p><span class="math display">\[
+\gamma (pH)=\left\{\begin{matrix}0,\qquad
+pH{\leq}pH_{min}\\\frac{(pH-pH_{max}){\times}\left(pH-pH_{min}\right)}{\left[\left(pH_{opt}-pH_{min}\right).\left(pH-pH_{opt}\right)-\left(pH_{opt}-pH_{max}\right).\left(pH_{min}-pH\right)\right]},\qquad
+pH_{min}&lt;pH&lt;pH_{max}\\0,\qquad
+pH{\geq}pH_{max}\end{matrix}\right.
+\]</span></p>
+<div id="cardinal-parameter-model-for-aw" class="section level3" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> Cardinal parameter
+model for Aw</h3>
+<p><code>predmicror</code> adjusts the cardinal model for water activity
+from <span class="citation">(<strong>Rosso1993?</strong>)</span> to
+extract optimum growth rate (<span class="math inline">\(\mu_{opt}\)</span>) and the cardinal parameters
+<span class="math inline">\(aw_{min}\)</span> and <span class="math inline">\(aw_{opt}\)</span>.</p>
+<p><span class="math display">\[
+\sqrt{\mu _{max}}=\sqrt{\mu _{opt} \times \gamma \left(aw\right)} +
+\varepsilon
+\]</span></p>
+<p><span class="math display">\[
+\gamma (aw)=\left\{\begin{matrix} 0, \qquad aw \leq aw_{min} \\
+\frac{(aw-1.0)\times(aw-aw_{min})^2}{\left(aw_{opt}-aw_{min}\right)\times\left[\begin{matrix}\left(aw_{opt}-aw_{min}\right){\times}\left(aw-aw_{opt}\right)-\left(aw_{opt}-1.0\right)\times
+\\
+\left(aw_{opt}+aw_{min}-2aw\right)\end{matrix}\right]},  \qquad
+aw_{min}&lt;aw&lt;1.0 \\
+0, \qquad aw \geq 1.0 \end{matrix} \right.
+\]</span></p>
+<p>To fit this model to the growth data, the response variable, maximum
+growth rate ( <span class="math inline">\(\mu_{max}\)</span>), is
+square-root transformed to reduce heterocedasticity. The residuals are
+represented by <span class="math inline">\(\varepsilon\)</span>, and are
+assumed to follow a normal distribution with mean zero and variance
+<span class="math inline">\(\sigma^2\)</span>.</p>
+</div>
+<div id="cardinal-parameter-model-for-inhibitory-substance" class="section level3" number="4.2.2">
+<h3><span class="header-section-number">4.2.2</span> Cardinal parameter
+model for inhibitory substance</h3>
+<p>For the inhibitors (Inh) including undissociated organic acids, <span class="math inline">\(CO\)</span> and others, the cardinal parameter
+model proposed by <span class="citation">(<strong>Lemarc2002?</strong>)</span>)and <span class="citation">(<strong>Coroller2005?</strong>)</span> can be fitter
+by the <code>predmicror</code>.</p>
+<p><span class="math display">\[
+\sqrt{\mu_{max}}=\sqrt{\mu_{opt} \times \gamma
+\left(inh\right)}+\varepsilon
+\]</span></p>
+<p><span class="math display">\[
+\gamma \left(Inh\right)=1-\left(\frac{Inh}{MIC}\right)^\alpha
+\]</span></p>
+<ul>
+<li><code>Inh</code>: concentration of the inhibiting substance or
+compound (e.g. undissociated organic acid (mM), CO (%)</li>
+<li><code>MIC</code>: Minimum Inhibitory Concentration (mM or %,
+accordingly)</li>
+<li><span class="math inline">\(\alpha\)</span>: shape parameter of the
+curve (<span class="math inline">\(\alpha=1\)</span> the shape is
+linear; <span class="math inline">\(\alpha&gt;1\)</span> the shape is
+downward concave; and <span class="math inline">\(\alpha&lt;1\)</span>
+the shape is upward concave).</li>
+</ul>
+<p>To fit this model to the growth data, the response variable, maximum
+growth rate ( <span class="math inline">\(\mu_{max}\)</span>), is
+square-root transformed to reduce heterocedasticity. The residuals are
+represented by <span class="math inline">\(\varepsilon\)</span>, and are
+assumed to follow a normal distribution with mean zero and variance
+<span class="math inline">\(\sigma^2\)</span>. The model parameters are
+MIC and <span class="math inline">\(\alpha\)</span>.</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1 class="unnumbered">References</h1>
+<div id="refs" class="references csl-bib-body hanging-indent" line-spacing="2">
+<div id="ref-Baranyi1994" class="csl-entry">
+Baranyi, J., &amp; Roberts, T. A. (1994). A dynamic approach to
+predicting bacterial growth in food. <em>International Journal of Food
+Microbiology</em>, <em>23</em>, 277–294.
+</div>
+<div id="ref-Buchanan1997" class="csl-entry">
+Buchanan, R. L., Whiting, R. C., &amp; Damert, W. C. (1997). When is
+simple good enough: A comparison of the gompertz, baranyi, and
+three-phase linear models for fitting bacterial growth curves. <em>Food
+Microbiology</em>, <em>14</em>(4), 313–326. https://doi.org/<a href="https://doi.org/10.1006/fmic.1997.0125">https://doi.org/10.1006/fmic.1997.0125</a>
+</div>
+<div id="ref-Fang2012" class="csl-entry">
+Fang, T., Gurtler, J. B., &amp; Huang, L. (2012). Growth kinetics and
+model comparison of cronobacter sakazakii in reconstituted powdered
+infant formula. <em>Journal of Food Science</em>, <em>77</em>(9),
+E247–E255. <a href="https://doi.org/10.1111/j.1750-3841.2012.02873.x">https://doi.org/10.1111/j.1750-3841.2012.02873.x</a>
+</div>
+<div id="ref-Fang2013" class="csl-entry">
+Fang, T., Liu, Y., &amp; Huang, L. (2013). Growth kinetics of listeria
+monocytogenes and spoilage microorganisms in fresh-cut cantaloupe.
+<em>Food Microbiology</em>, <em>34</em>(1), 174–181. https://doi.org/<a href="https://doi.org/10.1016/j.fm.2012.12.005">https://doi.org/10.1016/j.fm.2012.12.005</a>
+</div>
+<div id="ref-Huang2008" class="csl-entry">
+Huang, L. (2008). Growth kinetics of listeria monocytogenes in broth and
+beef frankfurters-determination of lag phase duration and exponential
+growth rate under isothermal conditions. <em>Journal of Food
+Science</em>, <em>73</em>(5), E235–E242. <a href="https://doi.org/10.1111/j.1750-3841.2008.00785.x">https://doi.org/10.1111/j.1750-3841.2008.00785.x</a>
+</div>
+<div id="ref-Huang2013" class="csl-entry">
+Huang, L. (2013). Optimization of a new mathematical model for bacterial
+growth. <em>Food Control</em>, <em>32</em>(1), 283–288.
+https://doi.org/<a href="https://doi.org/10.1016/j.foodcont.2012.11.019">https://doi.org/10.1016/j.foodcont.2012.11.019</a>
+</div>
+<div id="ref-Rosso1996" class="csl-entry">
+Rosso, L., Bajard, S., Flandrois, J. P., Lahellec, C., Fournaud, J.,
+&amp; Veit, P. (1996). Differential growth of listeria monocytogenes at
+4 and 8 ºC: Consequences for the shelf life of chilled products.
+<em>Journal of Food Protection</em>, <em>59</em>(9), 944–949. <a href="https://doi.org/10.4315/0362-028X-59.9.944">https://doi.org/10.4315/0362-028X-59.9.944</a>
+</div>
+<div id="ref-Rosso1995" class="csl-entry">
+Rosso, L., Lobry, J., Charles (Bajard), S., &amp; Flandrois, J.-P.
+(1995). Convenient model to describe the combined effects of temperature
+and pH on microbial growth. <em>Applied and Environmental
+Microbiology</em>, <em>61</em>, 610–616. <a href="https://doi.org/10.1128/AEM.61.2.610-616.1995">https://doi.org/10.1128/AEM.61.2.610-616.1995</a>
+</div>
+<div id="ref-Zwietering1991" class="csl-entry">
+Zwietering, M. H., DEKoos, J. T., Hasenack, B. E., DeWit, J. C., &amp;
+K.Van’tRiet. (1991). Modeling of bacterial growth as a function of
+temperature. <em>Appl. Environ. Microbiol</em>, <em>57</em>, 1094–1101.
+</div>
+<div id="ref-Zwietering1990" class="csl-entry">
+Zwietering, M. H., Jongenburger, I., Rombouts, F. M., &amp; van’t Riet,
+K. (1990). Modeling of the bacterial growth curve. <em>Applied and
+Environmental Microbiology</em>, <em>56</em>(6), 1875–1881. <a href="https://aem.asm.org/content/56/6/1875">https://aem.asm.org/content/56/6/1875</a>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

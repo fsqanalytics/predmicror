@@ -36,11 +36,12 @@ Users should make sure that the microbial concentration input is entered in natu
 \examples{
 ## Example: Rosso full model
 library(gslnls)
-data(growthfull)  # simulated data set.
-initial_values = list(Y0=0.04, Ymax=21, MUmax=1.9, lag=5.0) # define the initial values
+data(growthfull) # simulated data set.
+initial_values <- list(Y0 = 0.04, Ymax = 21, MUmax = 1.9, lag = 5.0) # define the initial values
 fit <- gsl_nls(lnN ~ RossoFM(Time, Y0, Ymax, MUmax, lag),
-           data=growthfull,
-           start =  initial_values)
+  data = growthfull,
+  start = initial_values
+)
 summary(fit)
 
 }

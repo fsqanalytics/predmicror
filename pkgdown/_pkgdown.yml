@@ -1,3 +1,5 @@
+url: https://fsqanalytics.github.io/predmicror/
+
 template:
   bootstrap: 5
   bootswatch: united
@@ -15,18 +17,21 @@ reference:
   - HuangFM
   - RossoFM
   - ZwieteringFM
+  
 - title: "No lag growth models"
   desc: "Functions for fitting no lag growth models."
   contents:
   - FangNLM
   - HuangNLM
   - RichardsNLM
+  
 - title: "Reduced growth models"
   desc: "Functions for fitting reduced growth models."
   contents:
   - BaranyiRM
   - BuchananRM
   - HuangRM
+  
 - title: "Inactivation models"
   desc: "Functions for fitting inactivation models."
   contents:
@@ -35,6 +40,7 @@ reference:
   - WeibullMM
   - WeibullPH
   - GeeraerdST
+  
 - title: "Cardinal models"
   desc: "Functions for fitting cardinal models."
   contents:
@@ -42,6 +48,21 @@ reference:
   - CMPH
   - CMAW
   - CMInh
+ 
+- title: "Datasets"
+  desc: "Datasets of example data."
+  contents:
+  - aw
+  - bixina
+  - growthfull
+  - growthnolag
+  - growthred
+  - inh
+  - ph
+  - salmonella
+  - mafart2005Li11
+  
+  
 home:
   sidebar:
     structure: [links, license, community, citation, authors, dev]

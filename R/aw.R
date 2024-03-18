@@ -14,4 +14,3 @@
 #' @name aw
 #' @usage data(aw)
 "aw"
-

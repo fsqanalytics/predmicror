@@ -34,11 +34,12 @@ Users should make sure that the microbial concentration input is entered in natu
 \examples{
 ## Example: Fang no lag model
 library(gslnls)
-data(growthnolag)  # simulated data set.
-initial_values = list(Y0=0, Ymax=22, MUmax=1.7) # define the initial values
+data(growthnolag) # simulated data set.
+initial_values <- list(Y0 = 0, Ymax = 22, MUmax = 1.7) # define the initial values
 fit <- gsl_nls(lnN ~ FangNLM(Time, Y0, Ymax, MUmax),
-           data=growthnolag,
-           start =  initial_values)
+  data = growthnolag,
+  start = initial_values
+)
 summary(fit)
 
 }

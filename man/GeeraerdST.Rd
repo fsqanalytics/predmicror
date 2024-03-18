@@ -37,14 +37,15 @@ in base 10 logarithm, \code{Y(t) = log10(N(t))}.
 \examples{
 library(gslnls)
 data(mafart2005Li11)
-initial_values = list(Y0=10, Yres=7, kmax=0.7, Sl=4)
-fit <- gsl_nls(logN ~  GeeraerdST(Time,Y0,Yres,kmax,Sl),
-               data=mafart2005Li11,
-               start =  initial_values)
+initial_values <- list(Y0 = 10, Yres = 7, kmax = 0.7, Sl = 4)
+fit <- gsl_nls(logN ~ GeeraerdST(Time, Y0, Yres, kmax, Sl),
+  data = mafart2005Li11,
+  start = initial_values
+)
 summary(fit)
 
-plot(logN ~ Time, data=mafart2005Li11)
-lines(mafart2005Li11$Time, predict(fit), col="blue")
+plot(logN ~ Time, data = mafart2005Li11)
+lines(mafart2005Li11$Time, predict(fit), col = "blue")
 
 }
 \references{

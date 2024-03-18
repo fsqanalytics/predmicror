@@ -13,4 +13,3 @@
 #' @name mafart2005Li11
 #' @usage data(mafart2005Li11)
 "mafart2005Li11"
-

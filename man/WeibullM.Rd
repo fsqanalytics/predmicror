@@ -35,16 +35,17 @@ in base 10 logarithm, \code{Y(t) = log10(N(t))}.
 \examples{
 library(gslnls)
 data(bixina)
-initial_values = list(Y0=2.5, sigma=2, alpha=2)
+initial_values <- list(Y0 = 2.5, sigma = 2, alpha = 2)
 bixina$N <- exp(bixina$lnN)
 bixina$logN <- log10(bixina$N)
-fit <- gsl_nls(logN ~  WeibullM(Time,Y0,sigma, alpha),
-               data=bixina,
-               start =  initial_values)
+fit <- gsl_nls(logN ~ WeibullM(Time, Y0, sigma, alpha),
+  data = bixina,
+  start = initial_values
+)
 summary(fit)
 
-plot(logN ~ Time, data=bixina)
-lines(bixina$Time, predict(fit), col="blue")
+plot(logN ~ Time, data = bixina)
+lines(bixina$Time, predict(fit), col = "blue")
 
 }
 \references{

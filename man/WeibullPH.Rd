@@ -44,14 +44,15 @@ The following parameters can be estimated using Weibull function:
 \examples{
 library(gslnls)
 data(bixina)
-initial_values = list(Y0=6.0, k=1.0, alpha=0.2)
+initial_values <- list(Y0 = 6.0, k = 1.0, alpha = 0.2)
 fit <- gsl_nls(lnN ~ WeibullPH(Time, Y0, k, alpha),
-           data=bixina,
-           start =  initial_values)
+  data = bixina,
+  start = initial_values
+)
 summary(fit)
 
-plot(lnN ~ Time, data=bixina)
-lines(bixina$Time, predict(fit), col="blue")
+plot(lnN ~ Time, data = bixina)
+lines(bixina$Time, predict(fit), col = "blue")
 
 }
 \references{

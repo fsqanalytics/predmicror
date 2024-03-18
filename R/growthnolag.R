@@ -1,8 +1,8 @@
-#'Data of a no lag curve of microbial growth
+#' Data of a no lag curve of microbial growth
 #'
 #' A dataset containing simulated data for a no lag growth model
 #'
-#'#' @format A data frame with 10 rows and 3 variables.
+#' #' @format A data frame with 10 rows and 3 variables.
 #' \describe{
 #'   \item{Time}{Time in minutes}
 #'   \item{logN}{Number of microrganism in log10 scale}

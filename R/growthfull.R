@@ -14,4 +14,3 @@
 #' @name growthfull
 #' @usage data(growthfull)
 "growthfull"
-

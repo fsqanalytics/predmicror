@@ -14,4 +14,3 @@
 #' @name inh
 #' @usage data(inh)
 "inh"
-
