@@ -57,7 +57,7 @@ CMTI <- function(x, Tmax, Tmin, MUopt, Topt) {
     )
   }
 
-  CMT <- ifelse(x < Tmin | x > Tmax, 0, MUopt * (((x - Tmax) * (x - Tmin)^2) / ((Topt - Tmin) * ((Topt - Tmin) * (x - Topt) - (Topt - Tmax) * (Topt + Tmin - 2 * x)))))
+  CMT <- ifelse(x <= Tmin | x >= Tmax, 0, MUopt * (((x - Tmax) * (x - Tmin)^2) / ((Topt - Tmin) * ((Topt - Tmin) * (x - Topt) - (Topt - Tmax) * (Topt + Tmin - 2 * x)))))
   result <- sqrt(CMT)
   return(result)
 }
