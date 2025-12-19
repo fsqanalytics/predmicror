@@ -5,20 +5,17 @@
 \alias{growthnolag}
 \title{Data of a no lag curve of microbial growth}
 \format{
-An object of class \code{data.frame} with 10 rows and 3 columns.
+A data frame with 10 rows and 3 variables.
+\describe{
+\item{Time}{Time in minutes}
+\item{logN}{Number of microrganism in log10 scale}
+\item{lnN}{Number of microrganism in ln scale}
+}
 }
 \usage{
 data(growthnolag)
 }
 \description{
 A dataset containing simulated data for a no lag growth model
-}
-\details{
-#' @format A data frame with 10 rows and 3 variables.
-\describe{
-\item{Time}{Time in minutes}
-\item{logN}{Number of microrganism in log10 scale}
-\item{lnN}{Number of microrganism in ln scale}
-}
 }
 \keyword{datasets}

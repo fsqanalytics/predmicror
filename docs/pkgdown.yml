@@ -1,11 +1,10 @@
-pandoc: 3.1.1
-pkgdown: 2.0.7
+pandoc: 3.6.3
+pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   growth_models: growth_models.html
   predmicror: predmicror.html
-last_built: 2024-03-20T23:32Z
+last_built: 2025-12-19T15:57Z
 urls:
   reference: https://fsqanalytics.github.io/predmicror/reference
   article: https://fsqanalytics.github.io/predmicror/articles
-

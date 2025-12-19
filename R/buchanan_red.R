@@ -20,7 +20,7 @@
 #'
 #' @param lag is the duration of the lag phase in time units
 #'
-#' @return An object of nls class
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez, \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron, \email{ubarron@ipb.pt}
 #'
@@ -46,12 +46,6 @@
 #' summary(fit)
 #'
 BuchananRM <- function(t, Y0, MUmax, lag) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-  result <- ifelse(t <= lag, Y0, Y0 + MUmax * (t - lag))
-  return(result)
+  result <- Y0 + MUmax * pmax(t - lag, 0)
+  result
 }

@@ -1,8 +1,8 @@
 ---
-title: Fitting growth models using predmicror
+title: "Fitting growth models using predmicror"
 author:
-   - Vasco Cadavez
-   - Ursula Gonzales Barron
+   - "Vasco Cadavez"
+   - "Ursula Gonzales-Barron"
 date: 2022/04/30
 output: 
   rmarkdown::html_vignette:

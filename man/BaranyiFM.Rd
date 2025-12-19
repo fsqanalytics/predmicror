@@ -18,7 +18,7 @@ BaranyiFM(t, Y0, Ymax, MUmax, lag)
 \item{lag}{is the duration of the lag phase in time units}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{BaranyiFM} function to fit the Baranyi & Roberts full growth model to a complete microbial growth curve.

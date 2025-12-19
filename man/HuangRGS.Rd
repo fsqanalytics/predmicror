@@ -16,7 +16,7 @@ HuangRGS(x, Y0, k, M)
 \item{M}{is a time constant (s)}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{HuangRGS} reparametrized Gompertz survival model for microbial inactivation.
@@ -36,13 +36,14 @@ in base 10 logarithm, \code{Y(t) = log10(X(t))}.
 library(gslnls)
 data(bixina)
 initial_values <- list(Y0 = 5.6, k = 0.37, M = 6.8)
-fit <- gsl_nls(lnN ~ HuangRGS(Time, Y0, k, M),
+bixina$logN <- log10(exp(bixina$lnN))
+fit <- gsl_nls(logN ~ HuangRGS(Time, Y0, k, M),
   data = bixina,
   start = initial_values
 )
 summary(fit)
 
-plot(lnN ~ Time, data = bixina)
+plot(logN ~ Time, data = bixina)
 lines(bixina$Time, predict(fit), col = "blue")
 
 }

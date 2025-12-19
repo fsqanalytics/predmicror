@@ -5,7 +5,7 @@
 \alias{salmonella}
 \title{Potential growth of \emph{Salmonella typhimurium} on cooked chicken}
 \format{
-A data frame with 22 rows and 3 variables:
+A data frame with 21 rows and 3 variables:
 \describe{
 \item{Temp}{Temperature (ºC)}
 \item{GR}{Specific growth rate (log10/h)}
@@ -16,7 +16,7 @@ A data frame with 22 rows and 3 variables:
 data(salmonella)
 }
 \description{
-A dataset containing the specific growth rate of \emph{Salmonela typhimurium} on cooked chicken
+A dataset containing the specific growth rate of \emph{Salmonella typhimurium} on cooked chicken
 }
 \references{
 \insertRef{Oscar2002}{predmicror}

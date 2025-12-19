@@ -21,7 +21,7 @@
 #'
 #' @param pHopt is the optimum pH for growth
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -45,14 +45,13 @@
 #' summary(fit)
 #'
 CMPH <- function(x, pHmax, pHmin, MUopt, pHopt) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
+  CMph <- numeric(length(x))
+  idx <- x >= pHmin & x <= pHmax
+  if (any(idx)) {
+    num <- (x[idx] - pHmax) * (x[idx] - pHmin)
+    den <- (pHopt - pHmin) * (x[idx] - pHopt) - (pHopt - pHmax) * (pHmin - x[idx])
+    CMph[idx] <- MUopt * (num / den)
   }
-
-  CMph <- ifelse(x < pHmin | x > pHmax, 0, MUopt * ((x - pHmax) * (x - pHmin)) / ((pHopt - pHmin) * (x - pHopt) - (pHopt - pHmax) * (pHmin - x)))
-  result <- sqrt(CMph)
-  return(result)
+  result <- sqrt(pmax(CMph, 0))
+  result
 }

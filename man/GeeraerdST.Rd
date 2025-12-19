@@ -18,7 +18,7 @@ GeeraerdST(x, Y0, Yres, kmax, Sl)
 \item{Sl}{represents shoulder phase preceding the sharp inactivation slope of the curve}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{GeeraerdST} inactivation model for microbial inactivation curve.

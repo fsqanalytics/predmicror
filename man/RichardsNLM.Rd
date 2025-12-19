@@ -4,7 +4,7 @@
 \alias{RichardsNLM}
 \title{Richards no lag growth model}
 \usage{
-RichardsNLM(t, Y0, Ymax, MUmax)
+RichardsNLM(t, Y0, Ymax, MUmax, m = 1)
 }
 \arguments{
 \item{t}{is a numeric vector indicating the time of the experiment}
@@ -14,9 +14,11 @@ RichardsNLM(t, Y0, Ymax, MUmax)
 \item{Ymax}{is the natural logarithm of the maximum concentration (\code{ln(Nmax)}) reached by the microorganism}
 
 \item{MUmax}{is the maximum specific growth rate given in time units}
+
+\item{m}{is the shape parameter of the Richards model (default = 1)}
 }
 \value{
-An object of nls class
+A numeric vector with the fitted values
 }
 \description{
 \code{RichardsNLM} function to fit the Richards no lag growth model to an incomplete microbial growth curve.

@@ -16,7 +16,7 @@ CMAW(x, AWmin, MUopt, AWopt)
 \item{AWopt}{is optimum water activity for growth}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{CMAW} function to fit the water activity cardinal model (Rosso et al., 1993).

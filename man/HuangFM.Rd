@@ -18,7 +18,7 @@ HuangFM(t, Y0, Ymax, MUmax, lag)
 \item{lag}{is the duration of the lag phase in time units}
 }
 \value{
-An object of nls class
+A numeric vector with the fitted values
 }
 \description{
 \code{HuangFM} function to fit the Huang full growth model to complete microbial growth curve.

@@ -17,7 +17,7 @@ CMInh(x, MIC, MUopt, alpha)
 alpha > 1 the shape is downward concave; and alpha < 1 the shape is upward concave)}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{CMInh} function to fit the growth inhibitors cardinal model (Rosso et al, 1993).

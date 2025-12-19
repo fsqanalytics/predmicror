@@ -3,9 +3,9 @@
 \docType{data}
 \name{bixina}
 \alias{bixina}
-\title{Data concerning \emph{Staphilococcus aureus} microbial inactivation in beef}
+\title{Data concerning \emph{Staphylococcus aureus} microbial inactivation in beef}
 \format{
-A data frame with 10 rows and 3 variables:
+A data frame with 18 rows and 3 variables:
 \describe{
 \item{Time}{Time in minutes}
 \item{Rep}{Repetition}

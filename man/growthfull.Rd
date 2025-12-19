@@ -5,7 +5,7 @@
 \alias{growthfull}
 \title{Data of a complete curve of microbial growth}
 \format{
-A data frame with 10 rows and 3 variables.
+A data frame with 13 rows and 3 variables.
 \describe{
 \item{Time}{Time in minutes}
 \item{logN}{Number of microrganism in log10 scale}

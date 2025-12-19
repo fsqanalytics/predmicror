@@ -18,7 +18,7 @@ CMTI(x, Tmax, Tmin, MUopt, Topt)
 \item{Topt}{is optimum temperature for growth}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{CMTI} function to fit the temperature cardinal model (Rosso et al, 1993).

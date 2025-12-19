@@ -19,7 +19,7 @@
 #'
 #' @param AWopt is optimum water activity for growth
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -43,14 +43,14 @@
 #' summary(fit)
 #'
 CMAW <- function(x, AWmin, MUopt, AWopt) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
+  CMaw <- numeric(length(x))
+  idx <- x >= AWmin & x <= 1.000
+  if (any(idx)) {
+    num <- (x[idx] - 1.000) * (x[idx] - AWmin)^2
+    den <- (AWopt - AWmin) * ((AWopt - AWmin) * (x[idx] - AWopt) -
+      (AWopt - 1.000) * (AWopt + AWmin - 2 * x[idx]))
+    CMaw[idx] <- MUopt * (num / den)
   }
-
-  CMaw <- ifelse(x < AWmin | x > 1.000, 0.000, MUopt * ((x - 1.000) * (x - AWmin)^2) / ((AWopt - AWmin) * ((AWopt - AWmin) * (x - AWopt) - (AWopt - 1.000) * (AWopt + AWmin - 2 * x))))
-  result <- sqrt(CMaw)
-  return(result)
+  result <- sqrt(pmax(CMaw, 0))
+  result
 }

@@ -19,7 +19,7 @@
 #'
 #' @param MUmax is the maximum specific growth rate given in time units
 #'
-#' @return An object of nls class
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez, \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron, \email{ubarron@ipb.pt}
 #'
@@ -46,13 +46,7 @@
 #' summary(fit)
 #'
 HuangNLM <- function(t, Y0, Ymax, MUmax) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-
-  result <- Y0 - log(exp(Y0 - Ymax) + (1 - exp(Y0 - Ymax)) * exp(-MUmax * t))
-  return(result)
+  exp_term <- (exp(Ymax - Y0) - 1) * exp(-MUmax * t)
+  result <- Ymax - log1p(exp_term)
+  result
 }

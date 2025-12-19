@@ -3,8 +3,8 @@ title: "Introduction to predmicror"
 description: >
   Set of predictive microbiology models to fit to experimental data.
 author: 
-   - Vasco Cadavez 
-   - Ursula Gonzales-Barron
+   - "Vasco Cadavez" 
+   - "Ursula Gonzales-Barron"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:

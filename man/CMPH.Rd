@@ -18,7 +18,7 @@ CMPH(x, pHmax, pHmin, MUopt, pHopt)
 \item{pHopt}{is the optimum pH for growth}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{CMPH} function to fit the pH cardinal model (Rosso et al, 1993).

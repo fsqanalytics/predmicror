@@ -16,7 +16,7 @@ WeibullM(x, Y0, sigma, alpha)
 \item{alpha}{which is a shape parameter}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{WeibullM} inactivation model for microbial inactivation curve.

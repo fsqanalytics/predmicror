@@ -1,8 +1,8 @@
 #' Data of aw
 #'
-#' A dataset containing ???
+#' A dataset containing water activity and growth rate data
 #'
-#' @format A data frame with 9 rows and 2 variables:
+#' @format A data frame with 9 rows and 3 variables:
 #' \describe{
 #'   \item{aw}{Water activity}
 #'   \item{sqrtGR}{Square root of the growth rate}

@@ -16,7 +16,7 @@ FangNLM(t, Y0, Ymax, MUmax)
 \item{MUmax}{is the maximum specific growth rate given in time units}
 }
 \value{
-An object of nls class
+A numeric vector with the fitted values
 }
 \description{
 \code{FangNLM} function to fit the Fang no lag growth model to an incomplete microbial growth curve.

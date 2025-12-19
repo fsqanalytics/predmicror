@@ -1,8 +1,8 @@
 #' Data of microbial inactivation Albert and Mafart (2005)
 #'
-#' A dataset containing
+#' A dataset containing time and log10 counts for microbial inactivation
 #'
-#' @format A data frame with 10 rows and 3 variables.
+#' @format A data frame with 10 rows and 2 variables.
 #' \describe{
 #'   \item{Time}{Time}
 #'   \item{logN}{Number of microrganism in log10 scale}

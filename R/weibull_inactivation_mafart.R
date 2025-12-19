@@ -20,7 +20,7 @@
 #'
 #' @param alpha which is a shape parameter
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -49,12 +49,6 @@
 #' lines(bixina$Time, predict(fit), col = "blue")
 #'
 WeibullM <- function(x, Y0, sigma, alpha) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
   result <- Y0 - (x / sigma)^alpha
-  return(result)
+  result
 }

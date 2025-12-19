@@ -19,7 +19,9 @@
 #'
 #' @param MUmax is the maximum specific growth rate given in time units
 #'
-#' @return An object of nls class
+#' @param m is the shape parameter of the Richards model (default = 1)
+#'
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez, \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron, \email{ubarron@ipb.pt}
 #'
@@ -42,14 +44,8 @@
 #' )
 #' summary(fit)
 #'
-RichardsNLM <- function(t, Y0, Ymax, MUmax) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-  m <- 1
-  result <- Y0 + MUmax * t - (1 / m) * log(1 + (exp(m * MUmax * t) - 1) / exp(m * (Ymax - Y0)))
-  return(result)
+RichardsNLM <- function(t, Y0, Ymax, MUmax, m = 1) {
+  result <- Y0 + MUmax * t -
+    (1 / m) * log1p(expm1(m * MUmax * t) * exp(-m * (Ymax - Y0)))
+  result
 }

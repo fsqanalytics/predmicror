@@ -19,17 +19,17 @@
 #'
 #' \code{k}: is the inactivation rate (log cfu/s or log cfu/min, or log cfu/h)
 #'
-#' \code{alpha}: is the ????
+#' \code{alpha}: is the shape parameter of the survival curve
 #'
 #' @param t is a numeric vector indicating the time of the experiment
 #'
 #' @param Y0 is the base 10 logarithm of the initial (time=0) bacterial concentration
 #'
-#' @param k is the inactivation rate ()
+#' @param k is the inactivation rate (log units/time)
 #'
-#' @param alpha is the ???
+#' @param alpha is the shape parameter
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -46,22 +46,17 @@
 #' library(gslnls)
 #' data(bixina)
 #' initial_values <- list(Y0 = 6.0, k = 1.0, alpha = 0.2)
-#' fit <- gsl_nls(lnN ~ WeibullPH(Time, Y0, k, alpha),
+#' bixina$logN <- log10(exp(bixina$lnN))
+#' fit <- gsl_nls(logN ~ WeibullPH(Time, Y0, k, alpha),
 #'   data = bixina,
 #'   start = initial_values
 #' )
 #' summary(fit)
 #'
-#' plot(lnN ~ Time, data = bixina)
+#' plot(logN ~ Time, data = bixina)
 #' lines(bixina$Time, predict(fit), col = "blue")
 #'
 WeibullPH <- function(t, Y0, k, alpha) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
   result <- Y0 - k * t^alpha
-  return(result)
+  result
 }

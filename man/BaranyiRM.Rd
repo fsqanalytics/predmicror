@@ -16,7 +16,7 @@ BaranyiRM(t, Y0, MUmax, lag)
 \item{lag}{is the duration of the lag phase in time units}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{BaranyiRM} function to fit the Baranyi and Roberts growth model to a reduced microbial growth curve.

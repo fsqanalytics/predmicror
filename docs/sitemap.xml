@@ -1,114 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/404.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/articles/growth_models.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/articles/index.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/articles/predmicror.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/authors.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/index.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/news/index.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/BaranyiFM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/BaranyiRM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/BuchananRM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/CMAW.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/CMInh.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/CMPH.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/CMTI.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/FangNLM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/GeeraerdST.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/HuangFM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/HuangNLM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/HuangRGS.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/HuangRM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/RichardsNLM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/RossoFM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/WeibullM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/WeibullMM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/WeibullPH.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/ZwieteringFM.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/aw.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/bixina.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/growthfull.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/growthnolag.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/growthred.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/index.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/inh.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/mafart2005Li11.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/ph.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/predmicror-package.html</loc>
-  </url>
-  <url>
-    <loc>https://fsqanalytics.github.io/predmicror/reference/salmonella.html</loc>
-  </url>
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>https://fsqanalytics.github.io/predmicror/404.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/articles/growth_models.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/articles/index.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/articles/predmicror.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/articles/test.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/authors.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/index.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/news/index.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/BaranyiFM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/BaranyiRM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/BuchananRM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/CMAW.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/CMInh.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/CMPH.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/CMTI.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/FangNLM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/GeeraerdST.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/HuangFM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/HuangNLM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/HuangRGS.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/HuangRM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/RichardsNLM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/RossoFM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/WeibullM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/WeibullMM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/WeibullPH.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/ZwieteringFM.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/aw.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/bixina.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/growthfull.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/growthnolag.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/growthred.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/index.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/inh.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/mafart2005Li11.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/ph.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror-package.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/salmonella.html</loc></url>
 </urlset>
+

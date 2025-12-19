@@ -21,7 +21,7 @@
 #'
 #' @param Topt is optimum temperature for growth
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -50,14 +50,14 @@
 #' lines(salmonella$Temp, fitted(fit), col = "red")
 #'
 CMTI <- function(x, Tmax, Tmin, MUopt, Topt) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
+  CMT <- numeric(length(x))
+  idx <- x > Tmin & x < Tmax
+  if (any(idx)) {
+    num <- (x[idx] - Tmax) * (x[idx] - Tmin)^2
+    den <- (Topt - Tmin) * ((Topt - Tmin) * (x[idx] - Topt) -
+      (Topt - Tmax) * (Topt + Tmin - 2 * x[idx]))
+    CMT[idx] <- MUopt * (num / den)
   }
-
-  CMT <- ifelse(x <= Tmin | x >= Tmax, 0, MUopt * (((x - Tmax) * (x - Tmin)^2) / ((Topt - Tmin) * ((Topt - Tmin) * (x - Topt) - (Topt - Tmax) * (Topt + Tmin - 2 * x)))))
-  result <- sqrt(CMT)
-  return(result)
+  result <- sqrt(pmax(CMT, 0))
+  result
 }

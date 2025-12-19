@@ -4,28 +4,28 @@
 \alias{RossoFM}
 \title{Rosso full growth model}
 \usage{
-RossoFM(t, Y0, MUmax, Ymax, lag)
+RossoFM(t, Y0, Ymax, MUmax, lag)
 }
 \arguments{
 \item{t}{is a numeric vector indicating the time of the experiment}
 
 \item{Y0}{is the natural logarithm of the initial microbial concentration (\code{ln(N0)}) at time=0}
 
-\item{MUmax}{is the maximum specific growth rate given in time units}
-
 \item{Ymax}{is the natural logarithm of the maximum concentration (\code{ln(Nmax)}) reached by the microorganism}
+
+\item{MUmax}{is the maximum specific growth rate given in time units}
 
 \item{lag}{is the duration of the lag phase in time units}
 }
 \value{
-An object of nls class
+A numeric vector with the fitted values
 }
 \description{
 \code{RossoFM} function to fit the Rosso full growth model to complete microbial growth curve.
 Returns the model parameters estimated according to data collected in microbial growth experiments.
 }
 \details{
-Model's inputs are:s
+Model's inputs are:
 
 \code{t}: time, assuming time zero as the beginning of the experiment.
 

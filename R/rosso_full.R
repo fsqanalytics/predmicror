@@ -3,7 +3,7 @@
 #' \code{RossoFM} function to fit the Rosso full growth model to complete microbial growth curve.
 #' Returns the model parameters estimated according to data collected in microbial growth experiments.
 #'
-#' Model's inputs are:s
+#' Model's inputs are:
 #'
 #' \code{t}: time, assuming time zero as the beginning of the experiment.
 #'
@@ -21,7 +21,7 @@
 #'
 #' @param lag is the duration of the lag phase in time units
 #'
-#' @return An object of nls class
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez (\email{vcadavez@ipb.pt}) and Ursula Gonzales-Barron (\email{ubarron@ipb.pt})
 #' @keywords full models
@@ -45,14 +45,12 @@
 #' )
 #' summary(fit)
 #'
-RossoFM <- function(t, Y0, MUmax, Ymax, lag) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
+RossoFM <- function(t, Y0, Ymax, MUmax, lag) {
+  result <- rep(Y0, length(t))
+  idx <- t > lag
+  if (any(idx)) {
+    exp_term <- expm1(Ymax - Y0) * exp(-MUmax * (t[idx] - lag))
+    result[idx] <- Ymax - log1p(exp_term)
   }
-
-  result <- ifelse(t <= lag, Y0, Ymax - log(1 + (exp(Ymax) / exp(Y0) - 1) * exp(-MUmax * (t - lag))))
-  return(result)
+  result
 }

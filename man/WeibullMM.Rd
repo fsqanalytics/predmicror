@@ -19,7 +19,7 @@ for the part of the population not belonging to Yres}
 \item{alpha}{is the shape parameter and allows to catch the curve concavity or convexity}
 }
 \value{
-An object of nls class with the fitted parameters of the model
+A numeric vector with the fitted values
 }
 \description{
 \code{WeibullMM} inactivation model for microbial inactivation curve.

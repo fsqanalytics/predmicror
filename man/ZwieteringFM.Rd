@@ -18,7 +18,7 @@ ZwieteringFM(t, Y0, Ymax, MUmax, lag)
 \item{lag}{is the duration of the lag phase in time units}
 }
 \value{
-An object of nls class
+A numeric vector with the fitted values
 }
 \description{
 \code{ZwieteringFM} function to fit the Zwietering full growth model to a complete microbial growth curve.

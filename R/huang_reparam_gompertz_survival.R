@@ -20,7 +20,7 @@
 #'
 #' @param M is a time constant (s)
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -37,22 +37,17 @@
 #' library(gslnls)
 #' data(bixina)
 #' initial_values <- list(Y0 = 5.6, k = 0.37, M = 6.8)
-#' fit <- gsl_nls(lnN ~ HuangRGS(Time, Y0, k, M),
+#' bixina$logN <- log10(exp(bixina$lnN))
+#' fit <- gsl_nls(logN ~ HuangRGS(Time, Y0, k, M),
 #'   data = bixina,
 #'   start = initial_values
 #' )
 #' summary(fit)
 #'
-#' plot(lnN ~ Time, data = bixina)
+#' plot(logN ~ Time, data = bixina)
 #' lines(bixina$Time, predict(fit), col = "blue")
 #'
 HuangRGS <- function(x, Y0, k, M) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
   result <- Y0 * (1 - exp(-exp(-k * (x - M))))
-  return(result)
+  result
 }

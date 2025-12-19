@@ -2,7 +2,7 @@
 #'
 #' A dataset containing simulated data for a reduced growth model
 #'
-#' @format A data frame with 10 rows and 3 variables.
+#' @format A data frame with 9 rows and 3 variables.
 #' \describe{
 #'   \item{Time}{Time in minutes}
 #'   \item{logN}{Number of microrganism in log10 scale}

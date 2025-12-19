@@ -16,7 +16,7 @@ HuangRM(t, Y0, MUmax, lag)
 \item{lag}{is the duration of the lag phase in time units}
 }
 \value{
-An object of nls class
+A numeric vector with the fitted values
 }
 \description{
 \code{HuangRM} function to fit the Huang reduced growth model to a reduced microbial growth curve.

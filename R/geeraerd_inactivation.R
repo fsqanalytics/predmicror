@@ -22,7 +22,7 @@
 #'
 #' @param Sl represents shoulder phase preceding the sharp inactivation slope of the curve
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -49,12 +49,6 @@
 #' lines(mafart2005Li11$Time, predict(fit), col = "blue")
 #'
 GeeraerdST <- function(x, Y0, Yres, kmax, Sl) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
   result <- log10((10^Y0 - 10^Yres) * exp(-kmax * x) * ((exp(kmax * Sl)) / (1 + (exp(kmax * Sl) - 1) * exp(-kmax * x))) + 10^Yres)
-  return(result)
+  result
 }

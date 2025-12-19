@@ -21,7 +21,7 @@
 #'
 #' @param lag is the duration of the lag phase in time units
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -46,12 +46,9 @@
 #' summary(fit)
 #'
 BaranyiFM <- function(t, Y0, Ymax, MUmax, lag) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
-  }
-  result <- Y0 + MUmax * (t + 1 / MUmax * log(exp(-MUmax * t) + exp(-MUmax * lag) - exp(-MUmax * (t + lag)))) - log(1 + (exp(MUmax * (t + 1 / MUmax * log(exp(-MUmax * t) + exp(-MUmax * lag) - exp(-MUmax * (t + lag))))) - 1) / exp(Ymax - Y0))
-  return(result)
+  h <- t + (1 / MUmax) * log(
+    exp(-MUmax * t) + exp(-MUmax * lag) - exp(-MUmax * (t + lag))
+  )
+  result <- Y0 + MUmax * h - log1p(expm1(MUmax * h) * exp(Y0 - Ymax))
+  result
 }

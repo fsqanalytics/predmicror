@@ -5,7 +5,7 @@
 \alias{growthred}
 \title{Data of a reduced curve of microbial growth}
 \format{
-A data frame with 10 rows and 3 variables.
+A data frame with 9 rows and 3 variables.
 \describe{
 \item{Time}{Time in minutes}
 \item{logN}{Number of microrganism in log10 scale}

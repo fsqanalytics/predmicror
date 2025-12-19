@@ -1,8 +1,8 @@
 #' Data pH
 #'
-#' A dataset containing ???
+#' A dataset containing pH and growth rate data
 #'
-#' @format A data frame with 14 rows and 2 variables.
+#' @format A data frame with 14 rows and 3 variables.
 #' \describe{
 #'   \item{pH}{pH of food}
 #'   \item{sqrtGR}{Square root of the growth rate}

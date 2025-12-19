@@ -20,7 +20,7 @@
 #' @param alpha is the shape parameter of the curve (alpha = 1 the shape is linear;
 #'  alpha > 1 the shape is downward concave; and alpha < 1 the shape is upward concave)
 #'
-#' @return An object of nls class with the fitted parameters of the model
+#' @return A numeric vector with the fitted values
 #'
 #' @author Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}
 #'
@@ -44,14 +44,11 @@
 #' summary(fit)
 #'
 CMInh <- function(x, MIC, MUopt, alpha) {
-  if (!requireNamespace("gslnls", quietly = TRUE)) {
-    stop(
-      "Package \"gslnls\" must be installed to use this function.",
-      call. = FALSE
-    )
+  CMinh <- numeric(length(x))
+  idx <- x <= MIC
+  if (any(idx)) {
+    CMinh[idx] <- MUopt * (1 - (x[idx] / MIC)^alpha)
   }
-
-  CMinh <- ifelse(x > MIC, 0, MUopt * (1 - (x / MIC)^alpha))
-  result <- sqrt(CMinh)
-  return(result)
+  result <- sqrt(pmax(CMinh, 0))
+  result
 }
