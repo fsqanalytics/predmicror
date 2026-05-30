@@ -9,7 +9,7 @@ WeibullM(x, Y0, sigma, alpha)
 \arguments{
 \item{x}{is a numeric vector indicating the heating time under a constant temperature of the experiment}
 
-\item{Y0}{is the base 10 logarithm of the initial (time=0) bacterial concentration (N0)}
+\item{Y0}{is the natural logarithm of the initial (time=0) bacterial concentration (N0)}
 
 \item{sigma}{is the time of first decimal reduction}
 
@@ -27,29 +27,27 @@ The model's inputs are:
 
 \code{t}: time, assuming time zero as the beginning of the experiment.
 
-\code{Y(t)}: the base 10 logarithm of the bacterial concentration ($log10(N(t)$) measured at time t.
+\code{Y(t)}: the natural logarithm of the bacterial concentration (\code{ln(N(t))}) measured at time t.
 
 Users should make sure that the bacterial concentration input is entered
-in base 10 logarithm, \code{Y(t) = log10(N(t))}.
+in natural logarithm, \code{Y(t) = ln(N(t))}.
 }
 \examples{
 library(gslnls)
 data(bixina)
-initial_values <- list(Y0 = 2.5, sigma = 2, alpha = 2)
-bixina$N <- exp(bixina$lnN)
-bixina$logN <- log10(bixina$N)
-fit <- gsl_nls(logN ~ WeibullM(Time, Y0, sigma, alpha),
+initial_values <- list(Y0 = 5.75, sigma = 12.8, alpha = 2.4)
+fit <- gsl_nls(lnN ~ WeibullM(Time, Y0, sigma, alpha),
   data = bixina,
   start = initial_values
 )
 summary(fit)
 
-plot(logN ~ Time, data = bixina)
+plot(lnN ~ Time, data = bixina)
 lines(bixina$Time, predict(fit), col = "blue")
 
 }
 \references{
-\insertRef{Mafart2002}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Mafart2002",package="predmicror")}
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

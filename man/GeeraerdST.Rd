@@ -9,9 +9,9 @@ GeeraerdST(x, Y0, Yres, kmax, Sl)
 \arguments{
 \item{x}{is a numeric vector indicating the heating time under a constant temperature of the experiment}
 
-\item{Y0}{is the initial (time=0) bacterial concentration (log10(N0))}
+\item{Y0}{is the initial (time=0) bacterial concentration (ln(N0))}
 
-\item{Yres}{is a low asymptote reflecting the presence of a resistant sub-population (log10(Nres))}
+\item{Yres}{is a low asymptote reflecting the presence of a resistant sub-population (ln(Nres))}
 
 \item{kmax}{is the maximum inactivation rate}
 
@@ -32,24 +32,25 @@ The model's inputs are:
 \code{N(t)}: the bacterial concentration measured at time t.
 
 Users should make sure that the bacterial concentration input is entered
-in base 10 logarithm, \code{Y(t) = log10(N(t))}.
+in natural logarithm, \code{Y(t) = ln(N(t))}.
 }
 \examples{
 library(gslnls)
 data(mafart2005Li11)
-initial_values <- list(Y0 = 10, Yres = 7, kmax = 0.7, Sl = 4)
-fit <- gsl_nls(logN ~ GeeraerdST(Time, Y0, Yres, kmax, Sl),
+mafart2005Li11$lnN <- log(10) * mafart2005Li11$logN
+initial_values <- list(Y0 = 18, Yres = 2, kmax = 0.7, Sl = 4)
+fit <- gsl_nls(lnN ~ GeeraerdST(Time, Y0, Yres, kmax, Sl),
   data = mafart2005Li11,
   start = initial_values
 )
 summary(fit)
 
-plot(logN ~ Time, data = mafart2005Li11)
+plot(lnN ~ Time, data = mafart2005Li11)
 lines(mafart2005Li11$Time, predict(fit), col = "blue")
 
 }
 \references{
-\insertRef{Geeraerd2005}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Geeraerd2005",package="predmicror")}
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

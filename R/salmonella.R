@@ -10,7 +10,7 @@
 #' }
 #'
 #' @references
-#' \insertRef{Oscar2002}{predmicror}
+#' \Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Oscar2002",package="predmicror")}
 #'
 #' @docType data
 #' @keywords datasets

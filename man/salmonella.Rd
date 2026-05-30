@@ -19,6 +19,6 @@ data(salmonella)
 A dataset containing the specific growth rate of \emph{Salmonella typhimurium} on cooked chicken
 }
 \references{
-\insertRef{Oscar2002}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Oscar2002",package="predmicror")}
 }
 \keyword{datasets}

@@ -7,14 +7,14 @@
 #'
 #' \code{t}: time, assuming time zero as the beginning of the experiment.
 #'
-#' \code{Y(t)}: the base 10 logarithm of the bacterial concentration ($log10(X(t)$) measured at time t.
+#' \code{Y(t)}: the natural logarithm of the bacterial concentration (\code{ln(X(t))}) measured at time t.
 #'
 #' Users should make sure that the bacterial concentration input is entered
-#'  in base 10 logarithm, \code{Y(t) = log10(X(t))}.
+#'  in natural logarithm, \code{Y(t) = ln(X(t))}.
 #'
 #' @param x is a numeric vector indicating the heating time under a constant temperature of the experiment
 #'
-#' @param Y0 is the initial microbial concentration (log10(cfu 1/g))
+#' @param Y0 is the initial microbial concentration (ln(cfu 1/g))
 #'
 #' @param k is the inactivation rate (1/s)
 #'
@@ -27,7 +27,7 @@
 #' @keywords Huang Gompertz Survival Inactivation
 #'
 #' @references
-#' \insertRef{Huang2009Inac}{predmicror}
+#' \Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Huang2009Inac",package="predmicror")}
 #'
 #' @importFrom gslnls gsl_nls
 #'
@@ -37,14 +37,13 @@
 #' library(gslnls)
 #' data(bixina)
 #' initial_values <- list(Y0 = 5.6, k = 0.37, M = 6.8)
-#' bixina$logN <- log10(exp(bixina$lnN))
-#' fit <- gsl_nls(logN ~ HuangRGS(Time, Y0, k, M),
+#' fit <- gsl_nls(lnN ~ HuangRGS(Time, Y0, k, M),
 #'   data = bixina,
 #'   start = initial_values
 #' )
 #' summary(fit)
 #'
-#' plot(logN ~ Time, data = bixina)
+#' plot(lnN ~ Time, data = bixina)
 #' lines(bixina$Time, predict(fit), col = "blue")
 #'
 HuangRGS <- function(x, Y0, k, M) {

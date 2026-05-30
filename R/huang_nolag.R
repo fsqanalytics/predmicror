@@ -34,7 +34,7 @@
 #' @export
 #'
 #' @examples
-#' ## Example: Fang no lag model
+#' ## Example: Huang no lag model
 #' library(gslnls)
 #' data(growthnolag) # simulated data set.
 #' initial_values <- list(Y0 = 0, Ymax = 22, MUmax = 1.7) # define the initial values

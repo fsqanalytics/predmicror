@@ -21,7 +21,8 @@ Returns the model parameters estimated according to data collected in microbial 
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
+    <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -58,11 +59,11 @@ Returns the model parameters estimated according to data collected in microbial 
 
 
 <dt id="arg-y-">Y0<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
-<dd><p>is the base 10 logarithm of the initial (time=0) bacterial concentration</p></dd>
+<dd><p>is the natural logarithm of the initial (time=0) bacterial concentration</p></dd>
 
 
 <dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
-<dd><p>is the inactivation rate (log units/time)</p></dd>
+<dd><p>is the inactivation rate (ln units/time)</p></dd>
 
 
 <dt id="arg-alpha">alpha<a class="anchor" aria-label="anchor" href="#arg-alpha"></a></dt>
@@ -77,17 +78,21 @@ Returns the model parameters estimated according to data collected in microbial 
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The model's inputs are:</p>
 <p>t: time, assuming time zero as the beginning of the experiment.</p>
-<p>Y(t): the base 10 logarithm of the bacterial concentration X(t) measured at time t.</p>
-<p>Users should make sure that the bacterial concentration input is entered in base 10 logarithm, Y(t) = log10(X(t)).</p>
+<p>Y(t): the natural logarithm of the bacterial concentration X(t) measured at time t.</p>
+<p>Users should make sure that the bacterial concentration input is entered in natural logarithm, Y(t) = ln(X(t)).</p>
 <p>The following parameters can be estimated using Weibull function:</p>
 <p><code>t</code>: is heating time under a constant temperature</p>
-<p><code>Y0</code>: is the initial (time=0) bacterial counts in base 10 logarithm of the initial bacterial counts;</p>
-<p><code>k</code>: is the inactivation rate (log cfu/s or log cfu/min, or log cfu/h)</p>
+<p><code>Y0</code>: is the initial (time=0) bacterial counts in natural logarithm of the initial bacterial counts;</p>
+<p><code>k</code>: is the inactivation rate (ln units/time)</p>
 <p><code>alpha</code>: is the shape parameter of the survival curve</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Huang2009Inacpredmicror</p>
+    <p>Huang L (2009).
+“Thermal inactivation of Listeria monocytogenes in ground beef under isothermal and dynamic temperature conditions.”
+<em>Journal of Food Engineering</em>, <b>90</b>(3), 380-387.
+ISSN 0260-8774, <a href="https://doi.org/10.1016/j.jfoodeng.2008.07.011" class="external-link">doi:10.1016/j.jfoodeng.2008.07.011</a>
+, <a href="https://www.sciencedirect.com/science/article/pii/S0260877408003439" class="external-link">https://www.sciencedirect.com/science/article/pii/S0260877408003439</a>.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -99,30 +104,29 @@ Returns the model parameters estimated according to data collected in microbial 
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JorisChau/gslnls" class="external-link">gslnls</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bixina</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">initial_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">6.0</span>, k <span class="op">=</span> <span class="fl">1.0</span>, alpha <span class="op">=</span> <span class="fl">0.2</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">bixina</span><span class="op">$</span><span class="va">logN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">bixina</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">logN</span> <span class="op">~</span> <span class="fu">WeibullPH</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">k</span>, <span class="va">alpha</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="fu">WeibullPH</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">k</span>, <span class="va">alpha</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">bixina</span>,</span></span>
 <span class="r-in"><span>  start <span class="op">=</span> <span class="va">initial_values</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: logN ~ WeibullPH(Time, Y0, k, alpha)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: lnN ~ WeibullPH(Time, Y0, k, alpha)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Parameters:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>        Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Y0    2.4031289  0.0169123  142.09  &lt; 2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Y0    5.5334088  0.0389420  142.09  &lt; 2e-16 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> k     0.0021978  0.0007657    2.87   0.0117 *  </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> alpha 2.3953478  0.1316153   18.20 1.23e-11 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.042 on 15 degrees of freedom</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.09671 on 15 degrees of freedom</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Number of iterations to convergence: 53 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of iterations to convergence: 29 </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Achieved convergence tolerance: 0</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">logN</span> <span class="op">~</span> <span class="va">Time</span>, data <span class="op">=</span> <span class="va">bixina</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="va">Time</span>, data <span class="op">=</span> <span class="va">bixina</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">bixina</span><span class="op">$</span><span class="va">Time</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="WeibullPH-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

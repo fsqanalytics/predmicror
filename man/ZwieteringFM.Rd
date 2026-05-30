@@ -29,7 +29,7 @@ Model's inputs are:
 
 \code{t}: time, assuming time zero as the beginning of the experiment.
 
-\code{Y(t)}: the natural logarithm of the microbial concentration (\code{ln(N(t)}) measured at time t.
+\code{Y(t)}: the natural logarithm of the microbial concentration (\code{ln(N(t))}) measured at time t.
 
 Users should make sure that the microbial concentration input is entered in natural logarithm, \code{Y(t) = ln(X(t))}.
 }
@@ -46,7 +46,7 @@ summary(fit)
 
 }
 \references{
-\insertRef{Zwietering1990}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Zwietering1990",package="predmicror")}
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

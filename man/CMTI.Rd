@@ -50,7 +50,7 @@ lines(salmonella$Temp, fitted(fit), col = "red")
 
 }
 \references{
-\insertRef{Rosso1995}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Rosso1995",package="predmicror")}
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

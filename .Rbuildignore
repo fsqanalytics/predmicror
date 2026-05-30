@@ -2,3 +2,13 @@
 ^\.Rproj\.user$
 ^doc$
 ^Meta$
+^docs$
+^pkgdown$
+^\.cache$
+^README\.Rmd$
+^_config\.yml$
+^\.github$
+^learnr-integration-report\.md$
+^paper\.bib$
+^paper\.md$
+^predmicror_analysis_report\.md$

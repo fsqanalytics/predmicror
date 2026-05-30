@@ -9,9 +9,9 @@ WeibullPH(t, Y0, k, alpha)
 \arguments{
 \item{t}{is a numeric vector indicating the time of the experiment}
 
-\item{Y0}{is the base 10 logarithm of the initial (time=0) bacterial concentration}
+\item{Y0}{is the natural logarithm of the initial (time=0) bacterial concentration}
 
-\item{k}{is the inactivation rate (log units/time)}
+\item{k}{is the inactivation rate (ln units/time)}
 
 \item{alpha}{is the shape parameter}
 }
@@ -27,17 +27,17 @@ The model's inputs are:
 
 t: time, assuming time zero as the beginning of the experiment.
 
-Y(t): the base 10 logarithm of the bacterial concentration X(t) measured at time t.
+Y(t): the natural logarithm of the bacterial concentration X(t) measured at time t.
 
-Users should make sure that the bacterial concentration input is entered in base 10 logarithm, Y(t) = log10(X(t)).
+Users should make sure that the bacterial concentration input is entered in natural logarithm, Y(t) = ln(X(t)).
 
 The following parameters can be estimated using Weibull function:
 
 \code{t}: is heating time under a constant temperature
 
-\code{Y0}: is the initial (time=0) bacterial counts in base 10 logarithm of the initial bacterial counts;
+\code{Y0}: is the initial (time=0) bacterial counts in natural logarithm of the initial bacterial counts;
 
-\code{k}: is the inactivation rate (log cfu/s or log cfu/min, or log cfu/h)
+\code{k}: is the inactivation rate (ln units/time)
 
 \code{alpha}: is the shape parameter of the survival curve
 }
@@ -45,19 +45,18 @@ The following parameters can be estimated using Weibull function:
 library(gslnls)
 data(bixina)
 initial_values <- list(Y0 = 6.0, k = 1.0, alpha = 0.2)
-bixina$logN <- log10(exp(bixina$lnN))
-fit <- gsl_nls(logN ~ WeibullPH(Time, Y0, k, alpha),
+fit <- gsl_nls(lnN ~ WeibullPH(Time, Y0, k, alpha),
   data = bixina,
   start = initial_values
 )
 summary(fit)
 
-plot(logN ~ Time, data = bixina)
+plot(lnN ~ Time, data = bixina)
 lines(bixina$Time, predict(fit), col = "blue")
 
 }
 \references{
-\insertRef{Huang2009Inac}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Huang2009Inac",package="predmicror")}
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

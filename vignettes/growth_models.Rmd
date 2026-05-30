@@ -23,7 +23,7 @@ In this tutorial we will explain how to fit primary growth models to experimenta
 
 
 
-```{r}
+```{r, fig.alt="Observed ln N versus time for the growthfull dataset."}
 library(predmicror)
 library(gslnls)
 library(ggplot2)
@@ -33,13 +33,13 @@ library(ggplot2)
 
 To conduct statistical analyses, we need to import data into R working environment. The `predmicror` package has incorporated datasets, and we can use the `data()` function to load the example datasets to the working environment. Thus, we will start by fitting a full growth model to experimental data, thus we load the `growthfull.Rda` dataset which is part of the `predmicror` package.
 
-```{r}
+```{r, fig.alt="Huang full model fit with confidence interval bands."}
 data(growthfull)
 ```
 
 Now the dataset is available in the `R` environment, and we can print the entire `dataset` by typing `growthfull` or take a look to the first five lines by using the `head()`.
 
-```{r}
+```{r, fig.alt="Huang full model fit with prediction interval bands."}
 growthfull
 head(growthfull)
 ```
@@ -52,7 +52,7 @@ growthfull <- read.csv("growthfull.csv", sep = ";", header = TRUE)
 
 We have the dataset in the R environment, thus we can start checking the data proprieties. For example, the `str()` function gives information considering the structure of the variables (numeric, integer, etc.), and the `names()` function show us the variables names.
 
-```{r}
+```{r, fig.alt="Fang no lag model fit with confidence interval bands."}
 str(growthfull)
 names(growthfull)
 ```
@@ -61,7 +61,7 @@ names(growthfull)
 
 To check the relationship between `Time` and `lnN`, we might use the function `plot()`, and we can check the data by visual inspection.
 
-```{r}
+```{r, fig.alt="Fang no lag model fit with prediction interval bands."}
 plot(lnN ~ Time,
   data = growthfull,
   xlab = "Time (hours)", ylab = "ln N",
@@ -86,13 +86,13 @@ dev.off()
 We will start by fitting the _Huang_ full growth model to experimental data stored in the `growthfull` dataset. The Huang full growth model function (`Huang()`) from the `predmicror` package and this function will be fitted to data non-linear least squares function `gsl_nls()` implemented in the `gslnls` package.
 First, we need a good guess for the starting values for the fitting procedure:
 
-```{r}
+```{r, fig.alt="Buchanan reduced model fit with confidence interval bands."}
 start_values <- list(Y0 = 0.02, Ymax = 22, MUmax = 1.6, lag = 5)
 ```
 
 Now we can fit the model to the data `growthfull`:
 
-```{r}
+```{r, fig.alt="Buchanan reduced model fit with prediction interval bands."}
 fit <- gsl_nls(lnN ~ HuangFM(Time, Y0, Ymax, MUmax, lag),
   data = growthfull,
   start = start_values

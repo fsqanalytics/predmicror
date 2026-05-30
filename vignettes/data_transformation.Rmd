@@ -1,0 +1,47 @@
+---
+title: "Data Transformation in predmicror"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Data Transformation in predmicror}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+## Consistent Use of Natural Logarithm
+
+In previous versions of `predmicror`, there was an inconsistency in the required data transformation for different models. Some models required the data to be in natural logarithm (`ln`) scale, while others required it to be in base-10 logarithm (`log10`) scale. This could lead to confusion and errors.
+
+To address this issue, all models in `predmicror` have been harmonized to use the **natural logarithm (`ln`)** for the response variable `Y(t)`.
+
+This means that users should always provide the microbial concentration in `ln` scale.
+
+### Converting from `log10` to `ln`
+
+If your data is in `log10` scale, you can easily convert it to `ln` scale using the following formula:
+
+`ln(N) = log(10) * log10(N)`
+
+Here is an example of how to convert a column in a data frame:
+
+```{r}
+# Create a sample data frame with log10 data
+my_data <- data.frame(
+  Time = c(0, 1, 2, 3),
+  log10N = c(2, 2.5, 3, 3.5)
+)
+
+# Convert the log10N column to lnN
+my_data$lnN <- log(10) * my_data$log10N
+
+# Print the updated data frame
+print(my_data)
+```
+
+By ensuring that all models use a consistent `ln` scale, `predmicror` is now more user-friendly and less prone to errors.

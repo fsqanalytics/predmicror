@@ -21,7 +21,8 @@ Returns the model parameters estimated according to data collected in microbial 
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
+    <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -81,12 +82,16 @@ Returns the model parameters estimated according to data collected in microbial 
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>Model's inputs are:</p>
 <p><code>t</code>: time, assuming time zero as the beginning of the experiment.</p>
-<p><code>Y(t)</code>: the natural logarithm of the microbial concentration (<code>ln(N(t)</code>) measured at time t.</p>
+<p><code>Y(t)</code>: the natural logarithm of the microbial concentration (<code>ln(N(t))</code>) measured at time t.</p>
 <p>Users should make sure that the microbial concentration input is entered in natural logarithm, <code>Y(t) = ln(X(t))</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Rosso1996predmicror</p>
+    <p>Rosso L, Bajard S, Flandrois JP, Lahellec C, Fournaud J, Veit P (1996).
+“Differential growth of Listeria monocytogenes at 4 and 8 ºC: Consequences for the Shelf Life of Chilled Products.”
+<em>Journal of Food Protection</em>, <b>59</b>(9), 944-949.
+ISSN 0362-028X, <a href="https://doi.org/10.4315/0362-028X-59.9.944" class="external-link">doi:10.4315/0362-028X-59.9.944</a>
+.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>

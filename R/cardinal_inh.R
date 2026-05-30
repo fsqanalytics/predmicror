@@ -17,8 +17,8 @@
 #'
 #' @param MUopt is the optimum growth rate
 #'
-#' @param alpha is the shape parameter of the curve (alpha = 1 the shape is linear;
-#'  alpha > 1 the shape is downward concave; and alpha < 1 the shape is upward concave)
+#' @param alpha is the shape parameter of the curve (\eqn{\alpha = 1} the shape is linear;
+#'  \eqn{\alpha > 1} the shape is downward concave; and \eqn{\alpha < 1} the shape is upward concave)
 #'
 #' @return A numeric vector with the fitted values
 #'
@@ -27,7 +27,7 @@
 #' @keywords Cardinal Rosso Inhibitor
 #'
 #' @references
-#' \insertRef{Rosso1995}{predmicror}
+#' \Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Rosso1995",package="predmicror")}
 #'
 #' @importFrom gslnls gsl_nls
 #'

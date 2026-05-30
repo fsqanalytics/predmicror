@@ -16,7 +16,7 @@ A data frame with 18 rows and 3 variables:
 data(bixina)
 }
 \description{
-A dataset containing time (hours), repetition and number of microrganisms (ln N).
+A dataset containing time (minutes), repetition and number of microrganisms (ln N).
 }
 \keyword{beef}
 \keyword{bixina}

@@ -38,6 +38,16 @@
 #' @examples
 #' library(gslnls)
 #' data(bixina)
+#' initial_values <- list(Y0 = 5.6, Yres = 1, sigma = 2, alpha = 1)
+#' bixina$logN <- log10(exp(bixina$lnN))
+#' fit <- gsl_nls(logN ~ WeibullMM(Time, Y0, Yres, sigma, alpha),
+#'   data = bixina,
+#'   start = initial_values
+#' )
+#' summary(fit)
+#'
+#' plot(logN ~ Time, data = bixina)
+#' lines(bixina$Time, predict(fit), col = "blue")
 #'
 WeibullMM <- function(x, Y0, Yres, sigma, alpha) {
   result <- log10((10^Y0 - 10^Yres) * 10^(-(x / sigma)^alpha) + 10^Yres)

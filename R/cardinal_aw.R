@@ -26,7 +26,7 @@
 #' @keywords Cardinal Rosso water activity
 #'
 #' @references
-#' \insertRef{Rosso1995}{predmicror}
+#' \Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Rosso1995",package="predmicror")}
 #'
 #' @importFrom gslnls gsl_nls
 #'

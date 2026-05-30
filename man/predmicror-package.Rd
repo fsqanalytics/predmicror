@@ -4,11 +4,11 @@
 \name{predmicror-package}
 \alias{predmicror}
 \alias{predmicror-package}
-\title{predmicror: predmicror: Fitting predictive microbiology models in r}
+\title{predmicror: Fitting Predictive Microbiology Models in R}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-A package for fitting predictive microbiology models to experimental data.
+Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data using nonlinear least squares.
 }
 \seealso{
 Useful links:

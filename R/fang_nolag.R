@@ -7,7 +7,7 @@
 #'
 #' \code{t}: time, assuming time zero as the beginning of the experiment.
 #'
-#' \code{Y(t)}: the natural logarithm of the microbial concentration (\code{ln(N(t)}) measured at time t.
+#' \code{Y(t)}: the natural logarithm of the microbial concentration (\code{ln(N(t))}) measured at time t.
 #'
 #' Users should make sure that the microbial concentration input is entered in natural logarithm, \code{Y(t) = ln(N(t))}.
 #'
@@ -26,8 +26,8 @@
 #' @keywords fullmodel Baranyi
 #'
 #' @references
-#' \insertRef{Fang2012}{predmicror}
-#' \insertRef{Fang2013}{predmicror}
+#' \Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Fang2012",package="predmicror")}
+#' \Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Fang2013",package="predmicror")}
 #'
 #' @importFrom gslnls gsl_nls
 #' @importFrom Rdpack reprompt

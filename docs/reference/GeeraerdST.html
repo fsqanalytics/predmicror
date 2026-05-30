@@ -21,7 +21,8 @@ Returns the model parameters estimated according to data collected in microbial 
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
+    <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -58,11 +59,11 @@ Returns the model parameters estimated according to data collected in microbial 
 
 
 <dt id="arg-y-">Y0<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
-<dd><p>is the initial (time=0) bacterial concentration (log10(N0))</p></dd>
+<dd><p>is the initial (time=0) bacterial concentration (ln(N0))</p></dd>
 
 
 <dt id="arg-yres">Yres<a class="anchor" aria-label="anchor" href="#arg-yres"></a></dt>
-<dd><p>is a low asymptote reflecting the presence of a resistant sub-population (log10(Nres))</p></dd>
+<dd><p>is a low asymptote reflecting the presence of a resistant sub-population (ln(Nres))</p></dd>
 
 
 <dt id="arg-kmax">kmax<a class="anchor" aria-label="anchor" href="#arg-kmax"></a></dt>
@@ -83,11 +84,15 @@ Returns the model parameters estimated according to data collected in microbial 
 <p><code>t</code>: time, assuming time zero as the beginning of the experiment.</p>
 <p><code>N(t)</code>: the bacterial concentration measured at time t.</p>
 <p>Users should make sure that the bacterial concentration input is entered
-in base 10 logarithm, <code>Y(t) = log10(N(t))</code>.</p>
+in natural logarithm, <code>Y(t) = ln(N(t))</code>.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Geeraerd2005predmicror</p>
+    <p>Geeraerd AH, Valdramidis VP, Van Impe JF (2005).
+“GInaFiT, a freeware tool to assess non-log-linear microbial survivor curves.”
+<em>International Journal of Food Microbiology</em>, <b>102</b>(1), 95-105.
+ISSN 0168-1605, <a href="https://doi.org/10.1016/j.ijfoodmicro.2004.11.038" class="external-link">doi:10.1016/j.ijfoodmicro.2004.11.038</a>
+.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -98,31 +103,32 @@ in base 10 logarithm, <code>Y(t) = log10(N(t))</code>.</p>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JorisChau/gslnls" class="external-link">gslnls</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">mafart2005Li11</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">initial_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">10</span>, Yres <span class="op">=</span> <span class="fl">7</span>, kmax <span class="op">=</span> <span class="fl">0.7</span>, Sl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">logN</span> <span class="op">~</span> <span class="fu">GeeraerdST</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">Yres</span>, <span class="va">kmax</span>, <span class="va">Sl</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span><span class="va">mafart2005Li11</span><span class="op">$</span><span class="va">lnN</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">10</span><span class="op">)</span> <span class="op">*</span> <span class="va">mafart2005Li11</span><span class="op">$</span><span class="va">logN</span></span></span>
+<span class="r-in"><span><span class="va">initial_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">18</span>, Yres <span class="op">=</span> <span class="fl">2</span>, kmax <span class="op">=</span> <span class="fl">0.7</span>, Sl <span class="op">=</span> <span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="fu">GeeraerdST</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">Yres</span>, <span class="va">kmax</span>, <span class="va">Sl</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">mafart2005Li11</span>,</span></span>
 <span class="r-in"><span>  start <span class="op">=</span> <span class="va">initial_values</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: logN ~ GeeraerdST(Time, Y0, Yres, kmax, Sl)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: lnN ~ GeeraerdST(Time, Y0, Yres, kmax, Sl)</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Parameters:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>      Estimate Std. Error t value Pr(&gt;|t|)    </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Y0   10.07258    0.08464 119.000 2.37e-11 ***</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Yres  6.93372    0.07834  88.504 1.40e-10 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Y0   23.19298    0.19490 119.000 2.37e-11 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Yres 15.96547    0.18039  88.504 1.40e-10 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> kmax  0.59485    0.05436  10.943 3.46e-05 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Sl    5.67219    0.82123   6.907 0.000455 ***</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.1192 on 6 degrees of freedom</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.2744 on 6 degrees of freedom</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Number of iterations to convergence: 12 </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> Achieved convergence tolerance: 1.943e-16</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achieved convergence tolerance: 8.882e-16</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">logN</span> <span class="op">~</span> <span class="va">Time</span>, data <span class="op">=</span> <span class="va">mafart2005Li11</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="va">Time</span>, data <span class="op">=</span> <span class="va">mafart2005Li11</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">mafart2005Li11</span><span class="op">$</span><span class="va">Time</span>, <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span>, col <span class="op">=</span> <span class="st">"blue"</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="GeeraerdST-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>

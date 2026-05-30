@@ -21,7 +21,8 @@ Returns the model parameters estimated according to data collected in microbial 
 <li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
-  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
+    <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
   </ul></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
@@ -58,11 +59,11 @@ Returns the model parameters estimated according to data collected in microbial 
 
 
 <dt id="arg-y-">Y0<a class="anchor" aria-label="anchor" href="#arg-y-"></a></dt>
-<dd><p>is the log10 of the initial bacterial concentration (at time t=0)</p></dd>
+<dd><p>is the natural logarithm of the initial bacterial concentration (at time t=0)</p></dd>
 
 
 <dt id="arg-yres">Yres<a class="anchor" aria-label="anchor" href="#arg-yres"></a></dt>
-<dd><p>is the log10 of the residual bacterial concentration (at the end of the experiment)</p></dd>
+<dd><p>is the natural logarithm of the residual bacterial concentration (at the end of the experiment)</p></dd>
 
 
 <dt id="arg-sigma">sigma<a class="anchor" aria-label="anchor" href="#arg-sigma"></a></dt>
@@ -82,12 +83,14 @@ for the part of the population not belonging to Yres</p></dd>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p>The model's inputs are:</p>
 <p><code>t</code>: time, assuming time zero as the beginning of the experiment.</p>
-<p><code>Y(t)</code>: the bacterial concentration ($Y(t)$) measured at time t.</p>
-<p>Users should make sure to use the base 10 logarithm bacterial concentration (Y(t)) as input.</p>
+<p><code>Y(t)</code>: the bacterial concentration (<code>Y(t)</code>) measured at time t.</p>
+<p>Users should make sure to use the natural logarithm bacterial concentration (Y(t)) as input.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
-    <p>Mafart2005predmicror</p>
+    <p>Albert I, Mafart P (2005).
+“A modified Weibull model for bacterial inactivation.”
+<em>International Journal of Food Microbiology</em>, <b>100</b>, 197-211.</p>
     </div>
     <div class="section level2">
     <h2 id="author">Author<a class="anchor" aria-label="anchor" href="#author"></a></h2>
@@ -98,6 +101,29 @@ for the part of the population not belonging to Yres</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JorisChau/gslnls" class="external-link">gslnls</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bixina</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">initial_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">6</span>, Yres <span class="op">=</span> <span class="fl">1</span>, sigma <span class="op">=</span> <span class="fl">10</span>, alpha <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="fu">WeibullMM</span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">Yres</span>, <span class="va">sigma</span>, <span class="va">alpha</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span> data <span class="op">=</span> <span class="va">bixina</span>,</span></span>
+<span class="r-in"><span> start <span class="op">=</span> <span class="va">initial_values</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Formula: lnN ~ WeibullMM(Time, Y0, Yres, sigma, alpha)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Parameters:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         Estimate Std. Error t value Pr(&gt;|t|)    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Y0     5.533e+00  4.138e-02  133.74  &lt; 2e-16 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Yres  -1.480e+01  1.202e+07    0.00        1    </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> sigma  1.287e+01  4.222e-01   30.49 3.34e-14 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> alpha  2.395e+00  1.996e-01   12.00 9.37e-09 ***</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ---</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Residual standard error: 0.1001 on 14 degrees of freedom</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of iterations to convergence: 33 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Achieved convergence tolerance: 4.162e-11</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

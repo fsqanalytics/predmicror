@@ -13,8 +13,8 @@ CMInh(x, MIC, MUopt, alpha)
 
 \item{MUopt}{is the optimum growth rate}
 
-\item{alpha}{is the shape parameter of the curve (alpha = 1 the shape is linear;
-alpha > 1 the shape is downward concave; and alpha < 1 the shape is upward concave)}
+\item{alpha}{is the shape parameter of the curve (\eqn{\alpha = 1} the shape is linear;
+\eqn{\alpha > 1} the shape is downward concave; and \eqn{\alpha < 1} the shape is upward concave)}
 }
 \value{
 A numeric vector with the fitted values
@@ -44,7 +44,7 @@ summary(fit)
 
 }
 \references{
-\insertRef{Rosso1995}{predmicror}
+\Sexpr[results=rd,stage=build]{Rdpack::insert_ref(key="Rosso1995",package="predmicror")}
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

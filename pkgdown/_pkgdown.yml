@@ -61,6 +61,12 @@ reference:
   - ph
   - salmonella
   - mafart2005Li11
+
+- title: "Assistant"
+  desc: "Local helper for using predmicror."
+  contents:
+  - predmicror_assistant
+  - predmicror_assistant_app
   
   
 home:
