@@ -12,3 +12,7 @@
 ^paper\.bib$
 ^paper\.md$
 ^predmicror_analysis_report\.md$
+^\.predmicror_hotfix_backups$
+^\.predmicror_phase2_backups$
+^predmicror_1_2_0_phase2$
+^predmicror_1_2_1_cleanup_hotfix$

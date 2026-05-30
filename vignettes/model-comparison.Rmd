@@ -1,0 +1,75 @@
+---
+title: "Comparing fitted predmicror models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparing fitted predmicror models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+This vignette shows a compact workflow for comparing alternative predictive microbiology models with the `predmicror_fit` interface.
+
+## Fit candidate models
+
+```{r}
+library(predmicror)
+
+data(growthfull)
+
+huang <- fit_growth(
+  growthfull,
+  model = "HuangFM",
+  time = "Time",
+  response = "lnN",
+  start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
+)
+
+baranyi <- fit_growth(
+  growthfull,
+  model = "BaranyiFM",
+  time = "Time",
+  response = "lnN",
+  start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
+)
+```
+
+## Extract fitted values and residuals
+
+```{r}
+head(predmicror_augment(huang))
+```
+
+The returned data frame keeps the original columns and adds:
+
+- `.fitted`: predicted response on the fitted response scale;
+- `.resid`: observed minus fitted response, when the response column is available;
+- `.model`: fitted model name;
+- `.type`: model family.
+
+## Calculate diagnostics for one model
+
+```{r}
+fit_metrics(huang)
+```
+
+`fit_metrics()` reports residual and information-criterion diagnostics on the response scale used for fitting.
+
+## Compare models
+
+```{r}
+compare_models(
+  huang = huang,
+  baranyi = baranyi,
+  sort_by = "AIC"
+)
+```
+
+For models fitted to the same response variable and dataset, lower AIC, BIC, RMSE, and MAE values usually indicate a better fit. These criteria should be interpreted together with residual plots, biological plausibility, and parameter uncertainty.

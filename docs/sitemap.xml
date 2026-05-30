@@ -3,12 +3,15 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/data_transformation.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/growth_models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/index.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/articles/model-comparison.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/predmicror.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/test.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/authors.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/index.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/learnr-integration-report.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/news/index.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/paper.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/predmicror_analysis_report.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/BaranyiFM.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/BaranyiRM.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/BuchananRM.html</loc></url>
@@ -30,6 +33,11 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/ZwieteringFM.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/aw.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/bixina.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/compare_models.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_cardinal.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_growth.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_inactivation.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_metrics.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/growthfull.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/growthnolag.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/growthred.html</loc></url>
@@ -40,6 +48,9 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror-package.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_assistant.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_assistant_app.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_augment.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_fit_methods.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/salmonella.html</loc></url>
 </urlset>
 

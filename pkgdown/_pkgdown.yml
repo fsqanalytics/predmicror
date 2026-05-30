@@ -3,13 +3,29 @@ url: https://fsqanalytics.github.io/predmicror/
 template:
   bootstrap: 5
   bootswatch: united
- 
+
 navbar:
   structure:
-    left:  [intro, reference, articles, news]
+    left: [intro, reference, articles, news]
     right: [search, github]
 
 reference:
+- title: "Fitting wrappers"
+  desc: "Convenience wrappers for fitting and discovering predictive microbiology models."
+  contents:
+  - fit_growth
+  - fit_inactivation
+  - fit_cardinal
+  - predmicror_models
+
+- title: "Model diagnostics and comparison"
+  desc: "Helpers for extracting fitted values, calculating metrics, and comparing fitted models."
+  contents:
+  - predmicror_augment
+  - fit_metrics
+  - compare_models
+  - predmicror_fit_methods
+
 - title: "Full growth models"
   desc: "Functions for fitting full growth models."
   contents:
@@ -17,21 +33,21 @@ reference:
   - HuangFM
   - RossoFM
   - ZwieteringFM
-  
+
 - title: "No lag growth models"
   desc: "Functions for fitting no lag growth models."
   contents:
   - FangNLM
   - HuangNLM
   - RichardsNLM
-  
+
 - title: "Reduced growth models"
   desc: "Functions for fitting reduced growth models."
   contents:
   - BaranyiRM
   - BuchananRM
   - HuangRM
-  
+
 - title: "Inactivation models"
   desc: "Functions for fitting inactivation models."
   contents:
@@ -40,7 +56,7 @@ reference:
   - WeibullMM
   - WeibullPH
   - GeeraerdST
-  
+
 - title: "Cardinal models"
   desc: "Functions for fitting cardinal models."
   contents:
@@ -48,7 +64,7 @@ reference:
   - CMPH
   - CMAW
   - CMInh
- 
+
 - title: "Datasets"
   desc: "Datasets of example data."
   contents:
@@ -67,8 +83,7 @@ reference:
   contents:
   - predmicror_assistant
   - predmicror_assistant_app
-  
-  
+
 home:
   sidebar:
     structure: [links, license, community, citation, authors, dev]

@@ -8,11 +8,12 @@
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data using nonlinear least squares.
+Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data using nonlinear least squares. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models.
 }
 \seealso{
 Useful links:
 \itemize{
+  \item \url{https://fsqanalytics.github.io/predmicror/}
   \item \url{https://github.com/fsqanalytics/predmicror}
   \item Report bugs at \url{https://github.com/fsqanalytics/predmicror/issues}
 }

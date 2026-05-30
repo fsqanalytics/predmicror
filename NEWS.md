@@ -1,3 +1,25 @@
+# predmicror 1.2.1
+
+* Register default S3 methods for `predmicror_augment()` and `fit_metrics()` in roxygen documentation.
+* Add the pkgdown site URL to `DESCRIPTION`.
+* Add the new fitting and diagnostic topics to the pkgdown reference index.
+* Ignore temporary phase overlay folders created while applying local hotfixes.
+
+# predmicror 1.2.0
+
+* Add `predmicror_augment()` to extract original data, fitted values, residuals, model name, and model type from `predmicror_fit` objects.
+* Add `as.data.frame.predmicror_fit()` as a lightweight base-R shortcut for `predmicror_augment()`.
+* Add `fit_metrics()` to calculate residual diagnostics and information criteria for fitted models, including SSE, RMSE, MAE, bias, residual standard error, R2, adjusted R2, log-likelihood, AIC, BIC, and convergence status.
+* Add `compare_models()` to combine diagnostics across multiple fitted models and sort by AIC, BIC, RMSE, or MAE.
+* Add tests for diagnostic extraction, model metrics, and model comparison.
+* Add a model-comparison vignette showing how to compare alternative fitted predictive microbiology models.
+
+# predmicror 1.1.3
+
+* Declare `shiny` as a suggested package for assistant functions.
+* Import `utils::tail()` for assistant history formatting.
+* Keep `R CMD check` free of errors and warnings, apart from environment-specific timestamp notes.
+
 # predmicror 1.1.0
 
 * Add `fit_growth()`, `fit_inactivation()`, and `fit_cardinal()` wrappers around `gslnls::gsl_nls()`.
@@ -11,8 +33,8 @@
 # predmicror 1.0.1
 
 * Fix Rosso full model parameter order and Baranyi reduced formulation.
-* Add numeric stability guards (log1p/expm1, bounded sqrt) across growth and cardinal models.
-* Expose Richards shape parameter and align examples with log10 inactivation scales.
+* Add numeric stability guards with `log1p()`, `expm1()`, and bounded square roots across growth and cardinal models.
+* Expose the Richards shape parameter and align examples with log10 inactivation scales.
 * Correct dataset documentation and row counts.
 * Add testthat coverage for growth, cardinal, and inactivation models.
 
