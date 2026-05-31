@@ -9,6 +9,20 @@ navbar:
     left: [intro, reference, articles, news]
     right: [search, github]
 
+articles:
+- title: Applied workflows
+  navbar: ~
+  contents:
+  - growth_models
+  - model-comparison
+  - inactivation-models
+  - cardinal-models
+- title: Package overview and data preparation
+  navbar: ~
+  contents:
+  - predmicror
+  - data_transformation
+
 reference:
 - title: "Fitting wrappers"
   desc: "Convenience wrappers for fitting and discovering predictive microbiology models."
@@ -17,7 +31,6 @@ reference:
   - fit_inactivation
   - fit_cardinal
   - predmicror_models
-
 - title: "Model diagnostics and comparison"
   desc: "Helpers for extracting fitted values, calculating metrics, and comparing fitted models."
   contents:
@@ -25,7 +38,6 @@ reference:
   - fit_metrics
   - compare_models
   - predmicror_fit_methods
-
 - title: "Full growth models"
   desc: "Functions for fitting full growth models."
   contents:
@@ -33,21 +45,18 @@ reference:
   - HuangFM
   - RossoFM
   - ZwieteringFM
-
 - title: "No lag growth models"
   desc: "Functions for fitting no lag growth models."
   contents:
   - FangNLM
   - HuangNLM
   - RichardsNLM
-
 - title: "Reduced growth models"
   desc: "Functions for fitting reduced growth models."
   contents:
   - BaranyiRM
   - BuchananRM
   - HuangRM
-
 - title: "Inactivation models"
   desc: "Functions for fitting inactivation models."
   contents:
@@ -56,7 +65,6 @@ reference:
   - WeibullMM
   - WeibullPH
   - GeeraerdST
-
 - title: "Cardinal models"
   desc: "Functions for fitting cardinal models."
   contents:
@@ -64,7 +72,6 @@ reference:
   - CMPH
   - CMAW
   - CMInh
-
 - title: "Datasets"
   desc: "Datasets of example data."
   contents:
@@ -77,7 +84,6 @@ reference:
   - ph
   - salmonella
   - mafart2005Li11
-
 - title: "Assistant"
   desc: "Local helper for using predmicror."
   contents:

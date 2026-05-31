@@ -1,3 +1,10 @@
+# predmicror 1.3.1
+
+* Polish the GitHub README to reflect the current fitting, diagnostics, and model-comparison API.
+* Add explicit package website and issue tracker links to the README.
+* Make applied inactivation and cardinal-model vignettes more robust by using explicit fitted/residual column access.
+* Group applied workflow articles in the pkgdown articles index.
+
 # predmicror 1.3.0
 
 ## Documentation and applied workflows

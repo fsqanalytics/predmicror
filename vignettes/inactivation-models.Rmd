@@ -20,11 +20,9 @@ knitr::opts_chunk$set(
 library(predmicror)
 ```
 
-This vignette shows a complete workflow for fitting microbial inactivation
-models with `predmicror`. Inactivation models in this package expect microbial
-counts on the base-10 logarithmic scale, usually in a column named `logN`.
+This vignette shows a complete workflow for fitting microbial inactivation models with `predmicror`.
 
-The workflow is:
+Inactivation models in this package expect microbial counts on the base-10 logarithmic scale, usually in a column named `logN`. The workflow is:
 
 1. inspect the available models;
 2. fit one or more candidate models;
@@ -40,8 +38,7 @@ predmicror_models("inactivation")
 
 ## Example data
 
-The `mafart2005Li11` dataset contains inactivation data with time and log10
-microbial counts.
+The `mafart2005Li11` dataset contains inactivation data with time and log10 microbial counts.
 
 ```{r}
 data(mafart2005Li11)
@@ -61,9 +58,7 @@ plot(
 
 ## Fitting candidate models
 
-Nonlinear fitting can be sensitive to starting values. The helper below keeps
-this vignette robust across platforms by returning `NULL` if a candidate model
-cannot be fitted with the selected starting values.
+Nonlinear fitting can be sensitive to starting values. The helper below keeps this vignette robust across platforms by returning `NULL` if a candidate model cannot be fitted with the selected starting values.
 
 ```{r}
 safe_fit <- function(expr) {
@@ -133,8 +128,7 @@ names(fits)
 
 ## Diagnostics and model comparison
 
-Use `fit_metrics()` for one fitted model and `compare_models()` for a ranked
-summary of several fitted models.
+Use `fit_metrics()` for one fitted model and `compare_models()` for a ranked summary of several fitted models.
 
 ```{r}
 if (length(fits) > 0L) {
@@ -150,8 +144,7 @@ if (length(fits) > 1L) {
 
 ## Fitted values and residuals
 
-`predmicror_augment()` adds fitted values and residuals to the original data.
-This is useful for diagnostic plots and for exporting results.
+`predmicror_augment()` adds fitted values and residuals to the original data. This is useful for diagnostic plots and for exporting results.
 
 ```{r}
 if (length(fits) > 0L) {
@@ -163,7 +156,6 @@ if (length(fits) > 0L) {
 ```{r}
 if (length(fits) > 0L) {
   aug <- predmicror_augment(fits[[1]])
-
   if (all(c(".fitted", ".resid") %in% names(aug))) {
     plot(
       aug[[".fitted"]], aug[[".resid"]],
@@ -178,12 +170,12 @@ if (length(fits) > 0L) {
 
 ## Prediction over a time grid
 
-The same augment helper can be used with `newdata` to obtain predictions over a
-regular time grid.
+The same augment helper can be used with `newdata` to obtain predictions over a regular time grid.
 
 ```{r}
 if (length(fits) > 0L) {
   best_fit <- fits[[1]]
+
   if (length(fits) > 1L) {
     comparison <- compare_models(fits, sort_by = "AIC")
     best_fit <- fits[[comparison$model[1]]]
@@ -192,6 +184,7 @@ if (length(fits) > 0L) {
   new_time <- data.frame(
     Time = seq(min(mafart2005Li11$Time), max(mafart2005Li11$Time), length.out = 100)
   )
+
   pred <- predmicror_augment(best_fit, newdata = new_time)
 
   plot(
@@ -201,6 +194,7 @@ if (length(fits) > 0L) {
     ylab = expression(log[10](N)),
     pch = 19
   )
+
   if (".fitted" %in% names(pred)) {
     lines(pred$Time, pred[[".fitted"]], lwd = 2)
   }
@@ -209,8 +203,6 @@ if (length(fits) > 0L) {
 
 ## Practical notes
 
-For inactivation models, verify the response scale before fitting. The wrappers
-expect base-10 log counts. When fitting more complex models with residual tails,
-use biologically plausible starting values and inspect parameter uncertainty;
-residual population parameters can be weakly identified if the data do not show
-a clear tail.
+For inactivation models, verify the response scale before fitting. The wrappers expect base-10 log counts.
+
+When fitting more complex models with residual tails, use biologically plausible starting values and inspect parameter uncertainty; residual population parameters can be weakly identified if the data do not show a clear tail.

@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">predmicror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,11 +43,11 @@
 <li class="nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="articles/cardinal-models.html">Cardinal parameter models</a></li>
-    <li><a class="dropdown-item" href="articles/data_transformation.html">Data Transformation in predmicror</a></li>
-    <li><a class="dropdown-item" href="articles/growth_models.html">Fitting growth models using predmicror</a></li>
-    <li><a class="dropdown-item" href="articles/inactivation-models.html">Microbial inactivation models</a></li>
+<li><a class="dropdown-item" href="articles/growth_models.html">Fitting growth models using predmicror</a></li>
     <li><a class="dropdown-item" href="articles/model-comparison.html">Comparing fitted predmicror models</a></li>
+    <li><a class="dropdown-item" href="articles/inactivation-models.html">Microbial inactivation models</a></li>
+    <li><a class="dropdown-item" href="articles/cardinal-models.html">Cardinal parameter models</a></li>
+    <li><a class="dropdown-item" href="articles/data_transformation.html">Data Transformation in predmicror</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
@@ -69,8 +69,13 @@
 <img src="logo.png" class="logo" alt=""><h1 id="predmicror">predmicror<a class="anchor" aria-label="anchor" href="#predmicror"></a>
 </h1>
 </div>
-<p><a href="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></p>
+<p><a href="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></p>
 <p><code>predmicror</code> provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data.</p>
+<p>The package can be used in two complementary ways:</p>
+<ul>
+<li>call the exported model equations directly inside <code><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gslnls::gsl_nls()</a></code>;</li>
+<li>use the higher-level <code>fit_*()</code> wrappers for routine fitting, diagnostics, and model comparison.</li>
+</ul>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -80,10 +85,65 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"fsqanalytics/predmicror"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="basic-use">Basic use<a class="anchor" aria-label="anchor" href="#basic-use"></a>
+<h2 id="model-families">Model families<a class="anchor" aria-label="anchor" href="#model-families"></a>
 </h2>
-<p>The exported model functions can still be used directly inside <code><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gslnls::gsl_nls()</a></code>. For routine analyses, the <code>fit_*()</code> wrappers provide a smaller and safer interface:</p>
+<p><code>predmicror</code> includes models for three common predictive microbiology workflows.</p>
+<table class="table">
+<colgroup>
+<col width="25%">
+<col width="25%">
+<col width="25%">
+<col width="25%">
+</colgroup>
+<thead><tr>
+<th>Workflow</th>
+<th>Wrapper</th>
+<th>Expected response scale</th>
+<th>Examples</th>
+</tr></thead>
+<tbody>
+<tr>
+<td>Primary growth</td>
+<td><code><a href="reference/fit_growth.html">fit_growth()</a></code></td>
+<td>natural logarithm, usually <code>lnN</code>
+</td>
+<td>
+<code>HuangFM</code>, <code>BaranyiFM</code>, <code>RossoFM</code>
+</td>
+</tr>
+<tr>
+<td>Microbial inactivation</td>
+<td><code><a href="reference/fit_inactivation.html">fit_inactivation()</a></code></td>
+<td>base-10 logarithm, usually <code>logN</code>
+</td>
+<td>
+<code>WeibullM</code>, <code>WeibullPH</code>, <code>GeeraerdST</code>
+</td>
+</tr>
+<tr>
+<td>Cardinal parameters</td>
+<td><code><a href="reference/fit_cardinal.html">fit_cardinal()</a></code></td>
+<td>square-root growth rate, usually <code>sqrtGR</code>
+</td>
+<td>
+<code>CMTI</code>, <code>CMPH</code>, <code>CMAW</code>, <code>CMInh</code>
+</td>
+</tr>
+</tbody>
+</table>
+<p>List all models available through the fitting wrappers with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"growth"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"inactivation"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"cardinal"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="quick-start-fitting-a-primary-growth-model">Quick start: fitting a primary growth model<a class="anchor" aria-label="anchor" href="#quick-start-fitting-a-primary-growth-model"></a>
+</h2>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span>
@@ -99,25 +159,18 @@
 <span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<p>You can list the models available through the wrappers with:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"growth"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"inactivation"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"cardinal"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="model-diagnostics-and-comparison">Model diagnostics and comparison<a class="anchor" aria-label="anchor" href="#model-diagnostics-and-comparison"></a>
+<h2 id="diagnostics-and-model-comparison">Diagnostics and model comparison<a class="anchor" aria-label="anchor" href="#diagnostics-and-model-comparison"></a>
 </h2>
-<p>After fitting a model, use <code><a href="reference/predmicror_augment.html">predmicror_augment()</a></code> to extract observed values, fitted values, and residuals:</p>
+<p>Fitted models returned by the wrappers are <code>predmicror_fit</code> objects. They support common S3 methods and helper functions for reporting.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">augmented</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predmicror_augment.html">predmicror_augment</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">augmented</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code><a href="reference/fit_metrics.html">fit_metrics()</a></code> for one fitted model:</p>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/fit_metrics.html">fit_metrics</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predmicror_augment.html">predmicror_augment</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aug</span><span class="op">)</span></span></code></pre></div>
+<p>Compare alternative candidate models with <code><a href="reference/compare_models.html">compare_models()</a></code>:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fit_metrics.html">fit_metrics</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
-<p>Use <code><a href="reference/compare_models.html">compare_models()</a></code> to compare alternative fitted models on the same response scale:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">huang</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_growth.html">fit_growth</a></span><span class="op">(</span></span>
 <span>  <span class="va">growthfull</span>,</span>
 <span>  model <span class="op">=</span> <span class="st">"HuangFM"</span>,</span>
@@ -134,23 +187,43 @@
 <span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="reference/compare_models.html">compare_models</a></span><span class="op">(</span>huang <span class="op">=</span> <span class="va">huang</span>, baranyi <span class="op">=</span> <span class="va">baranyi</span>, sort_by <span class="op">=</span> <span class="st">"AIC"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="reference/compare_models.html">compare_models</a></span><span class="op">(</span>HuangFM <span class="op">=</span> <span class="va">huang</span>, BaranyiFM <span class="op">=</span> <span class="va">baranyi</span>, sort_by <span class="op">=</span> <span class="st">"AIC"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="response-scale-conventions">Response scale conventions<a class="anchor" aria-label="anchor" href="#response-scale-conventions"></a>
 </h2>
-<p>The fitting wrappers do not transform your response automatically. Use these scales before fitting:</p>
+<p>The fitting wrappers do not transform the response automatically. Prepare the response variable before fitting:</p>
 <ul>
 <li>growth models: natural logarithm of microbial concentration, usually <code>lnN</code>;</li>
-<li>inactivation models: base 10 logarithm of microbial concentration, usually <code>logN</code>;</li>
+<li>inactivation models: base-10 logarithm of microbial concentration, usually <code>logN</code>;</li>
 <li>cardinal models: square root of the growth rate, usually <code>sqrtGR</code>.</li>
 </ul>
-<p>More examples are available on the package website: <a href="https://fsqanalytics.github.io/predmicror/" class="uri">https://fsqanalytics.github.io/predmicror/</a>.</p>
+<p>These conventions are important because parameter estimates depend on the response scale and on the time or environmental units used in the data.</p>
+</div>
+<div class="section level2">
+<h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
+</h2>
+<p>More examples are available on the package website:</p>
+<p><a href="https://fsqanalytics.github.io/predmicror/" class="uri">https://fsqanalytics.github.io/predmicror/</a></p>
+<p>Useful articles include:</p>
+<ul>
+<li>model comparison workflows;</li>
+<li>microbial inactivation models;</li>
+<li>cardinal parameter models.</li>
+</ul>
 </div>
 <div class="section level2">
 <h2 id="reporting-bugs">Reporting bugs<a class="anchor" aria-label="anchor" href="#reporting-bugs"></a>
 </h2>
-<p>Please report bugs at <a href="https://github.com/fsqanalytics/predmicror/issues" class="external-link uri">https://github.com/fsqanalytics/predmicror/issues</a>.</p>
+<p>Please report bugs and feature requests at:</p>
+<p><a href="https://github.com/fsqanalytics/predmicror/issues" class="external-link uri">https://github.com/fsqanalytics/predmicror/issues</a></p>
+</div>
+<div class="section level2">
+<h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
+</h2>
+<p>To cite <code>predmicror</code>, use:</p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"predmicror"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

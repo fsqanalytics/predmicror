@@ -26,7 +26,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">predmicror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,11 +40,11 @@
 <li class="active nav-item dropdown">
   <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
-<li><a class="dropdown-item" href="../articles/cardinal-models.html">Cardinal parameter models</a></li>
-    <li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
-    <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
-    <li><a class="dropdown-item" href="../articles/inactivation-models.html">Microbial inactivation models</a></li>
+<li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
     <li><a class="dropdown-item" href="../articles/model-comparison.html">Comparing fitted predmicror models</a></li>
+    <li><a class="dropdown-item" href="../articles/inactivation-models.html">Microbial inactivation models</a></li>
+    <li><a class="dropdown-item" href="../articles/cardinal-models.html">Cardinal parameter models</a></li>
+    <li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -84,11 +84,12 @@
 <span><span class="co">#&gt; regarding the 'predmicror' package </span></span>
 <span><span class="co">#&gt; https://github.com/fsqanalytics/predmicror</span></span></code></pre></div>
 <p>Cardinal parameter models describe the effect of environmental
-factors on a microbial growth response. In <code>predmicror</code>, the
-cardinal fitting wrapper expects the response to be the square root of
-the growth rate, usually in a column named <code>sqrtGR</code>.</p>
-<p>This vignette shows how to fit cardinal models for temperature, pH,
-water activity, and inhibitory compounds.</p>
+factors on a microbial growth response.</p>
+<p>In <code>predmicror</code>, the cardinal fitting wrapper expects the
+response to be the square root of the growth rate, usually in a column
+named <code>sqrtGR</code>. This vignette shows how to fit cardinal
+models for temperature, pH, water activity, and inhibitory
+compounds.</p>
 <div class="section level2">
 <h2 id="available-cardinal-models">Available cardinal models<a class="anchor" aria-label="anchor" href="#available-cardinal-models"></a>
 </h2>
@@ -458,8 +459,9 @@ quality control.</p>
 units of the input data. For example, <code>Tmin</code>,
 <code>Topt</code>, and <code>Tmax</code> are in the same units as
 <code>Temp</code>, while <code>AWmin</code> and <code>AWopt</code> are
-in water-activity units. Always check that the response scale is
-<code>sqrtGR</code> before fitting.</p>
+in water-activity units.</p>
+<p>Always check that the response scale is <code>sqrtGR</code> before
+fitting.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

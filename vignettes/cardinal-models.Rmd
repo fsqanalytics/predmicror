@@ -20,13 +20,9 @@ knitr::opts_chunk$set(
 library(predmicror)
 ```
 
-Cardinal parameter models describe the effect of environmental factors on a
-microbial growth response. In `predmicror`, the cardinal fitting wrapper expects
-the response to be the square root of the growth rate, usually in a column named
-`sqrtGR`.
+Cardinal parameter models describe the effect of environmental factors on a microbial growth response.
 
-This vignette shows how to fit cardinal models for temperature, pH, water
-activity, and inhibitory compounds.
+In `predmicror`, the cardinal fitting wrapper expects the response to be the square root of the growth rate, usually in a column named `sqrtGR`. This vignette shows how to fit cardinal models for temperature, pH, water activity, and inhibitory compounds.
 
 ## Available cardinal models
 
@@ -36,9 +32,7 @@ predmicror_models("cardinal")
 
 ## Robust fitting helper
 
-Nonlinear fitting can depend on starting values. The helper below keeps the
-vignette robust by reporting fitting problems without stopping the document
-build.
+Nonlinear fitting can depend on starting values. The helper below keeps the vignette robust by reporting fitting problems without stopping the document build.
 
 ```{r}
 safe_fit <- function(expr) {
@@ -60,8 +54,7 @@ safe_fit <- function(expr) {
 
 ## Temperature model
 
-The `salmonella` dataset contains temperature and growth-rate data for
-*Salmonella typhimurium* on cooked chicken.
+The `salmonella` dataset contains temperature and growth-rate data for *Salmonella typhimurium* on cooked chicken.
 
 ```{r}
 data(salmonella)
@@ -245,9 +238,7 @@ if (!is.null(inh_fit)) {
 
 ## Collecting diagnostics
 
-The fitted models above describe different environmental factors and should not
-be ranked against each other using information criteria. Still, collecting their
-metrics in one table is useful for reporting and quality control.
+The fitted models above describe different environmental factors and should not be ranked against each other using information criteria. Still, collecting their metrics in one table is useful for reporting and quality control.
 
 ```{r}
 cardinal_fits <- Filter(Negate(is.null), list(
@@ -273,7 +264,6 @@ if (length(cardinal_fits) > 0L) {
 
 ## Practical notes
 
-Cardinal model parameters should be interpreted in the environmental units of
-the input data. For example, `Tmin`, `Topt`, and `Tmax` are in the same units as
-`Temp`, while `AWmin` and `AWopt` are in water-activity units. Always check that
-the response scale is `sqrtGR` before fitting.
+Cardinal model parameters should be interpreted in the environmental units of the input data. For example, `Tmin`, `Topt`, and `Tmax` are in the same units as `Temp`, while `AWmin` and `AWopt` are in water-activity units.
+
+Always check that the response scale is `sqrtGR` before fitting.

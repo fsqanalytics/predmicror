@@ -2,10 +2,17 @@
 # predmicror
 
 [![R-CMD-check](https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml)
+[![pkgdown](https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml)
 
 `predmicror` provides predictive microbiology model functions and
 convenience wrappers for fitting primary growth, microbial inactivation,
 and cardinal parameter models to experimental data.
+
+The package can be used in two complementary ways:
+
+- call the exported model equations directly inside `gslnls::gsl_nls()`;
+- use the higher-level `fit_*()` wrappers for routine fitting,
+  diagnostics, and model comparison.
 
 ## Installation
 
@@ -16,11 +23,29 @@ install.packages("devtools")
 devtools::install_github("fsqanalytics/predmicror")
 ```
 
-## Basic use
+## Model families
 
-The exported model functions can still be used directly inside
-`gslnls::gsl_nls()`. For routine analyses, the `fit_*()` wrappers
-provide a smaller and safer interface:
+`predmicror` includes models for three common predictive microbiology
+workflows.
+
+| Workflow | Wrapper | Expected response scale | Examples |
+|----|----|----|----|
+| Primary growth | `fit_growth()` | natural logarithm, usually `lnN` | `HuangFM`, `BaranyiFM`, `RossoFM` |
+| Microbial inactivation | `fit_inactivation()` | base-10 logarithm, usually `logN` | `WeibullM`, `WeibullPH`, `GeeraerdST` |
+| Cardinal parameters | `fit_cardinal()` | square-root growth rate, usually `sqrtGR` | `CMTI`, `CMPH`, `CMAW`, `CMInh` |
+
+List all models available through the fitting wrappers with:
+
+``` r
+library(predmicror)
+
+predmicror_models()
+predmicror_models("growth")
+predmicror_models("inactivation")
+predmicror_models("cardinal")
+```
+
+## Quick start: fitting a primary growth model
 
 ``` r
 library(predmicror)
@@ -40,33 +65,19 @@ coef(fit)
 plot(fit)
 ```
 
-You can list the models available through the wrappers with:
+## Diagnostics and model comparison
 
-``` r
-predmicror_models()
-predmicror_models("growth")
-predmicror_models("inactivation")
-predmicror_models("cardinal")
-```
-
-## Model diagnostics and comparison
-
-After fitting a model, use `predmicror_augment()` to extract observed
-values, fitted values, and residuals:
-
-``` r
-augmented <- predmicror_augment(fit)
-head(augmented)
-```
-
-Use `fit_metrics()` for one fitted model:
+Fitted models returned by the wrappers are `predmicror_fit` objects.
+They support common S3 methods and helper functions for reporting.
 
 ``` r
 fit_metrics(fit)
+
+aug <- predmicror_augment(fit)
+head(aug)
 ```
 
-Use `compare_models()` to compare alternative fitted models on the same
-response scale:
+Compare alternative candidate models with `compare_models()`:
 
 ``` r
 huang <- fit_growth(
@@ -85,24 +96,46 @@ baranyi <- fit_growth(
   start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
 )
 
-compare_models(huang = huang, baranyi = baranyi, sort_by = "AIC")
+compare_models(HuangFM = huang, BaranyiFM = baranyi, sort_by = "AIC")
 ```
 
 ## Response scale conventions
 
-The fitting wrappers do not transform your response automatically. Use
-these scales before fitting:
+The fitting wrappers do not transform the response automatically.
+Prepare the response variable before fitting:
 
 - growth models: natural logarithm of microbial concentration, usually
   `lnN`;
-- inactivation models: base 10 logarithm of microbial concentration,
+- inactivation models: base-10 logarithm of microbial concentration,
   usually `logN`;
 - cardinal models: square root of the growth rate, usually `sqrtGR`.
 
+These conventions are important because parameter estimates depend on
+the response scale and on the time or environmental units used in the
+data.
+
+## Documentation
+
 More examples are available on the package website:
-<https://fsqanalytics.github.io/predmicror/>.
+
+<https://fsqanalytics.github.io/predmicror/>
+
+Useful articles include:
+
+- model comparison workflows;
+- microbial inactivation models;
+- cardinal parameter models.
 
 ## Reporting bugs
 
-Please report bugs at
-<https://github.com/fsqanalytics/predmicror/issues>.
+Please report bugs and feature requests at:
+
+<https://github.com/fsqanalytics/predmicror/issues>
+
+## Citation
+
+To cite `predmicror`, use:
+
+``` r
+citation("predmicror")
+```
