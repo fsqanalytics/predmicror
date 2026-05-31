@@ -2,11 +2,13 @@ pandoc: 3.8.3
 pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
+  cardinal-models: cardinal-models.html
   data_transformation: data_transformation.html
   growth_models: growth_models.html
+  inactivation-models: inactivation-models.html
   model-comparison: model-comparison.html
   predmicror: predmicror.html
-last_built: 2026-05-30T23:01Z
+last_built: 2026-05-31T00:07Z
 urls:
   reference: https://fsqanalytics.github.io/predmicror/reference
   article: https://fsqanalytics.github.io/predmicror/articles

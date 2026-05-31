@@ -1,0 +1,216 @@
+---
+title: "Microbial inactivation models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Microbial inactivation models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 5
+)
+```
+
+```{r setup}
+library(predmicror)
+```
+
+This vignette shows a complete workflow for fitting microbial inactivation
+models with `predmicror`. Inactivation models in this package expect microbial
+counts on the base-10 logarithmic scale, usually in a column named `logN`.
+
+The workflow is:
+
+1. inspect the available models;
+2. fit one or more candidate models;
+3. calculate model diagnostics;
+4. extract fitted values and residuals;
+5. generate predictions over a time grid.
+
+## Available inactivation models
+
+```{r}
+predmicror_models("inactivation")
+```
+
+## Example data
+
+The `mafart2005Li11` dataset contains inactivation data with time and log10
+microbial counts.
+
+```{r}
+data(mafart2005Li11)
+head(mafart2005Li11)
+summary(mafart2005Li11)
+```
+
+```{r}
+plot(
+  logN ~ Time,
+  data = mafart2005Li11,
+  xlab = "Time",
+  ylab = expression(log[10](N)),
+  pch = 19
+)
+```
+
+## Fitting candidate models
+
+Nonlinear fitting can be sensitive to starting values. The helper below keeps
+this vignette robust across platforms by returning `NULL` if a candidate model
+cannot be fitted with the selected starting values.
+
+```{r}
+safe_fit <- function(expr) {
+  withCallingHandlers(
+    tryCatch(
+      expr,
+      error = function(e) {
+        message("Model fit failed: ", conditionMessage(e))
+        NULL
+      }
+    ),
+    warning = function(w) {
+      message("Model fit warning: ", conditionMessage(w))
+      invokeRestart("muffleWarning")
+    }
+  )
+}
+```
+
+A simple starting point is to fit the Weibull-Mafart model.
+
+```{r}
+weibull <- safe_fit(
+  fit_inactivation(
+    mafart2005Li11,
+    model = "WeibullM",
+    time = "Time",
+    response = "logN",
+    start = list(Y0 = max(mafart2005Li11$logN), sigma = 3, alpha = 1)
+  )
+)
+
+weibull
+```
+
+Additional candidate models can be fitted and compared when they converge.
+
+```{r}
+weibull_ph <- safe_fit(
+  fit_inactivation(
+    mafart2005Li11,
+    model = "WeibullPH",
+    time = "Time",
+    response = "logN",
+    start = list(Y0 = max(mafart2005Li11$logN), k = 0.3, alpha = 1)
+  )
+)
+
+huang_rgs <- safe_fit(
+  fit_inactivation(
+    mafart2005Li11,
+    model = "HuangRGS",
+    time = "Time",
+    response = "logN",
+    start = list(Y0 = max(mafart2005Li11$logN), k = 0.3, M = 1)
+  )
+)
+
+fits <- Filter(Negate(is.null), list(
+  WeibullM = weibull,
+  WeibullPH = weibull_ph,
+  HuangRGS = huang_rgs
+))
+
+names(fits)
+```
+
+## Diagnostics and model comparison
+
+Use `fit_metrics()` for one fitted model and `compare_models()` for a ranked
+summary of several fitted models.
+
+```{r}
+if (length(fits) > 0L) {
+  fit_metrics(fits[[1]])
+}
+```
+
+```{r}
+if (length(fits) > 1L) {
+  compare_models(fits, sort_by = "AIC")
+}
+```
+
+## Fitted values and residuals
+
+`predmicror_augment()` adds fitted values and residuals to the original data.
+This is useful for diagnostic plots and for exporting results.
+
+```{r}
+if (length(fits) > 0L) {
+  aug <- predmicror_augment(fits[[1]])
+  head(aug)
+}
+```
+
+```{r}
+if (length(fits) > 0L) {
+  aug <- predmicror_augment(fits[[1]])
+
+  if (all(c(".fitted", ".resid") %in% names(aug))) {
+    plot(
+      aug[[".fitted"]], aug[[".resid"]],
+      xlab = "Fitted values",
+      ylab = "Residuals",
+      pch = 19
+    )
+    abline(h = 0, lty = 2)
+  }
+}
+```
+
+## Prediction over a time grid
+
+The same augment helper can be used with `newdata` to obtain predictions over a
+regular time grid.
+
+```{r}
+if (length(fits) > 0L) {
+  best_fit <- fits[[1]]
+  if (length(fits) > 1L) {
+    comparison <- compare_models(fits, sort_by = "AIC")
+    best_fit <- fits[[comparison$model[1]]]
+  }
+
+  new_time <- data.frame(
+    Time = seq(min(mafart2005Li11$Time), max(mafart2005Li11$Time), length.out = 100)
+  )
+  pred <- predmicror_augment(best_fit, newdata = new_time)
+
+  plot(
+    logN ~ Time,
+    data = mafart2005Li11,
+    xlab = "Time",
+    ylab = expression(log[10](N)),
+    pch = 19
+  )
+  if (".fitted" %in% names(pred)) {
+    lines(pred$Time, pred[[".fitted"]], lwd = 2)
+  }
+}
+```
+
+## Practical notes
+
+For inactivation models, verify the response scale before fitting. The wrappers
+expect base-10 log counts. When fitting more complex models with residual tails,
+use biologically plausible starting values and inspect parameter uncertainty;
+residual population parameters can be weakly identified if the data do not show
+a clear tail.

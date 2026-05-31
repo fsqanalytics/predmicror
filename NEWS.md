@@ -1,3 +1,11 @@
+# predmicror 1.3.0
+
+## Documentation and applied workflows
+
+* Added an applied vignette for microbial inactivation models using `fit_inactivation()`, `predmicror_augment()`, `fit_metrics()`, and `compare_models()`.
+* Added an applied vignette for cardinal parameter models using `fit_cardinal()`, diagnostics helpers, and model comparison tools.
+* Expanded examples showing safer post-fitting workflows and prediction over new data grids.
+
 # predmicror 1.2.1
 
 * Register default S3 methods for `predmicror_augment()` and `fit_metrics()` in roxygen documentation.
