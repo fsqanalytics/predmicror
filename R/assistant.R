@@ -10,6 +10,15 @@
 #' @param root Path to the package root for context collection. Defaults to the
 #'   installed package path when available, otherwise the current working
 #'   directory.
+#' @param data Optional data frame to profile and use for data-aware code generation.
+#' @param file Optional path to a .csv, .txt, .tsv, .xls, or .xlsx file to read,
+#'   profile, and use for data-aware code generation.
+#' @param sheet Optional Excel sheet name or index when `file` is .xls or .xlsx.
+#' @param sep Optional field separator for delimited text files. If NULL, a simple
+#'   separator detector is used.
+#' @param dec Decimal mark for delimited text files.
+#' @param na.strings Character vector of strings to treat as missing values when
+#'   reading delimited text files.
 #' @param return_context Logical; if TRUE, returns a list with answer and
 #'   context.
 #' @param conversation Optional list or character vector with prior questions
@@ -33,11 +42,18 @@
 #' \dontrun{
 #' predmicror_assistant("How do I fit a Huang model?")
 #' predmicror_assistant("How do I fit a Huang model?", backend = "deterministic")
+#' predmicror_assistant("Analyse this growth dataset", file = "growth_data.csv")
 #' }
 #'
 predmicror_assistant <- function(query,
                                  model = "llama3-groq-tool-use:8b",
                                  root = NULL,
+                                 data = NULL,
+                                 file = NULL,
+                                 sheet = NULL,
+                                 sep = NULL,
+                                 dec = ".",
+                                 na.strings = c("", "NA"),
                                  return_context = FALSE,
                                  conversation = NULL,
                                  backend = c("auto", "ollama", "deterministic"),
@@ -56,6 +72,15 @@ predmicror_assistant <- function(query,
     }
   }
 
+  data_profile <- predmicror_assist_prepare_data(
+    data = data,
+    file = file,
+    sheet = sheet,
+    sep = sep,
+    dec = dec,
+    na.strings = na.strings
+  )
+
   registry <- predmicror_assist_registry()
   context <- predmicror_assist_collect_context(query, root = root)
   model_index <- predmicror_assist_model_index(root)
@@ -68,6 +93,12 @@ predmicror_assistant <- function(query,
     candidates <- predmicror_assist_default_candidates(query, predmicror_assist_query_flags(query), registry)
   }
   flags <- predmicror_assist_query_flags(query)
+  if (!is.null(data_profile) && !is.na(data_profile$task)) {
+    flags <- unique(c(flags, data_profile$task, "fit"))
+  }
+  if (!is.null(data_profile) && length(candidates) == 0 && length(data_profile$candidate) > 0) {
+    candidates <- data_profile$candidate
+  }
   history <- predmicror_assist_format_history(conversation)
 
   deterministic <- predmicror_assist_deterministic_answer(
@@ -76,11 +107,20 @@ predmicror_assistant <- function(query,
     flags = flags,
     registry = registry,
     prefer_wrappers = prefer_wrappers,
-    verify_code = verify_code
+    verify_code = verify_code,
+    data_profile = data_profile
   )
   candidates <- deterministic$candidates
 
   templates <- predmicror_assist_example_templates(candidates, flags)
+  if (!is.null(data_profile)) {
+    templates <- paste(
+      templates,
+      "\n\nData profile for the current user dataset:\n",
+      predmicror_assist_profile_text(data_profile, deterministic$language),
+      sep = ""
+    )
+  }
   if (nzchar(deterministic$code)) {
     templates <- paste(templates, "\n\nVerified registry template:\n", deterministic$code, sep = "")
   }
@@ -133,6 +173,7 @@ predmicror_assistant <- function(query,
         root = root,
         candidates = candidates,
         flags = flags,
+        data_profile = data_profile,
         code = deterministic$code,
         validation = deterministic$validation,
         mode = deterministic$mode,

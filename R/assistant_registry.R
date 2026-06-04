@@ -299,17 +299,20 @@ predmicror_assist_generic_code <- function() {
   )
 }
 
-predmicror_assist_code_from_registry <- function(candidate, registry, prefer_wrappers = TRUE, query = "") {
+predmicror_assist_code_from_registry <- function(candidate, registry, prefer_wrappers = TRUE, query = "", data_profile = NULL) {
   if (!length(candidate) || !candidate[1] %in% names(registry)) {
     return(paste(predmicror_assist_generic_code(), collapse = "\n"))
   }
   spec <- registry[[candidate[1]]]
   use_wrapper <- isTRUE(prefer_wrappers) && !predmicror_assist_wants_direct_gsl(query)
+  if (!is.null(data_profile) && use_wrapper) {
+    return(paste(predmicror_assist_data_code(spec, data_profile), collapse = "\n"))
+  }
   lines <- if (use_wrapper) predmicror_assist_wrapper_code(spec) else predmicror_assist_direct_code(spec)
   paste(lines, collapse = "\n")
 }
 
-predmicror_assist_validate_code <- function(code, registry = predmicror_assist_registry(), candidate = character(0)) {
+predmicror_assist_validate_code <- function(code, registry = predmicror_assist_registry(), candidate = character(0), data_profile = NULL) {
   problems <- character(0)
 
   parsed <- tryCatch(parse(text = code), error = function(e) e)
@@ -324,8 +327,9 @@ predmicror_assist_validate_code <- function(code, registry = predmicror_assist_r
     "fit_growth", "fit_inactivation", "fit_cardinal",
     "predmicror_augment", "fit_metrics", "compare_models", "predmicror_models",
     "data", "summary", "fitted", "predict", "plot", "lines", "points",
-    "seq", "min", "max", "list", "data.frame", "library", "require",
-    "c", "log", "log10", "exp", "gsl_nls"
+    "seq", "min", "max", "which.max", "list", "data.frame", "library", "require",
+    "c", "log", "log10", "exp", "gsl_nls", "read.table", "read.csv",
+    "read_excel", "as.data.frame"
   )
   unknown <- setdiff(unique(calls), allowed)
   unknown <- unknown[!grepl("^[A-Z]$", unknown)]
@@ -335,15 +339,17 @@ predmicror_assist_validate_code <- function(code, registry = predmicror_assist_r
 
   if (length(candidate) > 0 && candidate[1] %in% names(registry)) {
     spec <- registry[[candidate[1]]]
-    if (identical(spec$type, "growth") && !grepl("\\blnN\\s*~|response\\s*=\\s*\"lnN\"", code)) {
-      problems <- c(problems, "Growth examples should use response scale lnN.")
-    }
-    if (identical(spec$type, "inactivation") && grepl("fit_inactivation", code) &&
-        !grepl("response\\s*=\\s*\"logN\"", code)) {
-      problems <- c(problems, "fit_inactivation examples should declare response = \"logN\".")
-    }
-    if (identical(spec$type, "cardinal") && !grepl("\\bsqrtGR\\s*~|response\\s*=\\s*\"sqrtGR\"", code)) {
-      problems <- c(problems, "Cardinal examples should use response scale sqrtGR.")
+    if (is.null(data_profile)) {
+      if (identical(spec$type, "growth") && !grepl("\\blnN\\s*~|response\\s*=\\s*\"lnN\"", code)) {
+        problems <- c(problems, "Growth examples should use response scale lnN.")
+      }
+      if (identical(spec$type, "inactivation") && grepl("fit_inactivation", code) &&
+          !grepl("response\\s*=\\s*\"logN\"", code)) {
+        problems <- c(problems, "fit_inactivation examples should declare response = \"logN\".")
+      }
+      if (identical(spec$type, "cardinal") && !grepl("\\bsqrtGR\\s*~|response\\s*=\\s*\"sqrtGR\"", code)) {
+        problems <- c(problems, "Cardinal examples should use response scale sqrtGR.")
+      }
     }
   }
 
@@ -371,7 +377,8 @@ predmicror_assist_deterministic_answer <- function(query,
                                                    flags,
                                                    registry = predmicror_assist_registry(),
                                                    prefer_wrappers = TRUE,
-                                                   verify_code = TRUE) {
+                                                   verify_code = TRUE,
+                                                   data_profile = NULL) {
   language <- predmicror_assist_language(query)
   if (length(candidates) == 0) {
     candidates <- predmicror_assist_default_candidates(query, flags, registry)
@@ -380,7 +387,7 @@ predmicror_assist_deterministic_answer <- function(query,
   fit_requested <- predmicror_assist_fit_requested(flags, candidates)
   if (!fit_requested && length(candidates) == 0) {
     code <- paste(predmicror_assist_generic_code(), collapse = "\n")
-    validation <- if (isTRUE(verify_code)) predmicror_assist_validate_code(code, registry) else list(ok = NA, problems = character(0))
+    validation <- if (isTRUE(verify_code)) predmicror_assist_validate_code(code, registry, data_profile = data_profile) else list(ok = NA, problems = character(0))
     intro <- if (identical(language, "pt")) {
       paste(
         "Posso ajudar a escolher modelos de crescimento, inativacao e modelos cardinais do predmicror.",
@@ -403,16 +410,18 @@ predmicror_assist_deterministic_answer <- function(query,
   }
   candidate <- candidates[1]
   spec <- registry[[candidate]]
-  code <- predmicror_assist_code_from_registry(candidate, registry, prefer_wrappers, query)
+  code <- predmicror_assist_code_from_registry(candidate, registry, prefer_wrappers, query, data_profile = data_profile)
   validation <- if (isTRUE(verify_code)) {
-    predmicror_assist_validate_code(code, registry, candidate)
+    predmicror_assist_validate_code(code, registry, candidate, data_profile = data_profile)
   } else {
     list(ok = NA, problems = character(0))
   }
 
   using_wrapper <- isTRUE(prefer_wrappers) && !predmicror_assist_wants_direct_gsl(query)
+  profile_text <- predmicror_assist_profile_text(data_profile, language)
   intro <- if (identical(language, "pt")) {
     paste(
+      if (nzchar(profile_text)) profile_text else NULL,
       sprintf("Modelo sugerido: `%s` - %s.", candidate, spec$title),
       sprintf("Escala esperada da resposta: `%s`; coluna de exemplo: `%s`.", spec$response_scale, spec$response),
       if (using_wrapper) {
@@ -425,6 +434,7 @@ predmicror_assist_deterministic_answer <- function(query,
     )
   } else {
     paste(
+      if (nzchar(profile_text)) profile_text else NULL,
       sprintf("Suggested model: `%s` - %s.", candidate, spec$title),
       sprintf("Expected response scale: `%s`; example response column: `%s`.", spec$response_scale, spec$response),
       if (using_wrapper) {

@@ -28,3 +28,41 @@ test_that("assistant app is bundled in inst", {
   expect_true(nzchar(app_dir))
   expect_true(file.exists(file.path(app_dir, "app.R")))
 })
+
+test_that("assistant profiles uploaded-like growth data", {
+  dat <- data.frame(
+    Time = c(0, 1, 2, 3),
+    logN = c(2.0, 2.4, 3.1, 4.2)
+  )
+  profile <- predmicror:::predmicror_assist_profile_data(dat)
+
+  expect_equal(profile$n_rows, 4)
+  expect_equal(profile$columns$time, "Time")
+  expect_equal(profile$columns$response, "logN")
+  expect_equal(profile$task, "growth")
+  expect_equal(profile$candidate, "HuangFM")
+})
+
+test_that("assistant reads csv files and generates data-aware code", {
+  dat <- data.frame(
+    Time = c(0, 1, 2, 3),
+    logN = c(7.0, 6.2, 5.1, 4.5)
+  )
+  path <- tempfile(fileext = ".csv")
+  utils::write.csv(dat, path, row.names = FALSE)
+
+  result <- predmicror_assistant(
+    "analisa estes dados de inativacao",
+    file = path,
+    root = ".",
+    backend = "deterministic",
+    return_trace = TRUE
+  )
+
+  expect_match(result$answer, "Perfil dos dados")
+  expect_match(result$trace$code, "dat <- utils::read.table", fixed = TRUE)
+  expect_match(result$trace$code, "fit_inactivation", fixed = TRUE)
+  expect_match(result$trace$code, "Time", fixed = TRUE)
+  expect_match(result$trace$code, "logN", fixed = TRUE)
+  expect_true(isTRUE(result$trace$validation$ok))
+})

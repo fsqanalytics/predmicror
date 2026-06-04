@@ -8,6 +8,12 @@ predmicror_assistant(
   query,
   model = "llama3-groq-tool-use:8b",
   root = NULL,
+  data = NULL,
+  file = NULL,
+  sheet = NULL,
+  sep = NULL,
+  dec = ".",
+  na.strings = c("", "NA"),
   return_context = FALSE,
   conversation = NULL,
   backend = c("auto", "ollama", "deterministic"),
@@ -24,6 +30,21 @@ predmicror_assistant(
 \item{root}{Path to the package root for context collection. Defaults to the
 installed package path when available, otherwise the current working
 directory.}
+
+\item{data}{Optional data frame to profile and use for data-aware code generation.}
+
+\item{file}{Optional path to a .csv, .txt, .tsv, .xls, or .xlsx file to read,
+profile, and use for data-aware code generation.}
+
+\item{sheet}{Optional Excel sheet name or index when \code{file} is .xls or .xlsx.}
+
+\item{sep}{Optional field separator for delimited text files. If NULL, a simple
+separator detector is used.}
+
+\item{dec}{Decimal mark for delimited text files.}
+
+\item{na.strings}{Character vector of strings to treat as missing values when
+reading delimited text files.}
 
 \item{return_context}{Logical; if TRUE, returns a list with answer and
 context.}
@@ -59,6 +80,7 @@ returned.
 \dontrun{
 predmicror_assistant("How do I fit a Huang model?")
 predmicror_assistant("How do I fit a Huang model?", backend = "deterministic")
+predmicror_assistant("Analyse this growth dataset", file = "growth_data.csv")
 }
 
 }

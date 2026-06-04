@@ -44,6 +44,7 @@ Suggests:
     FME,
     minpack.lm,
     reshape2,
+    readxl,
     shiny
 VignetteBuilder: knitr
 Config/testthat/edition: 3
