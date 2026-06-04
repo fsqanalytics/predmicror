@@ -288,7 +288,7 @@ fit_dynamic_inactivation <- function(data,
 
 .predmicror_dynamic_prepare_start <- function(start, fixed) {
   .predmicror_validate_start_list(start)
-  if (!is.null(fixed)) {
+  if (!is.null(fixed) && length(fixed) > 0L) {
     if (!is.list(fixed) || is.null(names(fixed))) {
       stop("`fixed` must be a named list.", call. = FALSE)
     }
@@ -300,7 +300,7 @@ fit_dynamic_inactivation <- function(data,
 .predmicror_dynamic_estimate_names <- function(start, estimate, fixed) {
   scalar_numeric <- vapply(start, function(x) is.numeric(x) && length(x) == 1 && is.finite(x), logical(1))
   candidates <- names(start)[scalar_numeric]
-  if (!is.null(fixed)) {
+  if (!is.null(fixed) && length(fixed) > 0L) {
     candidates <- setdiff(candidates, names(fixed))
   }
   if (is.null(estimate)) {

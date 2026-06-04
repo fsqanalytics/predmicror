@@ -135,3 +135,29 @@ test_that("fit_dynamic_inactivation estimates selected parameters", {
   expect_s3_class(pred, "predmicror_dynamic_prediction")
   expect_equal(pred$logN, c(7, 5), tolerance = 0.02)
 })
+
+test_that("dynamic fitting accepts empty fixed list", {
+  profile <- dynamic_profile(
+    time = c(0, 5, 10),
+    temperature = c(12, 12, 12)
+  )
+
+  truth <- predict_dynamic_growth(
+    profile = profile,
+    start = list(logN0 = 2, logNmax = 6, a = 0.08, Tmin = 6, lag = 1),
+    times = seq(0, 10, by = 2)
+  )
+
+  obs <- data.frame(time = truth$time, logN = truth$response)
+
+  fit <- fit_dynamic_growth(
+    data = obs,
+    profile = profile,
+    time = "time",
+    response = "logN",
+    start = list(logN0 = 2, logNmax = 6, a = 0.08, Tmin = 6, lag = 1),
+    fixed = list()
+  )
+
+  expect_s3_class(fit, "predmicror_dynamic_fit")
+})
