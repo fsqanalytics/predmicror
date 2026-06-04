@@ -1,0 +1,258 @@
+---
+title: "Dynamic predictive microbiology models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Dynamic predictive microbiology models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+library(predmicror)
+```
+
+## Overview
+
+The dynamic modelling helpers in `predmicror` are designed for prediction and fitting when environmental conditions change over time. This is useful, for example, when temperature varies during storage, transport, processing, or abuse scenarios.
+
+The basic workflow is:
+
+1. define an environmental profile with `dynamic_profile()`;
+2. simulate microbial behaviour with `predict_dynamic_growth()` or `predict_dynamic_inactivation()`;
+3. fit selected dynamic parameters with `fit_dynamic_growth()` or `fit_dynamic_inactivation()`;
+4. inspect fitted values, residuals, metrics, and sensitivity coefficients.
+
+## A dynamic temperature profile
+
+A dynamic profile stores time-varying environmental conditions. At present, the most common use case is temperature as a function of time.
+
+```{r profile}
+profile <- dynamic_profile(
+  time = c(0, 5, 10, 15, 20, 25, 30),
+  temperature = c(10, 4, 2, 15, 15, 2, 10)
+)
+
+profile
+```
+
+```{r profile-plot, fig.alt="Dynamic temperature profile showing temperature changes over time."}
+plot(profile$time, profile$temperature,
+  type = "b",
+  xlab = "Time",
+  ylab = "Temperature"
+)
+```
+
+## Dynamic growth prediction
+
+The Huang dynamic growth model can be combined with a secondary square-root model for the effect of temperature on the maximum specific growth rate.
+
+```{r growth-prediction}
+growth_pred <- predict_dynamic_growth(
+  profile = profile,
+  model = "huang",
+  secondary = "huang_sqrt",
+  start = list(
+    logN0 = 2,
+    logNmax = 8.8,
+    a = 0.0886,
+    Tmin = 8.91,
+    lag = 2
+  ),
+  times = seq(0, 30, by = 1)
+)
+
+head(growth_pred)
+tail(growth_pred)
+```
+
+```{r growth-prediction-plot, fig.alt="Predicted dynamic microbial growth curve under a changing temperature profile."}
+plot(growth_pred$time, growth_pred$response,
+  type = "l",
+  lwd = 2,
+  xlab = "Time",
+  ylab = "Predicted log10 count"
+)
+```
+
+## Dynamic growth fitting
+
+Dynamic fitting estimates selected parameters by repeatedly solving the dynamic model and minimizing residual error at the observation times. In practice, it is often wise to estimate only a small number of parameters and keep others fixed, especially when the data set is small.
+
+Here we simulate observations from the dynamic growth prediction and estimate the secondary-model parameter `a`.
+
+```{r growth-fit}
+obs_growth <- data.frame(
+  time = growth_pred$time[seq(1, nrow(growth_pred), by = 3)],
+  logN = growth_pred$response[seq(1, nrow(growth_pred), by = 3)]
+)
+
+growth_fit <- fit_dynamic_growth(
+  data = obs_growth,
+  profile = profile,
+  time = "time",
+  response = "logN",
+  model = "huang",
+  secondary = "huang_sqrt",
+  start = list(
+    logN0 = 2,
+    logNmax = 8.8,
+    a = 0.07,
+    Tmin = 8.91,
+    lag = 2
+  ),
+  estimate = "a",
+  fixed = list(
+    logN0 = 2,
+    logNmax = 8.8,
+    Tmin = 8.91,
+    lag = 2
+  )
+)
+
+growth_fit
+coef(growth_fit)
+fit_metrics(growth_fit)
+```
+
+```{r growth-fit-plot, fig.alt="Observed and fitted dynamic growth values."}
+plot(obs_growth$time, obs_growth$logN,
+  pch = 16,
+  xlab = "Time",
+  ylab = "log10 count"
+)
+lines(growth_fit$prediction$time, growth_fit$prediction$response, lwd = 2)
+```
+
+The fitted object supports familiar helper methods:
+
+```{r growth-fit-methods}
+head(fitted(growth_fit))
+head(residuals(growth_fit))
+head(predmicror_augment(growth_fit))
+```
+
+## Dynamic inactivation prediction
+
+Dynamic inactivation can be simulated with the Weibull-Peleg formulation. In the simplest case, the rate is kept constant.
+
+```{r inactivation-prediction}
+inact_profile <- dynamic_profile(
+  time = c(0, 10),
+  temperature = c(60, 60)
+)
+
+inact_pred <- predict_dynamic_inactivation(
+  profile = inact_profile,
+  model = "weibull_peleg",
+  secondary = "constant",
+  start = list(
+    logN0 = 7,
+    b = 0.2,
+    n = 1
+  ),
+  times = seq(0, 10, by = 1)
+)
+
+head(inact_pred)
+tail(inact_pred)
+```
+
+```{r inactivation-prediction-plot, fig.alt="Predicted dynamic microbial inactivation curve."}
+plot(inact_pred$time, inact_pred$response,
+  type = "l",
+  lwd = 2,
+  xlab = "Time",
+  ylab = "Predicted log10 count"
+)
+```
+
+## Dynamic inactivation fitting
+
+The same framework can fit selected inactivation parameters. Here we estimate the Weibull-Peleg rate parameter `b`.
+
+```{r inactivation-fit}
+obs_inact <- data.frame(
+  time = c(0, 5, 10),
+  logN = c(7, 6, 5)
+)
+
+inact_fit <- fit_dynamic_inactivation(
+  data = obs_inact,
+  profile = inact_profile,
+  time = "time",
+  response = "logN",
+  model = "weibull_peleg",
+  secondary = "constant",
+  start = list(
+    logN0 = 7,
+    b = 0.1,
+    n = 1
+  ),
+  estimate = "b",
+  fixed = list(
+    logN0 = 7,
+    n = 1
+  )
+)
+
+inact_fit
+coef(inact_fit)
+fit_metrics(inact_fit)
+```
+
+```{r inactivation-fit-plot, fig.alt="Observed and fitted dynamic inactivation values."}
+plot(obs_inact$time, obs_inact$logN,
+  pch = 16,
+  xlab = "Time",
+  ylab = "log10 count"
+)
+lines(inact_fit$prediction$time, inact_fit$prediction$response, lwd = 2)
+```
+
+## Sensitivity analysis
+
+Finite-difference sensitivity analysis helps identify which parameters most influence the model output. The scaled sensitivity coefficients are useful because they are expressed on the response scale.
+
+```{r sensitivity}
+sens <- dynamic_sensitivity(
+  type = "growth",
+  profile = profile,
+  model = "huang",
+  secondary = "huang_sqrt",
+  start = list(
+    logN0 = 2,
+    logNmax = 8.8,
+    a = 0.0886,
+    Tmin = 8.91,
+    lag = 2
+  ),
+  parameters = c("a", "Tmin"),
+  times = seq(0, 30, by = 2)
+)
+
+head(sens)
+```
+
+```{r sensitivity-plot, fig.alt="Scaled sensitivity coefficients for selected dynamic growth parameters."}
+plot(sens$time, sens$scaled_sensitivity,
+  type = "n",
+  xlab = "Time",
+  ylab = "Scaled sensitivity"
+)
+for (p in unique(sens$parameter)) {
+  z <- sens[sens$parameter == p, ]
+  lines(z$time, z$scaled_sensitivity, lwd = 2)
+}
+legend("topleft", legend = unique(sens$parameter), lty = 1, lwd = 2, bty = "n")
+```
+
+## Practical notes
+
+Dynamic fitting can be computationally more demanding than fitting explicit isothermal models because each objective-function evaluation requires solving the dynamic trajectory. For small data sets, avoid estimating too many parameters at once. Use `fixed` to keep parameters at known or literature-supported values and estimate only the parameters that are informed by the available observations.

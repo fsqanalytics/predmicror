@@ -2,6 +2,7 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/404.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/cardinal-models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/data_transformation.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/articles/dynamic-models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/growth_models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/inactivation-models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/articles/index.html</loc></url>
@@ -39,6 +40,8 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/dynamic_profile.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/dynamic_sensitivity.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_cardinal.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_dynamic_growth.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_dynamic_inactivation.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_growth.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_inactivation.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_metrics.html</loc></url>

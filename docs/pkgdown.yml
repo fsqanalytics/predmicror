@@ -4,11 +4,12 @@ pkgdown_sha: ~
 articles:
   cardinal-models: cardinal-models.html
   data_transformation: data_transformation.html
+  dynamic-models: dynamic-models.html
   growth_models: growth_models.html
   inactivation-models: inactivation-models.html
   model-comparison: model-comparison.html
   predmicror: predmicror.html
-last_built: 2026-06-04T16:37Z
+last_built: 2026-06-04T18:00Z
 urls:
   reference: https://fsqanalytics.github.io/predmicror/reference
   article: https://fsqanalytics.github.io/predmicror/articles

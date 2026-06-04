@@ -15,6 +15,7 @@ articles:
   contents:
   - growth_models
   - model-comparison
+  - dynamic-models
   - inactivation-models
   - cardinal-models
 - title: Package overview and data preparation
