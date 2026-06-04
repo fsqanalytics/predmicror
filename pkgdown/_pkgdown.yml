@@ -90,6 +90,8 @@ reference:
   - dynamic_profile
   - predict_dynamic_growth
   - predict_dynamic_inactivation
+  - fit_dynamic_growth
+  - fit_dynamic_inactivation
   - dynamic_sensitivity
 - title: "Assistant"
   desc: "Local helper for using predmicror."

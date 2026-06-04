@@ -83,3 +83,55 @@ test_that("dynamic sensitivity returns scaled coefficients", {
   expect_equal(unique(sens$parameter), "MUmax")
   expect_equal(nrow(sens), 3)
 })
+
+test_that("fit_dynamic_growth estimates selected parameters", {
+  profile <- dynamic_profile(time = c(0, 10), temperature = c(20, 20))
+  truth <- list(logN0 = 2, logNmax = 8, MUmax = 0.45, lag = 0)
+  obs_pred <- predict_dynamic_growth(
+    profile,
+    secondary = "constant",
+    start = truth,
+    times = c(0, 4, 8, 10),
+    dt = 0.1
+  )
+  obs <- data.frame(time = obs_pred$time, logN = obs_pred$logN)
+
+  fit <- fit_dynamic_growth(
+    obs,
+    profile = profile,
+    time = "time",
+    response = "logN",
+    start = list(logN0 = 2, logNmax = 8, MUmax = 0.25, lag = 0),
+    estimate = "MUmax",
+    secondary = "constant",
+    dt = 0.1
+  )
+
+  expect_s3_class(fit, "predmicror_dynamic_fit")
+  expect_equal(unname(coef(fit)["MUmax"]), 0.45, tolerance = 0.02)
+  expect_equal(length(fitted(fit)), nrow(obs))
+  expect_lt(fit_metrics(fit)$RMSE, 0.02)
+  expect_true(all(c(".fitted", ".resid", ".model", ".type") %in% names(predmicror_augment(fit))))
+})
+
+test_that("fit_dynamic_inactivation estimates selected parameters", {
+  profile <- dynamic_profile(time = c(0, 10), temperature = c(60, 60))
+  obs <- data.frame(time = c(0, 5, 10), logN = c(7, 6, 5))
+
+  fit <- fit_dynamic_inactivation(
+    obs,
+    profile = profile,
+    time = "time",
+    response = "logN",
+    start = list(logN0 = 7, b = 0.1, n = 1),
+    estimate = "b",
+    dt = 0.05
+  )
+
+  expect_s3_class(fit, "predmicror_dynamic_fit")
+  expect_equal(unname(coef(fit)["b"]), 0.2, tolerance = 0.01)
+  expect_equal(residuals(fit), rep(0, 3), tolerance = 0.02)
+  pred <- predict(fit, times = c(0, 10))
+  expect_s3_class(pred, "predmicror_dynamic_prediction")
+  expect_equal(pred$logN, c(7, 5), tolerance = 0.02)
+})
