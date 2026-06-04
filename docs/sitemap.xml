@@ -35,6 +35,7 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/WeibullPH.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/ZwieteringFM.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/aw.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/bias_factor.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/bixina.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/compare_models.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/dynamic_profile.html</loc></url>
@@ -45,6 +46,7 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_growth.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_inactivation.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_metrics.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/fit_omnibus.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/growthfull.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/growthnolag.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/growthred.html</loc></url>
@@ -60,6 +62,8 @@
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_augment.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_fit_methods.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_models.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/predmicror_omnibus_methods.html</loc></url>
 <url><loc>https://fsqanalytics.github.io/predmicror/reference/salmonella.html</loc></url>
+<url><loc>https://fsqanalytics.github.io/predmicror/reference/validate_omnibus_leave_one_out.html</loc></url>
 </urlset>
 

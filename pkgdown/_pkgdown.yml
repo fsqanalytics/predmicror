@@ -32,6 +32,13 @@ reference:
   - fit_inactivation
   - fit_cardinal
   - predmicror_models
+- title: "Omnibus modelling"
+  desc: "Nonlinear mixed-effects omnibus models using predmicror primary models and secondary covariate formulas."
+  contents:
+  - fit_omnibus
+  - validate_omnibus_leave_one_out
+  - bias_factor
+  - predmicror_omnibus_methods
 - title: "Model diagnostics and comparison"
   desc: "Helpers for extracting fitted values, calculating metrics, and comparing fitted models."
   contents:
