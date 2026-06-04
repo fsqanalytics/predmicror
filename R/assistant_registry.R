@@ -325,9 +325,11 @@ predmicror_assist_validate_code <- function(code, registry = predmicror_assist_r
   allowed <- c(
     names(registry),
     "fit_growth", "fit_inactivation", "fit_cardinal",
+    "dynamic_profile", "fit_dynamic_growth", "fit_dynamic_inactivation",
+    "predict_dynamic_growth", "predict_dynamic_inactivation", "dynamic_sensitivity",
     "predmicror_augment", "fit_metrics", "compare_models", "predmicror_models",
     "data", "summary", "fitted", "predict", "plot", "lines", "points",
-    "seq", "min", "max", "which.max", "list", "data.frame", "library", "require",
+    "seq", "min", "max", "which.min", "which.max", "list", "data.frame", "library", "require",
     "c", "log", "log10", "exp", "gsl_nls", "read.table", "read.csv",
     "read_excel", "as.data.frame"
   )
@@ -419,30 +421,72 @@ predmicror_assist_deterministic_answer <- function(query,
 
   using_wrapper <- isTRUE(prefer_wrappers) && !predmicror_assist_wants_direct_gsl(query)
   profile_text <- predmicror_assist_profile_text(data_profile, language)
+  dynamic_case <- !is.null(data_profile) && isTRUE(data_profile$dynamic)
+  dynamic_wrapper <- if (dynamic_case && identical(data_profile$task, "inactivation")) {
+    "fit_dynamic_inactivation"
+  } else if (dynamic_case) {
+    "fit_dynamic_growth"
+  } else {
+    spec$wrapper
+  }
+  dynamic_label_pt <- if (dynamic_case && identical(data_profile$task, "inactivation")) {
+    "modelo dinamico de inativacao Weibull-Peleg"
+  } else if (dynamic_case) {
+    "modelo dinamico de crescimento Huang"
+  } else {
+    sprintf("`%s` - %s", candidate, spec$title)
+  }
+  dynamic_label_en <- if (dynamic_case && identical(data_profile$task, "inactivation")) {
+    "dynamic Weibull-Peleg inactivation model"
+  } else if (dynamic_case) {
+    "dynamic Huang growth model"
+  } else {
+    sprintf("`%s` - %s", candidate, spec$title)
+  }
+  scale_line_pt <- if (dynamic_case) {
+    sprintf("Escala detectada da resposta: `%s`; o perfil dinamico usa as colunas de tempo e temperatura.", predmicror_assist_na_label(data_profile$response_scale))
+  } else {
+    sprintf("Escala esperada da resposta: `%s`; coluna de exemplo: `%s`.", spec$response_scale, spec$response)
+  }
+  scale_line_en <- if (dynamic_case) {
+    sprintf("Detected response scale: `%s`; the dynamic profile uses the time and temperature columns.", predmicror_assist_na_label(data_profile$response_scale))
+  } else {
+    sprintf("Expected response scale: `%s`; example response column: `%s`.", spec$response_scale, spec$response)
+  }
+  constraints_line_pt <- if (dynamic_case) {
+    "Em modelos dinamicos, confirme a escala da resposta, o perfil de temperatura e quais parametros devem ficar fixos antes de interpretar as taxas estimadas."
+  } else {
+    spec$constraints
+  }
+  constraints_line_en <- if (dynamic_case) {
+    "For dynamic models, check the response scale, temperature profile, and fixed parameters before interpreting estimated rates."
+  } else {
+    spec$constraints
+  }
   intro <- if (identical(language, "pt")) {
     paste(
       if (nzchar(profile_text)) profile_text else NULL,
-      sprintf("Modelo sugerido: `%s` - %s.", candidate, spec$title),
-      sprintf("Escala esperada da resposta: `%s`; coluna de exemplo: `%s`.", spec$response_scale, spec$response),
+      if (dynamic_case) sprintf("Fluxo sugerido: %s.", dynamic_label_pt) else sprintf("Modelo sugerido: %s.", dynamic_label_pt),
+      scale_line_pt,
       if (using_wrapper) {
-        sprintf("Usei o wrapper `%s()` como caminho principal; a chamada direta a `gsl_nls()` fica para uso avancado.", spec$wrapper)
+        sprintf("Usei `%s()` como caminho principal; a chamada direta a `gsl_nls()` fica para uso avancado.", dynamic_wrapper)
       } else {
         "Usei uma chamada direta a `gslnls::gsl_nls()` porque a pergunta pediu o nivel baixo ou nao privilegiou wrappers."
       },
-      spec$constraints,
+      constraints_line_pt,
       sep = "\n"
     )
   } else {
     paste(
       if (nzchar(profile_text)) profile_text else NULL,
-      sprintf("Suggested model: `%s` - %s.", candidate, spec$title),
-      sprintf("Expected response scale: `%s`; example response column: `%s`.", spec$response_scale, spec$response),
+      if (dynamic_case) sprintf("Suggested workflow: %s.", dynamic_label_en) else sprintf("Suggested model: %s.", dynamic_label_en),
+      scale_line_en,
       if (using_wrapper) {
-        sprintf("I used the `%s()` wrapper as the main path; direct `gsl_nls()` calls are better left for advanced use.", spec$wrapper)
+        sprintf("I used `%s()` as the main path; direct `gsl_nls()` calls are better left for advanced use.", dynamic_wrapper)
       } else {
         "I used a direct `gslnls::gsl_nls()` call because the query requested low-level fitting or did not prefer wrappers."
       },
-      spec$constraints,
+      constraints_line_en,
       sep = "\n"
     )
   }

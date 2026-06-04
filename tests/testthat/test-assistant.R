@@ -98,3 +98,53 @@ test_that("assistant app has fallback model choices", {
   expect_true("example-model" %in% models)
   expect_true(length(models) >= 1)
 })
+
+test_that("assistant generates dynamic growth code when temperature profile is present", {
+  dat <- data.frame(
+    Time = c(0, 2, 4, 6, 8, 10),
+    logN = c(2.0, 2.1, 2.4, 3.0, 3.8, 4.6),
+    Temp = c(8, 10, 12, 15, 15, 14)
+  )
+
+  result <- predmicror_assistant(
+    "fit these dynamic growth data",
+    data = dat,
+    root = ".",
+    backend = "deterministic",
+    return_trace = TRUE
+  )
+
+  expect_equal(result$trace$data_profile$task, "growth")
+  expect_true(isTRUE(result$trace$data_profile$dynamic))
+  expect_match(result$answer, "dynamic Huang growth model", fixed = TRUE)
+  expect_match(result$answer, "fit_dynamic_growth", fixed = TRUE)
+  expect_match(result$trace$code, "dynamic_profile", fixed = TRUE)
+  expect_match(result$trace$code, "fit_dynamic_growth", fixed = TRUE)
+  expect_match(result$trace$code, "temperature = dat[[\"Temp\"]]", fixed = TRUE)
+  expect_true(isTRUE(result$trace$validation$ok))
+})
+
+test_that("assistant generates dynamic inactivation code when temperature profile is present", {
+  dat <- data.frame(
+    Time = c(0, 2, 4, 6, 8, 10),
+    logN = c(7.0, 6.6, 6.0, 5.2, 4.5, 3.9),
+    Temp = c(60, 60, 62, 62, 64, 64)
+  )
+
+  result <- predmicror_assistant(
+    "fit these dynamic inactivation data",
+    data = dat,
+    root = ".",
+    backend = "deterministic",
+    return_trace = TRUE
+  )
+
+  expect_equal(result$trace$data_profile$task, "inactivation")
+  expect_true(isTRUE(result$trace$data_profile$dynamic))
+  expect_match(result$answer, "dynamic Weibull-Peleg inactivation model", fixed = TRUE)
+  expect_match(result$answer, "fit_dynamic_inactivation", fixed = TRUE)
+  expect_match(result$trace$code, "dynamic_profile", fixed = TRUE)
+  expect_match(result$trace$code, "fit_dynamic_inactivation", fixed = TRUE)
+  expect_match(result$trace$code, "temperature = dat[[\"Temp\"]]", fixed = TRUE)
+  expect_true(isTRUE(result$trace$validation$ok))
+})

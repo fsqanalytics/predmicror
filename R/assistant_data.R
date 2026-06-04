@@ -136,6 +136,7 @@ predmicror_assist_profile_data <- function(data) {
 
   task <- predmicror_assist_guess_data_task(data, columns)
   response_scale <- predmicror_assist_guess_response_scale(data, columns)
+  dynamic <- predmicror_assist_is_dynamic_profile(columns, task)
   candidate <- predmicror_assist_candidate_from_profile(task, columns)
 
   list(
@@ -149,6 +150,7 @@ predmicror_assist_profile_data <- function(data) {
     columns = columns,
     task = task,
     response_scale = response_scale,
+    dynamic = dynamic,
     candidate = candidate
   )
 }
@@ -303,8 +305,13 @@ predmicror_assist_data_code <- function(spec, profile) {
   cols <- profile$columns
   task <- profile$task
   data_lines <- predmicror_assist_data_loading_lines(profile$source)
-  x_col <- predmicror_assist_x_col_for_spec(spec, cols)
   response <- if (!is.na(cols$response)) cols$response else spec$response
+
+  if (isTRUE(profile$dynamic)) {
+    return(predmicror_assist_dynamic_data_code(task, cols, response, data_lines))
+  }
+
+  x_col <- predmicror_assist_x_col_for_spec(spec, cols)
   start <- predmicror_assist_start_for_data(spec, x_col, response)
   new_data <- if (identical(task, "cardinal")) "new_x" else "new_times"
 
@@ -415,6 +422,94 @@ predmicror_assist_start_for_data <- function(spec, x_col, response) {
   spec$start
 }
 
+
+predmicror_assist_is_dynamic_profile <- function(columns, task) {
+  if (!identical(task, "growth") && !identical(task, "inactivation")) {
+    return(FALSE)
+  }
+  !is.na(columns$time) && !is.na(columns$response) && !is.na(columns$temperature)
+}
+
+predmicror_assist_dynamic_data_code <- function(task, cols, response, data_lines) {
+  time_col <- cols$time
+  temp_col <- cols$temperature
+
+  profile_lines <- c(
+    "profile <- dynamic_profile(",
+    paste0("  time = dat[[\"", time_col, "\"]],"),
+    paste0("  temperature = dat[[\"", temp_col, "\"]]"),
+    ")"
+  )
+
+  if (identical(task, "inactivation")) {
+    return(c(
+      data_lines,
+      "# Check the detected column mapping before fitting.",
+      profile_lines,
+      "fit <- fit_dynamic_inactivation(",
+      "  data = dat,",
+      "  profile = profile,",
+      paste0("  time = \"", time_col, "\","),
+      paste0("  response = \"", response, "\","),
+      "  model = \"weibull_peleg\",",
+      "  secondary = \"constant\",",
+      "  start = list(",
+      paste0("    logN0 = max(dat[[\"", response, "\"]], na.rm = TRUE),"),
+      "    b = 0.1,",
+      "    n = 1",
+      "  ),",
+      "  estimate = \"b\",",
+      "  fixed = list(",
+      paste0("    logN0 = max(dat[[\"", response, "\"]], na.rm = TRUE),"),
+      "    n = 1",
+      "  )",
+      ")",
+      "summary(fit)",
+      "fit_metrics(fit)",
+      "aug <- predmicror_augment(fit)",
+      "pred <- predict(fit)",
+      paste0("plot(dat[[\"", time_col, "\"]], dat[[\"", response, "\"]], xlab = \"", time_col, "\", ylab = \"", response, "\")"),
+      "lines(pred$time, pred$response, col = \"blue\", lwd = 2)",
+      paste0("points(dat[[\"", time_col, "\"]], aug$.fitted, pch = 16, col = \"grey40\")")
+    ))
+  }
+
+  c(
+    data_lines,
+    "# Check the detected column mapping before fitting.",
+    profile_lines,
+    "fit <- fit_dynamic_growth(",
+    "  data = dat,",
+    "  profile = profile,",
+    paste0("  time = \"", time_col, "\","),
+    paste0("  response = \"", response, "\","),
+    "  model = \"huang\",",
+    "  secondary = \"huang_sqrt\",",
+    "  start = list(",
+    paste0("    logN0 = dat[[\"", response, "\"]][which.min(dat[[\"", time_col, "\"]])],"),
+    paste0("    logNmax = max(dat[[\"", response, "\"]], na.rm = TRUE),"),
+    "    a = 0.08,",
+    paste0("    Tmin = min(dat[[\"", temp_col, "\"]], na.rm = TRUE) - 1,"),
+    paste0("    lag = min(dat[[\"", time_col, "\"]], na.rm = TRUE)"),
+    "  ),",
+    "  estimate = \"a\",",
+    "  fixed = list(",
+    paste0("    logN0 = dat[[\"", response, "\"]][which.min(dat[[\"", time_col, "\"]])],"),
+    paste0("    logNmax = max(dat[[\"", response, "\"]], na.rm = TRUE),"),
+    paste0("    Tmin = min(dat[[\"", temp_col, "\"]], na.rm = TRUE) - 1,"),
+    paste0("    lag = min(dat[[\"", time_col, "\"]], na.rm = TRUE)"),
+    "  )",
+    ")",
+    "summary(fit)",
+    "fit_metrics(fit)",
+    "aug <- predmicror_augment(fit)",
+    "pred <- predict(fit)",
+    paste0("plot(dat[[\"", time_col, "\"]], dat[[\"", response, "\"]], xlab = \"", time_col, "\", ylab = \"", response, "\")"),
+    "lines(pred$time, pred$response, col = \"blue\", lwd = 2)",
+    paste0("points(dat[[\"", time_col, "\"]], aug$.fitted, pch = 16, col = \"grey40\")")
+  )
+}
+
 predmicror_assist_override_profile <- function(profile,
                                                task = NULL,
                                                columns = list()) {
@@ -442,6 +537,7 @@ predmicror_assist_override_profile <- function(profile,
     }
   }
 
+  profile$dynamic <- predmicror_assist_is_dynamic_profile(profile$columns, profile$task)
   profile$candidate <- predmicror_assist_candidate_from_profile(profile$task, profile$columns)
   profile$response_scale <- predmicror_assist_guess_response_scale_from_profile(profile)
   profile
