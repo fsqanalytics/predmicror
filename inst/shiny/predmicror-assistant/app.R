@@ -66,7 +66,7 @@ server <- function(input, output, session) {
   output$trace <- renderPrint({
     x <- result()
     if (is.list(x) && !is.null(x$trace)) {
-      str(x$trace, max.level = 2)
+      utils::str(x$trace, max.level = 2)
     }
   })
 }

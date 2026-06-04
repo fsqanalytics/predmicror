@@ -13,13 +13,13 @@ predmicror_assistant_app(
 )
 }
 \arguments{
-\item{model}{Ollama model name used by \code{predmicror_assistant()}.}
+\item{model}{Ollama model name used by \code{\link[=predmicror_assistant]{predmicror_assistant()}}.}
 
 \item{root}{Optional package root used for assistant context collection.}
 
-\item{host}{Host passed to \code{shiny::runApp()}. Defaults to \code{"127.0.0.1"}.}
+\item{host}{Host passed to \code{\link[shiny:runApp]{shiny::runApp()}}. Defaults to \code{"127.0.0.1"}.}
 
-\item{port}{Optional port passed to \code{shiny::runApp()}.}
+\item{port}{Optional port passed to \code{\link[shiny:runApp]{shiny::runApp()}}.}
 
 \item{launch.browser}{Logical; whether to launch a browser.}
 }
