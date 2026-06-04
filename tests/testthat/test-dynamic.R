@@ -1,0 +1,85 @@
+test_that("dynamic profiles validate and sort input", {
+  profile <- dynamic_profile(
+    time = c(10, 0, 5),
+    temperature = c(15, 4, 10)
+  )
+
+  expect_s3_class(profile, "predmicror_dynamic_profile")
+  expect_equal(profile$time, c(0, 5, 10))
+  expect_equal(profile$temperature, c(4, 10, 15))
+})
+
+test_that("dynamic Huang growth with constant rate increases population", {
+  profile <- dynamic_profile(
+    time = c(0, 10),
+    temperature = c(20, 20)
+  )
+
+  pred <- predict_dynamic_growth(
+    profile = profile,
+    secondary = "constant",
+    start = list(logN0 = 2, logNmax = 8, MUmax = 0.6, lag = 0),
+    times = seq(0, 10, by = 1),
+    dt = 0.1
+  )
+
+  expect_s3_class(pred, "predmicror_dynamic_prediction")
+  expect_equal(pred$time[1], 0)
+  expect_equal(pred$logN[1], 2, tolerance = 1e-8)
+  expect_gt(pred$logN[nrow(pred)], pred$logN[1])
+  expect_lte(max(pred$logN), 8.01)
+})
+
+test_that("dynamic Huang square-root model responds to temperature", {
+  cold <- dynamic_profile(time = c(0, 10), temperature = c(4, 4))
+  warm <- dynamic_profile(time = c(0, 10), temperature = c(20, 20))
+
+  start <- list(logN0 = 2, logNmax = 8, a = 0.08, Tmin = 7, lag = 0)
+  pred_cold <- predict_dynamic_growth(cold, start = start, times = 0:10, dt = 0.1)
+  pred_warm <- predict_dynamic_growth(warm, start = start, times = 0:10, dt = 0.1)
+
+  expect_equal(pred_cold$logN[nrow(pred_cold)], 2, tolerance = 1e-4)
+  expect_gt(pred_warm$logN[nrow(pred_warm)], pred_cold$logN[nrow(pred_cold)])
+})
+
+test_that("dynamic Weibull-Peleg inactivation matches constant linear case", {
+  profile <- dynamic_profile(time = c(0, 10), temperature = c(60, 60))
+
+  pred <- predict_dynamic_inactivation(
+    profile = profile,
+    start = list(logN0 = 7, b = 0.2, n = 1),
+    times = c(0, 5, 10),
+    dt = 0.05
+  )
+
+  expect_equal(pred$logN, c(7, 6, 5), tolerance = 1e-3)
+  expect_equal(pred$log_survival, c(0, -1, -2), tolerance = 1e-3)
+})
+
+test_that("dynamic inactivation z-value secondary increases loss at higher temperature", {
+  low <- dynamic_profile(time = c(0, 10), temperature = c(55, 55))
+  high <- dynamic_profile(time = c(0, 10), temperature = c(65, 65))
+  start <- list(logN0 = 7, b_ref = 0.1, T_ref = 55, z = 10, n = 1)
+
+  pred_low <- predict_dynamic_inactivation(low, secondary = "z_value", start = start, times = c(0, 10), dt = 0.1)
+  pred_high <- predict_dynamic_inactivation(high, secondary = "z_value", start = start, times = c(0, 10), dt = 0.1)
+
+  expect_lt(pred_high$logN[2], pred_low$logN[2])
+})
+
+test_that("dynamic sensitivity returns scaled coefficients", {
+  profile <- dynamic_profile(time = c(0, 5), temperature = c(20, 20))
+  sens <- dynamic_sensitivity(
+    "growth",
+    profile = profile,
+    start = list(logN0 = 2, logNmax = 8, MUmax = 0.5, lag = 0),
+    parameters = "MUmax",
+    secondary = "constant",
+    times = c(0, 2.5, 5),
+    dt = 0.1
+  )
+
+  expect_true(all(c("time", "parameter", "scaled_sensitivity") %in% names(sens)))
+  expect_equal(unique(sens$parameter), "MUmax")
+  expect_equal(nrow(sens), 3)
+})

@@ -6,6 +6,7 @@
 * Add assistant tests for registry metadata, deterministic output, and Shiny app bundling.
 * Add data-aware assistant support for data frames and uploaded `.csv`, `.tsv`, `.xls`, and `.xlsx` files, including automatic profiling, column detection, and data-specific wrapper code.
 * Improve the assistant Shiny app with a card-based layout, separate Answer/Code/Data/Trace views, local Ollama model selection, and manual task/column overrides.
+* Add initial dynamic modelling support with `dynamic_profile()`, RK4-based `predict_dynamic_growth()`, `predict_dynamic_inactivation()`, and finite-difference `dynamic_sensitivity()`.
 
 # predmicror 1.3.1
 
