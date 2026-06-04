@@ -84,6 +84,13 @@ reference:
   - ph
   - salmonella
   - mafart2005Li11
+- title: "Dynamic models"
+  desc: "Dynamic prediction and sensitivity tools for changing environmental profiles."
+  contents:
+  - dynamic_profile
+  - predict_dynamic_growth
+  - predict_dynamic_inactivation
+  - dynamic_sensitivity
 - title: "Assistant"
   desc: "Local helper for using predmicror."
   contents:
