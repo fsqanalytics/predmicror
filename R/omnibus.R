@@ -79,7 +79,7 @@ fit_omnibus <- function(data,
   spec <- specs[[type]][[primary]]
   params <- spec$params
   fixed <- .predmicror_omnibus_fixed_list(params, secondary)
-  model_formula <- .predmicror_omnibus_model_formula(response, spec$fun, time, params)
+  model_formula <- .predmicror_omnibus_model_formula(response, spec$fun, time, params, secondary)
   random_formula <- .predmicror_omnibus_random_formula(substitute(random), group)
   correlation_obj <- .predmicror_omnibus_correlation(correlation, time, group)
 
@@ -202,6 +202,46 @@ fit_omnibus_inactivation <- function(data,
   )
 }
 
+#' Define an omnibus secondary model
+#'
+#' `omnibus_secondary()` defines a secondary model specification that can be used
+#' inside `fit_omnibus()`, `fit_omnibus_growth()`, or
+#' `fit_omnibus_inactivation()`. It allows a primary-model parameter to be
+#' described by another parameterised model already available in `predmicror`.
+#'
+#' @param model Character string naming a registered `predmicror` model, for
+#'   example `"CMTI"`, `"CMAW"`, `"CMPH"`, or `"CMInh"`.
+#' @param x Character string naming the covariate column used by the secondary
+#'   model.
+#' @param transform Character string. One of `"identity"` or `"square"`.
+#'
+#' @return An `omnibus_secondary` specification.
+#' @export
+omnibus_secondary <- function(model, x, transform = c("identity", "square")) {
+  model <- .predmicror_omnibus_arg_name(model, substitute(model), "model")
+  x <- .predmicror_omnibus_arg_name(x, substitute(x), "x")
+  transform <- match.arg(transform)
+
+  specs <- .predmicror_model_specs()
+  flat <- c(specs$growth, specs$inactivation, specs$cardinal)
+
+  if (!model %in% names(flat)) {
+    stop(sprintf("Unknown secondary model `%s`.", model), call. = FALSE)
+  }
+
+  structure(
+    list(
+      model = model,
+      fun = flat[[model]]$fun,
+      x = x,
+      params = flat[[model]]$params,
+      response_scale = flat[[model]]$response_scale,
+      transform = transform
+    ),
+    class = "omnibus_secondary"
+  )
+}
+
 
 .predmicror_omnibus_arg_name <- function(value, expr, arg) {
   if (is.character(value) && length(value) == 1L) {
@@ -223,19 +263,45 @@ fit_omnibus_inactivation <- function(data,
     stop(sprintf("Unknown primary parameter(s) in `secondary`: %s.", paste(unknown, collapse = ", ")), call. = FALSE)
   }
 
-  out <- lapply(params, function(param) {
+  out <- list()
+
+  for (param in params) {
     if (param %in% names(secondary)) {
       f <- secondary[[param]]
-      if (!inherits(f, "formula")) {
-        stop("Each `secondary` entry must be a formula.", call. = FALSE)
+      if (inherits(f, "omnibus_secondary")) {
+        next
       }
-      .predmicror_omnibus_parameter_formula(param, f)
+      if (!inherits(f, "formula")) {
+        stop("Each `secondary` entry must be a formula or an `omnibus_secondary` object.", call. = FALSE)
+      }
+      out[[param]] <- .predmicror_omnibus_parameter_formula(param, f)
     } else {
-      stats::as.formula(sprintf("%s ~ 1", param))
+      out[[param]] <- stats::as.formula(sprintf("%s ~ 1", param))
     }
-  })
-  names(out) <- params
+  }
+
+  extra <- unique(unlist(lapply(secondary, function(f) {
+    if (inherits(f, "omnibus_secondary")) f$params else character(0)
+  }), use.names = FALSE))
+
+  extra <- setdiff(extra, names(out))
+  for (param in extra) {
+    out[[param]] <- stats::as.formula(sprintf("%s ~ 1", param))
+  }
+
   out
+}
+
+
+.predmicror_omnibus_secondary_formula <- function(param, spec) {
+  call <- sprintf("%s(%s, %s)", spec$fun, spec$x, paste(spec$params, collapse = ", "))
+  rhs <- switch(
+    spec$transform,
+    identity = call,
+    square = sprintf("I((%s)^2)", call),
+    stop("Unsupported omnibus secondary transform.", call. = FALSE)
+  )
+  stats::as.formula(sprintf("%s ~ %s", param, rhs))
 }
 
 .predmicror_omnibus_parameter_formula <- function(param, formula) {
@@ -253,9 +319,31 @@ fit_omnibus_inactivation <- function(data,
   }
 }
 
-.predmicror_omnibus_model_formula <- function(response, fun, time, params) {
-  rhs <- sprintf("%s(%s, %s)", fun, time, paste(params, collapse = ", "))
+.predmicror_omnibus_model_formula <- function(response, fun, time, params, secondary = NULL) {
+  if (is.null(secondary)) {
+    secondary <- list()
+  }
+
+  args <- vapply(params, function(param) {
+    if (param %in% names(secondary) && inherits(secondary[[param]], "omnibus_secondary")) {
+      .predmicror_omnibus_secondary_call(secondary[[param]])
+    } else {
+      param
+    }
+  }, character(1))
+
+  rhs <- sprintf("%s(%s, %s)", fun, time, paste(args, collapse = ", "))
   stats::as.formula(sprintf("%s ~ %s", response, rhs))
+}
+
+.predmicror_omnibus_secondary_call <- function(spec) {
+  call <- sprintf("%s(%s, %s)", spec$fun, spec$x, paste(spec$params, collapse = ", "))
+  switch(
+    spec$transform,
+    identity = call,
+    square = sprintf("I((%s)^2)", call),
+    stop("Unsupported omnibus secondary transform.", call. = FALSE)
+  )
 }
 
 .predmicror_omnibus_random_formula <- function(random_expr, group) {
