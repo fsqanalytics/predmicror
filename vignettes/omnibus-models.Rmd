@@ -1,0 +1,286 @@
+---
+title: "Omnibus predictive microbiology models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Omnibus predictive microbiology models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4
+)
+library(predmicror)
+```
+
+## Overview
+
+Omnibus modelling combines primary predictive microbiology models with secondary covariate relationships in a single nonlinear mixed-effects model.
+
+In `predmicror`, the omnibus helpers are designed to reuse the primary and secondary models already available in the package. This means that the same primary models used by `fit_growth()` and `fit_inactivation()` can also be used in grouped omnibus models.
+
+The main workflow is:
+
+1. choose a primary growth or inactivation model;
+2. decide which primary-model parameters should depend on covariates;
+3. define the grouping variable for random effects;
+4. fit the model with `fit_omnibus_growth()` or `fit_omnibus_inactivation()`;
+5. inspect fitted values, residuals, metrics, and validation results.
+
+Omnibus models are especially useful when observations are grouped by experimental condition, strain, replicate, batch, study, or treatment.
+
+## Omnibus inactivation model
+
+The simplest omnibus inactivation workflow uses a primary inactivation model and allows one of its parameters to depend on an environmental covariate.
+
+In this example, the primary model is `WeibullM()`. The parameter `sigma` is modelled as a function of temperature, while `Y0` and `alpha` are estimated as intercept-only fixed effects. The grouping variable is `Condition`.
+
+```{r omnibus-inactivation-data}
+set.seed(1)
+
+inact_data <- do.call(rbind, lapply(1:4, function(g) {
+  Time <- c(1, 2, 4, 6, 8, 10)
+  Temp <- 55 + g
+  sigma <- 5 + 0.4 * g
+
+  data.frame(
+    Condition = g,
+    Time = Time,
+    Temp = Temp,
+    logN = WeibullM(Time, Y0 = 7, sigma = sigma, alpha = 1.1) +
+      rnorm(length(Time), 0, 0.03)
+  )
+}))
+
+head(inact_data)
+```
+
+```{r omnibus-inactivation-fit}
+inact_fit <- fit_omnibus_inactivation(
+  data = inact_data,
+  primary = "WeibullM",
+  time = "Time",
+  response = "logN",
+  group = "Condition",
+  secondary = list(
+    sigma = ~ Temp
+  ),
+  random = Y0 ~ 1,
+  start = c(
+    Y0 = 7,
+    sigma = 1,
+    sigma.Temp = 0.08,
+    alpha = 1
+  )
+)
+
+inact_fit
+```
+
+The fitted object can be inspected with the same lightweight diagnostic helpers used elsewhere in `predmicror`.
+
+```{r omnibus-inactivation-diagnostics}
+head(predmicror_augment(inact_fit))
+fit_metrics(inact_fit)
+```
+
+```{r omnibus-inactivation-plot, fig.alt="Observed and fitted log10 counts for an omnibus Weibull inactivation model grouped by condition."}
+aug_inact <- predmicror_augment(inact_fit)
+
+plot(aug_inact$Time, aug_inact$logN,
+  pch = 16,
+  xlab = "Time",
+  ylab = "log10 count"
+)
+
+for (g in unique(aug_inact$Condition)) {
+  z <- aug_inact[aug_inact$Condition == g, ]
+  z <- z[order(z$Time), ]
+  lines(z$Time, z$.fitted, lwd = 2)
+}
+```
+
+## Omnibus growth model
+
+The same structure can be used for grouped growth data. Here the primary model is `HuangNLM()`, and the maximum specific growth rate `MUmax` is described as a function of temperature.
+
+```{r omnibus-growth-data}
+set.seed(1)
+
+growth_data <- do.call(rbind, lapply(1:4, function(g) {
+  Time <- c(0, 1, 2, 3, 4, 5, 6)
+  Temp <- 20 + g
+  MUmax <- 0.6 + 0.04 * g
+
+  data.frame(
+    Condition = g,
+    Time = Time,
+    Temp = Temp,
+    lnN = HuangNLM(Time, Y0 = 2, Ymax = 8, MUmax = MUmax) +
+      rnorm(length(Time), 0, 0.02)
+  )
+}))
+
+head(growth_data)
+```
+
+```{r omnibus-growth-fit}
+growth_fit <- fit_omnibus_growth(
+  data = growth_data,
+  primary = "HuangNLM",
+  time = "Time",
+  response = "lnN",
+  group = "Condition",
+  secondary = list(
+    MUmax = ~ Temp
+  ),
+  random = Y0 ~ 1,
+  start = c(
+    Y0 = 2,
+    Ymax = 8,
+    MUmax = 0.1,
+    MUmax.Temp = 0.025
+  )
+)
+
+growth_fit
+```
+
+```{r omnibus-growth-diagnostics}
+head(predmicror_augment(growth_fit))
+fit_metrics(growth_fit)
+```
+
+```{r omnibus-growth-plot, fig.alt="Observed and fitted natural log counts for an omnibus Huang growth model grouped by condition."}
+aug_growth <- predmicror_augment(growth_fit)
+
+plot(aug_growth$Time, aug_growth$lnN,
+  pch = 16,
+  xlab = "Time",
+  ylab = "ln count"
+)
+
+for (g in unique(aug_growth$Condition)) {
+  z <- aug_growth[aug_growth$Condition == g, ]
+  z <- z[order(z$Time), ]
+  lines(z$Time, z$.fitted, lwd = 2)
+}
+```
+
+## Using parameterised secondary models
+
+Omnibus models can also use secondary models already implemented in `predmicror`. This is useful when a primary-model parameter should follow a mechanistic or cardinal-type relationship instead of a simple linear formula.
+
+In the example below, the primary model is again `HuangNLM()`, but `MUmax` is now described using the cardinal temperature model `CMTI()`.
+
+Because `CMTI()` returns a square-root growth-rate scale, `transform = "square"` is used to convert the secondary-model output to the growth-rate scale used by `MUmax`.
+
+```{r omnibus-secondary-data}
+set.seed(2)
+
+cardinal_growth_data <- do.call(rbind, lapply(1:5, function(g) {
+  Time <- c(0, 1, 2, 3, 4, 5, 6)
+  Temp <- 12 + 3 * g
+  MUmax <- CMTI(Temp, Tmax = 45, Tmin = 5, MUopt = 0.9, Topt = 30)^2
+
+  data.frame(
+    Condition = g,
+    Time = Time,
+    Temp = Temp,
+    lnN = HuangNLM(Time, Y0 = 2, Ymax = 8, MUmax = MUmax) +
+      rnorm(length(Time), 0, 0.02)
+  )
+}))
+
+head(cardinal_growth_data)
+```
+
+```{r omnibus-secondary-fit}
+cardinal_growth_fit <- fit_omnibus_growth(
+  data = cardinal_growth_data,
+  primary = "HuangNLM",
+  time = "Time",
+  response = "lnN",
+  group = "Condition",
+  secondary = list(
+    MUmax = omnibus_secondary("CMTI", x = "Temp", transform = "square")
+  ),
+  random = Y0 ~ 1,
+  start = c(
+    Y0 = 2,
+    Ymax = 8,
+    Tmax = 45,
+    Tmin = 5,
+    MUopt = 0.9,
+    Topt = 30
+  )
+)
+
+cardinal_growth_fit
+```
+
+```{r omnibus-secondary-diagnostics}
+head(predmicror_augment(cardinal_growth_fit))
+fit_metrics(cardinal_growth_fit)
+```
+
+```{r omnibus-secondary-plot, fig.alt="Observed and fitted natural log counts for an omnibus Huang growth model using a cardinal temperature secondary model."}
+aug_cardinal <- predmicror_augment(cardinal_growth_fit)
+
+plot(aug_cardinal$Time, aug_cardinal$lnN,
+  pch = 16,
+  xlab = "Time",
+  ylab = "ln count"
+)
+
+for (g in unique(aug_cardinal$Condition)) {
+  z <- aug_cardinal[aug_cardinal$Condition == g, ]
+  z <- z[order(z$Time), ]
+  lines(z$Time, z$.fitted, lwd = 2)
+}
+```
+
+## Validation metrics
+
+Predictive microbiology studies often use bias and accuracy factors to summarise external validation performance.
+
+```{r omnibus-validation-factors}
+observed <- c(7, 6, 5)
+predicted <- c(7.1, 5.9, 5.2)
+
+bias_factor(observed, predicted)
+accuracy_factor(observed, predicted)
+```
+
+A leave-one-condition-out validation workflow can be run with `validate_omnibus_leave_one_out()`. This refits the model after removing one group and predicts the left-out observations at the population level.
+
+```{r omnibus-leave-one-out}
+loo <- validate_omnibus_leave_one_out(
+  object = inact_fit,
+  group_value = 4,
+  level = 0
+)
+
+loo$bias_factor
+loo$accuracy_factor
+head(loo$data)
+```
+
+## Practical notes
+
+Omnibus models are more flexible than separate primary-model fits, but they require more care.
+
+Good practice includes:
+
+1. checking the response scale expected by the selected primary model;
+2. starting with a simple random-effects structure;
+3. estimating only parameters supported by the available data;
+4. using sensible starting values;
+5. comparing formula-based secondary relationships with parameterised secondary models;
+6. validating predictions on held-out conditions when possible.
+
+Formula-based secondary relationships are useful for exploratory modelling, for example `MUmax ~ Temp` or `sigma ~ Temp`. Parameterised secondary relationships are useful when an established secondary model is available in `predmicror`, such as `CMTI()`, `CMAW()`, `CMPH()`, or `CMInh()`.

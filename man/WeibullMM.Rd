@@ -50,7 +50,7 @@ lines(bixina$Time, predict(fit), col = "blue")
 
 }
 \references{
-\insertRef{Mafart2005}{predmicror}
+Mafart et al. (2005).
 }
 \author{
 Vasco Cadavez \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron \email{ubarron@ipb.pt}

@@ -26,7 +26,7 @@
 #' @keywords nolagmodel Growth Huang
 #'
 #' @references
-#' \insertRef{Huang2013}{predmicror}
+#' Huang (2013).
 #'
 #' @importFrom gslnls gsl_nls
 #' @importFrom Rdpack reprompt

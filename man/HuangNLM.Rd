@@ -45,7 +45,7 @@ summary(fit)
 
 }
 \references{
-\insertRef{Huang2013}{predmicror}
+Huang (2013).
 }
 \author{
 Vasco Cadavez, \email{vcadavez@ipb.pt} and Ursula Gonzales-Barron, \email{ubarron@ipb.pt}

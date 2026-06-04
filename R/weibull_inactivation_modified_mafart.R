@@ -29,7 +29,7 @@
 #' @keywords Weibull Inactivation Modified Mafart
 #'
 #' @references
-#' \insertRef{Mafart2005}{predmicror}
+#' Mafart et al. (2005).
 #'
 #' @importFrom gslnls gsl_nls
 #'

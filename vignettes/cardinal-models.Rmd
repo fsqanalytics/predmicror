@@ -81,7 +81,7 @@ if (!is.null(temp_fit)) {
 }
 ```
 
-```{r}
+```{r, fig.alt="Observed and fitted square-root growth rates for the cardinal temperature model."}
 if (!is.null(temp_fit)) {
   grid <- data.frame(
     Temp = seq(min(salmonella$Temp), max(salmonella$Temp), length.out = 100)
@@ -128,7 +128,7 @@ if (!is.null(ph_fit)) {
 }
 ```
 
-```{r}
+```{r, fig.alt="Observed and fitted square-root growth rates for the cardinal pH model."}
 if (!is.null(ph_fit)) {
   grid <- data.frame(pH = seq(min(ph$pH), max(ph$pH), length.out = 100))
   pred <- predmicror_augment(ph_fit, newdata = grid)
@@ -173,7 +173,7 @@ if (!is.null(aw_fit)) {
 }
 ```
 
-```{r}
+```{r, fig.alt="Observed and fitted square-root growth rates for the cardinal water activity model."}
 if (!is.null(aw_fit)) {
   grid <- data.frame(aw = seq(min(aw$aw), max(aw$aw), length.out = 100))
   pred <- predmicror_augment(aw_fit, newdata = grid)
@@ -218,7 +218,7 @@ if (!is.null(inh_fit)) {
 }
 ```
 
-```{r}
+```{r, fig.alt="Observed and fitted square-root growth rates for the cardinal inhibitor model."}
 if (!is.null(inh_fit)) {
   grid <- data.frame(Conce = seq(min(inh$Conce), max(inh$Conce), length.out = 100))
   pred <- predmicror_augment(inh_fit, newdata = grid)

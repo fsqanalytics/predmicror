@@ -43,6 +43,7 @@
 <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
     <li><a class="dropdown-item" href="../articles/model-comparison.html">Comparing fitted predmicror models</a></li>
     <li><a class="dropdown-item" href="../articles/dynamic-models.html">Dynamic predictive microbiology models</a></li>
+    <li><a class="dropdown-item" href="../articles/omnibus-models.html">Omnibus predictive microbiology models</a></li>
     <li><a class="dropdown-item" href="../articles/inactivation-models.html">Microbial inactivation models</a></li>
     <li><a class="dropdown-item" href="../articles/cardinal-models.html">Cardinal parameter models</a></li>
     <li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
@@ -77,13 +78,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span>
-<span><span class="co">#&gt; </span></span>
-<span><span class="co">#&gt;  Please cite the 'predmicror' package as: </span></span>
-<span><span class="co">#&gt; Vasco Cadavez and Ursula Gonzales-Barron  (2022). predmicror: Fitting predictive microbiology models in r </span></span>
-<span><span class="co">#&gt; If you have questions, suggestions, or comments </span></span>
-<span><span class="co">#&gt; regarding the 'predmicror' package </span></span>
-<span><span class="co">#&gt; https://github.com/fsqanalytics/predmicror</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span></code></pre></div>
 <p>This vignette shows a complete workflow for fitting microbial
 inactivation models with <code>predmicror</code>.</p>
 <p>Inactivation models in this package expect microbial counts on the
@@ -139,7 +134,7 @@ with time and log10 microbial counts.</p>
 <span>  ylab <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/expression.html" class="external-link">expression</a></span><span class="op">(</span><span class="va">log</span><span class="op">[</span><span class="fl">10</span><span class="op">]</span><span class="op">(</span><span class="va">N</span><span class="op">)</span><span class="op">)</span>,</span>
 <span>  pch <span class="op">=</span> <span class="fl">19</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="inactivation-models_files/figure-html/unnamed-chunk-4-1.png" width="672"></p>
+<p><img src="inactivation-models_files/figure-html/unnamed-chunk-4-1.png" alt="Observed inactivation data used to illustrate primary inactivation models." width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="fitting-candidate-models">Fitting candidate models<a class="anchor" aria-label="anchor" href="#fitting-candidate-models"></a>
@@ -291,7 +286,7 @@ results.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/abline.html" class="external-link">abline</a></span><span class="op">(</span>h <span class="op">=</span> <span class="fl">0</span>, lty <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="inactivation-models_files/figure-html/unnamed-chunk-11-1.png" width="672"></p>
+<p><img src="inactivation-models_files/figure-html/unnamed-chunk-11-1.png" alt="Observed and fitted values for the Weibull-Mafart inactivation model." width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="prediction-over-a-time-grid">Prediction over a time grid<a class="anchor" aria-label="anchor" href="#prediction-over-a-time-grid"></a>
@@ -325,7 +320,7 @@ obtain predictions over a regular time grid.</p>
 <span>    <span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">pred</span><span class="op">$</span><span class="va">Time</span>, <span class="va">pred</span><span class="op">[[</span><span class="st">".fitted"</span><span class="op">]</span><span class="op">]</span>, lwd <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span>
 <span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p><img src="inactivation-models_files/figure-html/unnamed-chunk-12-1.png" width="672"></p>
+<p><img src="inactivation-models_files/figure-html/unnamed-chunk-12-1.png" alt="Observed and fitted values for an alternative inactivation model." width="672"></p>
 </div>
 <div class="section level2">
 <h2 id="practical-notes">Practical notes<a class="anchor" aria-label="anchor" href="#practical-notes"></a>

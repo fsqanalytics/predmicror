@@ -43,6 +43,7 @@
 <li><a class="dropdown-item" href="../articles/growth_models.html">Fitting growth models using predmicror</a></li>
     <li><a class="dropdown-item" href="../articles/model-comparison.html">Comparing fitted predmicror models</a></li>
     <li><a class="dropdown-item" href="../articles/dynamic-models.html">Dynamic predictive microbiology models</a></li>
+    <li><a class="dropdown-item" href="../articles/omnibus-models.html">Omnibus predictive microbiology models</a></li>
     <li><a class="dropdown-item" href="../articles/inactivation-models.html">Microbial inactivation models</a></li>
     <li><a class="dropdown-item" href="../articles/cardinal-models.html">Cardinal parameter models</a></li>
     <li><a class="dropdown-item" href="../articles/data_transformation.html">Data Transformation in predmicror</a></li>
@@ -91,15 +92,8 @@ package is outside the base R functions, and the first step is load the
 growth models, and <code>gslnls</code> which is a package to fit
 non-linear models using non-linear least squares.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">##  Please cite the 'predmicror' package as: </span></span>
-<span><span class="co">## Vasco Cadavez and Ursula Gonzales-Barron  (2022). predmicror: Fitting predictive microbiology models in r </span></span>
-<span><span class="co">## If you have questions, suggestions, or comments </span></span>
-<span><span class="co">## regarding the 'predmicror' package </span></span>
-<span><span class="co">## https://github.com/fsqanalytics/predmicror</span></span></code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JorisChau/gslnls" class="external-link">gslnls</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/JorisChau/gslnls" class="external-link">gslnls</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="loading-data">Loading data<a class="anchor" aria-label="anchor" href="#loading-data"></a>
@@ -111,13 +105,13 @@ to load the example datasets to the working environment. Thus, we will
 start by fitting a full growth model to experimental data, thus we load
 the <code>growthfull.Rda</code> dataset which is part of the
 <code>predmicror</code> package.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></code></pre></div>
 <p>Now the dataset is available in the <code>R</code> environment, and
 we can print the entire <code>dataset</code> by typing
 <code>growthfull</code> or take a look to the first five lines by using
 the <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head()</a></code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">growthfull</span></span></code></pre></div>
 <pre><code><span><span class="co">##    Time    logN     lnN</span></span>
 <span><span class="co">## 1     0 -0.1046 -0.2006</span></span>
@@ -133,7 +127,7 @@ the <code><a href="https://rdrr.io/r/utils/head.html" class="external-link">head
 <span><span class="co">## 11   20  9.3162 21.6272</span></span>
 <span><span class="co">## 12   22  9.2224 20.5114</span></span>
 <span><span class="co">## 13   24  9.3019 21.3943</span></span></code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Time    logN     lnN</span></span>
 <span><span class="co">## 1    0 -0.1046 -0.2006</span></span>
@@ -149,20 +143,20 @@ dataset, its good practice to assure that the dataset is located in the
 working directory, thus to import a CSV file called
 <code>growthfull.csv</code> into the R environment we do it with the
 next code section.</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">growthfull</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"growthfull.csv"</span>, sep <span class="op">=</span> <span class="st">";"</span>, header <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 <p>We have the dataset in the R environment, thus we can start checking
 the data proprieties. For example, the <code><a href="https://rdrr.io/r/utils/str.html" class="external-link">str()</a></code> function gives
 information considering the structure of the variables (numeric,
 integer, etc.), and the <code><a href="https://rdrr.io/r/base/names.html" class="external-link">names()</a></code> function show us the
 variables names.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 'data.frame':    13 obs. of  3 variables:</span></span>
 <span><span class="co">##  $ Time: int  0 2 4 6 8 10 12 14 16 18 ...</span></span>
 <span><span class="co">##  $ logN: num  -0.1046 0.0792 0.1212 0.7344 2.5531 ...</span></span>
 <span><span class="co">##  $ lnN : num  -0.201 0.192 0.159 1.529 5.942 ...</span></span></code></pre>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## [1] "Time" "logN" "lnN"</span></span></code></pre>
 </div>
@@ -172,7 +166,7 @@ variables names.</p>
 <p>To check the relationship between <code>Time</code> and
 <code>lnN</code>, we might use the function <code><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot()</a></code>, and we
 can check the data by visual inspection.</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="va">Time</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">growthfull</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"Time (hours)"</span>, ylab <span class="op">=</span> <span class="st">"ln N"</span>,</span>
@@ -181,7 +175,7 @@ can check the data by visual inspection.</p>
 <p><img src="growth_models_files/figure-html/unnamed-chunk-6-1.png" alt="Fang no lag model fit with prediction interval bands." width="700"></p>
 <p>To save the plot as an <code>.png</code> object, we can use the
 <code><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png()</a></code> function.</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/grDevices/png.html" class="external-link">png</a></span><span class="op">(</span><span class="st">"growthfull.png"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="va">Time</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">growthfull</span>,</span>
@@ -200,16 +194,16 @@ Huang full growth model function (<code>Huang()</code>) from the
 non-linear least squares function <code><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls()</a></code> implemented in
 the <code>gslnls</code> package. First, we need a good guess for the
 starting values for the fitting procedure:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">start_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0.02</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.6</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></code></pre></div>
 <p>Now we can fit the model to the data <code>growthfull</code>:</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="fu"><a href="../reference/HuangFM.html">HuangFM</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">Ymax</span>, <span class="va">MUmax</span>, <span class="va">lag</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">growthfull</span>,</span>
 <span>  start <span class="op">=</span> <span class="va">start_values</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Next, we can check the model parameters:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Formula: lnN ~ HuangFM(Time, Y0, Ymax, MUmax, lag)</span></span>
@@ -227,7 +221,7 @@ starting values for the fitting procedure:</p>
 <span><span class="co">## </span></span>
 <span><span class="co">## Number of iterations to convergence: 10 </span></span>
 <span><span class="co">## Achieved convergence tolerance: 2.22e-16</span></span></code></pre>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">##          Y0        Ymax       MUmax         lag </span></span>
 <span><span class="co">##  0.04562408 21.13231519  1.85942431  5.07986575</span></span></code></pre>
@@ -235,7 +229,7 @@ starting values for the fitting procedure:</p>
 package can be used to produce both confidence and prediction intervals
 for the prediction of <code>lnN</code> for a given
 <code>Time</code>.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newTimes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">24</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="va">newTimes</span>, interval <span class="op">=</span> <span class="st">"confidence"</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">fits</span><span class="op">)</span></span></code></pre></div>
@@ -243,7 +237,7 @@ for the prediction of <code>lnN</code> for a given
 <span><span class="co">##  $ fit: num  0.0456 0.0456 0.0456 0.0456 0.0456 ...</span></span>
 <span><span class="co">##  $ lwr: num  -0.537 -0.537 -0.537 -0.537 -0.537 ...</span></span>
 <span><span class="co">##  $ upr: num  0.629 0.629 0.629 0.629 0.629 ...</span></span></code></pre>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="va">newTimes</span>, interval <span class="op">=</span> <span class="st">"prediction"</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">preds</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## 'data.frame':    241 obs. of  3 variables:</span></span>
@@ -252,7 +246,7 @@ for the prediction of <code>lnN</code> for a given
 <span><span class="co">##  $ upr: num  1.21 1.21 1.21 1.21 1.21 ...</span></span></code></pre>
 <p>Plot the observed data with the fitted values and confidence
 interval</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">fit</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"time (days)"</span>, ylab <span class="op">=</span> <span class="st">"logN"</span>,</span>
@@ -261,10 +255,10 @@ interval</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">$</span><span class="va">Time</span>, <span class="va">growthfull</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">upr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">lwr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_models_files/figure-html/unnamed-chunk-12-1.png" width="700"></p>
+<p><img src="growth_models_files/figure-html/unnamed-chunk-12-1.png" alt="Observed and fitted values for the Huang full growth model." width="700"></p>
 <p>Plot the observed data with the fitted values and prediction
 interval</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">fit</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"time (days)"</span>, ylab <span class="op">=</span> <span class="st">"logN"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">22</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">24</span><span class="op">)</span>,</span>
@@ -273,13 +267,13 @@ interval</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">$</span><span class="va">Time</span>, <span class="va">growthfull</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">preds</span><span class="op">$</span><span class="va">upr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">preds</span><span class="op">$</span><span class="va">lwr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_models_files/figure-html/unnamed-chunk-13-1.png" width="700"></p>
+<p><img src="growth_models_files/figure-html/unnamed-chunk-13-1.png" alt="Observed and fitted values for the Baranyi full growth model." width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="fitting-the-fang-no-lag-model">Fitting the Fang no lag model<a class="anchor" aria-label="anchor" href="#fitting-the-fang-no-lag-model"></a>
 </h2>
 <p>First, we want to load the data set:</p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthnolag</span><span class="op">)</span></span>
 <span><span class="va">growthnolag</span></span></code></pre></div>
 <pre><code><span><span class="co">##    Time   logN     lnN</span></span>
@@ -296,7 +290,7 @@ interval</p>
 <p>Let’s start with the Fang model, fit the model to the experimental
 data using nonlinear least squares function <code><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls()</a></code>
 implemented in the <code>gsl_nls</code> R package:</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">start_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0.01</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.6</span><span class="op">)</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="fu"><a href="../reference/FangNLM.html">FangNLM</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">Ymax</span>, <span class="va">MUmax</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">growthnolag</span>,</span>
@@ -315,7 +309,7 @@ implemented in the <code>gsl_nls</code> R package:</p>
 <span><span class="co">## Number of iterations to convergence: 9 </span></span>
 <span><span class="co">## Achieved convergence tolerance: 1.776e-15</span></span></code></pre>
 <p>Next, we can check the model parameters:</p>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Formula: lnN ~ FangNLM(Time, Y0, Ymax, MUmax)</span></span>
@@ -334,7 +328,7 @@ implemented in the <code>gsl_nls</code> R package:</p>
 <span><span class="co">## Achieved convergence tolerance: 1.776e-15</span></span></code></pre>
 <p>Next, we can extract the model parameters and apply the model to new
 data</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newTimes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="va">newTimes</span>, interval <span class="op">=</span> <span class="st">"confidence"</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">fits</span><span class="op">)</span></span></code></pre></div>
@@ -342,11 +336,11 @@ data</p>
 <span><span class="co">##  $ fit: num  1.76 1.94 2.13 2.32 2.5 ...</span></span>
 <span><span class="co">##  $ lwr: num  0.898 1.097 1.295 1.494 1.692 ...</span></span>
 <span><span class="co">##  $ upr: num  2.62 2.79 2.96 3.14 3.31 ...</span></span></code></pre>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="va">newTimes</span>, interval <span class="op">=</span> <span class="st">"prediction"</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Plot the observed data with the fitted values and confidence
 interval</p>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">fit</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"time (days)"</span>, ylab <span class="op">=</span> <span class="st">"logN"</span>,</span>
@@ -355,10 +349,10 @@ interval</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">growthnolag</span><span class="op">$</span><span class="va">Time</span>, <span class="va">growthnolag</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">upr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">lwr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_models_files/figure-html/unnamed-chunk-18-1.png" width="700"></p>
+<p><img src="growth_models_files/figure-html/unnamed-chunk-18-1.png" alt="Observed and fitted values for the Fang no-lag growth model." width="700"></p>
 <p>Plot the observed data with the fitted values and prediction
 interval</p>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">fit</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"time (days)"</span>, ylab <span class="op">=</span> <span class="st">"logN"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">22</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">18</span><span class="op">)</span>,</span>
@@ -367,13 +361,13 @@ interval</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">growthnolag</span><span class="op">$</span><span class="va">Time</span>, <span class="va">growthnolag</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">preds</span><span class="op">$</span><span class="va">upr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">preds</span><span class="op">$</span><span class="va">lwr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_models_files/figure-html/unnamed-chunk-19-1.png" width="700"></p>
+<p><img src="growth_models_files/figure-html/unnamed-chunk-19-1.png" alt="Observed and fitted values for the Huang no-lag growth model." width="700"></p>
 </div>
 <div class="section level2">
 <h2 id="fitting-the-buchanan-reduced-model">Fitting the Buchanan reduced model<a class="anchor" aria-label="anchor" href="#fitting-the-buchanan-reduced-model"></a>
 </h2>
 <p>First, we want to load the data set:</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthred</span><span class="op">)</span></span>
 <span><span class="va">growthred</span></span></code></pre></div>
 <pre><code><span><span class="co">##   Time    logN     lnN</span></span>
@@ -390,14 +384,14 @@ interval</p>
 experimental data using nonlinear least squares function
 <code><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls()</a></code> implemented in the <code>gslnls</code> R
 package:</p>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">start_values</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0.01</span>, MUmax <span class="op">=</span> <span class="fl">1.6</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
 <span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gsl_nls</a></span><span class="op">(</span><span class="va">lnN</span> <span class="op">~</span> <span class="fu"><a href="../reference/BuchananRM.html">BuchananRM</a></span><span class="op">(</span><span class="va">Time</span>, <span class="va">Y0</span>, <span class="va">MUmax</span>, <span class="va">lag</span><span class="op">)</span>,</span>
 <span>  data <span class="op">=</span> <span class="va">growthred</span>,</span>
 <span>  start <span class="op">=</span> <span class="va">start_values</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p>Next, we can check the model parameters:</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## </span></span>
 <span><span class="co">## Formula: lnN ~ BuchananRM(Time, Y0, MUmax, lag)</span></span>
@@ -416,7 +410,7 @@ package:</p>
 <span><span class="co">## Achieved convergence tolerance: 0</span></span></code></pre>
 <p>Next, we can extract the model parameters and apply the model to new
 data</p>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">newTimes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">16</span>, by <span class="op">=</span> <span class="fl">0.1</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">fits</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="va">newTimes</span>, interval <span class="op">=</span> <span class="st">"confidence"</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">fits</span><span class="op">)</span></span></code></pre></div>
@@ -424,11 +418,11 @@ data</p>
 <span><span class="co">##  $ fit: num  0.0501 0.0501 0.0501 0.0501 0.0501 ...</span></span>
 <span><span class="co">##  $ lwr: num  -0.508 -0.508 -0.508 -0.508 -0.508 ...</span></span>
 <span><span class="co">##  $ upr: num  0.608 0.608 0.608 0.608 0.608 ...</span></span></code></pre>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">preds</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">fit</span>, newdata <span class="op">=</span> <span class="va">newTimes</span>, interval <span class="op">=</span> <span class="st">"prediction"</span>, level <span class="op">=</span> <span class="fl">0.95</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <p>Plot the observed data with the fitted values and confidence
 interval</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">fit</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"time (days)"</span>, ylab <span class="op">=</span> <span class="st">"logN"</span>,</span>
@@ -437,10 +431,10 @@ interval</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">growthred</span><span class="op">$</span><span class="va">Time</span>, <span class="va">growthred</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">upr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">lwr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_models_files/figure-html/unnamed-chunk-24-1.png" width="700"></p>
+<p><img src="growth_models_files/figure-html/unnamed-chunk-24-1.png" alt="Observed and fitted values for the Huang reduced growth model." width="700"></p>
 <p>Plot the observed data with the fitted values and prediction
 interval</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">fits</span><span class="op">$</span><span class="va">fit</span>,</span>
 <span>  type <span class="op">=</span> <span class="st">"l"</span>, col <span class="op">=</span> <span class="st">"blue"</span>,</span>
 <span>  xlab <span class="op">=</span> <span class="st">"time (days)"</span>, ylab <span class="op">=</span> <span class="st">"logN"</span>, ylim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">-</span><span class="fl">1</span>, <span class="fl">22</span><span class="op">)</span>, xlim <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">16</span><span class="op">)</span>,</span>
@@ -449,7 +443,7 @@ interval</p>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/points.html" class="external-link">points</a></span><span class="op">(</span><span class="va">growthred</span><span class="op">$</span><span class="va">Time</span>, <span class="va">growthred</span><span class="op">$</span><span class="va">lnN</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">preds</span><span class="op">$</span><span class="va">upr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/lines.html" class="external-link">lines</a></span><span class="op">(</span><span class="va">newTimes</span><span class="op">$</span><span class="va">Time</span>, <span class="va">preds</span><span class="op">$</span><span class="va">lwr</span>, col <span class="op">=</span> <span class="st">"red"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="growth_models_files/figure-html/unnamed-chunk-25-1.png" width="700"></p>
+<p><img src="growth_models_files/figure-html/unnamed-chunk-25-1.png" alt="Observed and fitted values for the Baranyi reduced growth model." width="700"></p>
 </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside>

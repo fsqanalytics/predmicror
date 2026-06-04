@@ -71,7 +71,7 @@ plot(lnN ~ Time,
 
 To save the plot as an `.png` object, we can use the `png()` function.
 
-```{r, eval=FALSE}
+```{r, eval=FALSE, fig.alt="Observed growth data used to illustrate full primary growth models."}
 png("growthfull.png")
 plot(lnN ~ Time,
   data = growthfull,
@@ -119,7 +119,7 @@ str(preds)
 
 Plot the observed data with the fitted values and confidence interval
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Huang full growth model."}
 plot(newTimes$Time, fits$fit,
   type = "l", col = "blue",
   xlab = "time (days)", ylab = "logN",
@@ -132,7 +132,7 @@ lines(newTimes$Time, fits$lwr, col = "red")
 
 Plot the observed data with the fitted values and prediction interval
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Baranyi full growth model."}
 plot(newTimes$Time, fits$fit,
   type = "l", col = "blue",
   xlab = "time (days)", ylab = "logN", ylim = c(-1, 22), xlim = c(0, 24),
@@ -181,7 +181,7 @@ preds <- data.frame(predict(fit, newdata = newTimes, interval = "prediction", le
 
 Plot the observed data with the fitted values and confidence interval
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Fang no-lag growth model."}
 plot(newTimes$Time, fits$fit,
   type = "l", col = "blue",
   xlab = "time (days)", ylab = "logN",
@@ -194,7 +194,7 @@ lines(newTimes$Time, fits$lwr, col = "red")
 
 Plot the observed data with the fitted values and prediction interval
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Huang no-lag growth model."}
 plot(newTimes$Time, fits$fit,
   type = "l", col = "blue",
   xlab = "time (days)", ylab = "logN", ylim = c(-1, 22), xlim = c(0, 18),
@@ -241,7 +241,7 @@ preds <- data.frame(predict(fit, newdata = newTimes, interval = "prediction", le
 
 Plot the observed data with the fitted values and confidence interval
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Huang reduced growth model."}
 plot(newTimes$Time, fits$fit,
   type = "l", col = "blue",
   xlab = "time (days)", ylab = "logN",
@@ -254,7 +254,7 @@ lines(newTimes$Time, fits$lwr, col = "red")
 
 Plot the observed data with the fitted values and prediction interval
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Baranyi reduced growth model."}
 plot(newTimes$Time, fits$fit,
   type = "l", col = "blue",
   xlab = "time (days)", ylab = "logN", ylim = c(-1, 22), xlim = c(0, 16),

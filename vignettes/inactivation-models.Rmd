@@ -46,7 +46,7 @@ head(mafart2005Li11)
 summary(mafart2005Li11)
 ```
 
-```{r}
+```{r, fig.alt="Observed inactivation data used to illustrate primary inactivation models."}
 plot(
   logN ~ Time,
   data = mafart2005Li11,
@@ -153,7 +153,7 @@ if (length(fits) > 0L) {
 }
 ```
 
-```{r}
+```{r, fig.alt="Observed and fitted values for the Weibull-Mafart inactivation model."}
 if (length(fits) > 0L) {
   aug <- predmicror_augment(fits[[1]])
   if (all(c(".fitted", ".resid") %in% names(aug))) {
@@ -172,7 +172,7 @@ if (length(fits) > 0L) {
 
 The same augment helper can be used with `newdata` to obtain predictions over a regular time grid.
 
-```{r}
+```{r, fig.alt="Observed and fitted values for an alternative inactivation model."}
 if (length(fits) > 0L) {
   best_fit <- fits[[1]]
 

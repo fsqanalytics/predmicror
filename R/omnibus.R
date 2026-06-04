@@ -80,7 +80,11 @@ fit_omnibus <- function(data,
   params <- spec$params
   fixed <- .predmicror_omnibus_fixed_list(params, secondary)
   model_formula <- .predmicror_omnibus_model_formula(response, spec$fun, time, params, secondary)
-  random_formula <- .predmicror_omnibus_random_formula(substitute(random), group)
+  random_formula <- if (inherits(random, "formula")) {
+    .predmicror_omnibus_random_formula(random, group)
+  } else {
+    .predmicror_omnibus_random_formula(substitute(random), group)
+  }
   correlation_obj <- .predmicror_omnibus_correlation(correlation, time, group)
 
   if (!is.numeric(start) || !length(start)) {
