@@ -29,7 +29,7 @@
 
     <a class="navbar-brand me-2" href="index.html">predmicror</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.3.1.9000</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -95,14 +95,14 @@
 <col width="25%">
 <col width="25%">
 </colgroup>
-<thead><tr>
+<thead><tr class="header">
 <th>Workflow</th>
 <th>Wrapper</th>
 <th>Expected response scale</th>
 <th>Examples</th>
 </tr></thead>
 <tbody>
-<tr>
+<tr class="odd">
 <td>Primary growth</td>
 <td><code><a href="reference/fit_growth.html">fit_growth()</a></code></td>
 <td>natural logarithm, usually <code>lnN</code>
@@ -111,7 +111,7 @@
 <code>HuangFM</code>, <code>BaranyiFM</code>, <code>RossoFM</code>
 </td>
 </tr>
-<tr>
+<tr class="even">
 <td>Microbial inactivation</td>
 <td><code><a href="reference/fit_inactivation.html">fit_inactivation()</a></code></td>
 <td>base-10 logarithm, usually <code>logN</code>
@@ -120,7 +120,7 @@
 <code>WeibullM</code>, <code>WeibullPH</code>, <code>GeeraerdST</code>
 </td>
 </tr>
-<tr>
+<tr class="odd">
 <td>Cardinal parameters</td>
 <td><code><a href="reference/fit_cardinal.html">fit_cardinal()</a></code></td>
 <td>square-root growth rate, usually <code>sqrtGR</code>
