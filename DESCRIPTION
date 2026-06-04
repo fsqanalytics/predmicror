@@ -23,6 +23,7 @@ Depends:
 Imports:
     graphics,
     gslnls,
+    nlme,
     Rdpack,
     stats,
     utils
