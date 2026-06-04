@@ -66,3 +66,35 @@ test_that("assistant reads csv files and generates data-aware code", {
   expect_match(result$trace$code, "logN", fixed = TRUE)
   expect_true(isTRUE(result$trace$validation$ok))
 })
+
+test_that("assistant profile overrides are respected", {
+  dat <- data.frame(
+    t = c(0, 1, 2, 3),
+    y = c(7.0, 6.3, 5.1, 4.6),
+    other = c(1, 2, 3, 4)
+  )
+
+  result <- predmicror_assistant(
+    "fit this inactivation dataset",
+    data = dat,
+    root = ".",
+    backend = "deterministic",
+    return_trace = TRUE,
+    task = "inactivation",
+    time = "t",
+    response = "y"
+  )
+
+  expect_equal(result$trace$data_profile$task, "inactivation")
+  expect_equal(result$trace$data_profile$columns$time, "t")
+  expect_equal(result$trace$data_profile$columns$response, "y")
+  expect_match(result$trace$code, "fit_inactivation", fixed = TRUE)
+  expect_match(result$trace$code, "time = \"t\"", fixed = TRUE)
+  expect_match(result$trace$code, "response = \"y\"", fixed = TRUE)
+})
+
+test_that("assistant app has fallback model choices", {
+  models <- predmicror:::predmicror_assist_available_ollama_models("example-model")
+  expect_true("example-model" %in% models)
+  expect_true(length(models) >= 1)
+})

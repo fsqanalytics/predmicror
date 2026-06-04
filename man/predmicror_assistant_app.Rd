@@ -13,7 +13,9 @@ predmicror_assistant_app(
 )
 }
 \arguments{
-\item{model}{Ollama model name used by \code{\link[=predmicror_assistant]{predmicror_assistant()}}.}
+\item{model}{Default Ollama model name used by \code{\link[=predmicror_assistant]{predmicror_assistant()}}. The
+app also exposes a model selector populated from \verb{ollama list} when Ollama
+is available.}
 
 \item{root}{Optional package root used for assistant context collection.}
 
@@ -28,9 +30,10 @@ Runs the Shiny app.
 }
 \description{
 Starts the local assistant app bundled with the package. The app can read
-delimited text and Excel files, preview uploaded data, profile columns, and
-pass the data profile to \code{\link[=predmicror_assistant]{predmicror_assistant()}}. If the bundled app is not
-available, a fallback app is created from the installed R functions.
+delimited text and Excel files, preview uploaded data, profile columns, apply
+optional manual column overrides, and pass the data profile to
+\code{\link[=predmicror_assistant]{predmicror_assistant()}}. If the bundled app is not available, a fallback app
+is created from the installed R functions.
 }
 \examples{
 \dontrun{

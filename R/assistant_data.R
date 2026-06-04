@@ -414,3 +414,68 @@ predmicror_assist_start_for_data <- function(spec, x_col, response) {
   }
   spec$start
 }
+
+predmicror_assist_override_profile <- function(profile,
+                                               task = NULL,
+                                               columns = list()) {
+  if (is.null(profile)) {
+    return(NULL)
+  }
+
+  task <- predmicror_assist_clean_override(task)
+  if (!is.null(task)) {
+    if (!task %in% c("growth", "inactivation", "cardinal")) {
+      stop("`task` must be one of 'growth', 'inactivation', or 'cardinal'.", call. = FALSE)
+    }
+    profile$task <- task
+  }
+
+  if (length(columns)) {
+    for (nm in intersect(names(columns), names(profile$columns))) {
+      value <- predmicror_assist_clean_override(columns[[nm]])
+      if (!is.null(value)) {
+        if (!value %in% profile$names) {
+          stop("Column override not found in data: ", value, call. = FALSE)
+        }
+        profile$columns[[nm]] <- value
+      }
+    }
+  }
+
+  profile$candidate <- predmicror_assist_candidate_from_profile(profile$task, profile$columns)
+  profile$response_scale <- predmicror_assist_guess_response_scale_from_profile(profile)
+  profile
+}
+
+predmicror_assist_clean_override <- function(x) {
+  if (is.null(x) || length(x) == 0L) {
+    return(NULL)
+  }
+  x <- as.character(x[[1]])
+  x <- trimws(x)
+  if (!nzchar(x) || identical(tolower(x), "auto")) {
+    return(NULL)
+  }
+  x
+}
+
+predmicror_assist_guess_response_scale_from_profile <- function(profile) {
+  if (is.null(profile) || is.na(profile$columns$response)) {
+    return(NA_character_)
+  }
+  nm <- predmicror_assist_normalize_names(profile$columns$response)
+  if (grepl("sqrt", nm) || identical(profile$columns$response, profile$columns$sqrtgr)) {
+    return("sqrtGR")
+  }
+  if (grepl("ln", nm)) {
+    return("lnN")
+  }
+  if (grepl("log", nm)) {
+    return("log10N")
+  }
+  rng <- profile$ranges[[profile$columns$response]]
+  if (length(rng) == 2L && all(is.finite(rng)) && rng["min"] >= -1 && rng["max"] <= 12) {
+    return("log-like")
+  }
+  "unknown"
+}

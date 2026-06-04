@@ -14,6 +14,13 @@ predmicror_assistant(
   sep = NULL,
   dec = ".",
   na.strings = c("", "NA"),
+  task = NULL,
+  time = NULL,
+  response = NULL,
+  temperature = NULL,
+  ph = NULL,
+  aw = NULL,
+  inhibitor = NULL,
   return_context = FALSE,
   conversation = NULL,
   backend = c("auto", "ollama", "deterministic"),
@@ -45,6 +52,12 @@ separator detector is used.}
 
 \item{na.strings}{Character vector of strings to treat as missing values when
 reading delimited text files.}
+
+\item{task}{Optional data task override. Use one of \code{"growth"},
+\code{"inactivation"}, or \code{"cardinal"}; \code{NULL} keeps automatic detection.}
+
+\item{time, response, temperature, ph, aw, inhibitor}{Optional column-name overrides
+used when \code{data} or \code{file} is supplied.}
 
 \item{return_context}{Logical; if TRUE, returns a list with answer and
 context.}

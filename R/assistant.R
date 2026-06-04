@@ -19,6 +19,10 @@
 #' @param dec Decimal mark for delimited text files.
 #' @param na.strings Character vector of strings to treat as missing values when
 #'   reading delimited text files.
+#' @param task Optional data task override. Use one of `"growth"`,
+#'   `"inactivation"`, or `"cardinal"`; `NULL` keeps automatic detection.
+#' @param time,response,temperature,ph,aw,inhibitor Optional column-name overrides
+#'   used when `data` or `file` is supplied.
 #' @param return_context Logical; if TRUE, returns a list with answer and
 #'   context.
 #' @param conversation Optional list or character vector with prior questions
@@ -54,6 +58,13 @@ predmicror_assistant <- function(query,
                                  sep = NULL,
                                  dec = ".",
                                  na.strings = c("", "NA"),
+                                 task = NULL,
+                                 time = NULL,
+                                 response = NULL,
+                                 temperature = NULL,
+                                 ph = NULL,
+                                 aw = NULL,
+                                 inhibitor = NULL,
                                  return_context = FALSE,
                                  conversation = NULL,
                                  backend = c("auto", "ollama", "deterministic"),
@@ -79,6 +90,18 @@ predmicror_assistant <- function(query,
     sep = sep,
     dec = dec,
     na.strings = na.strings
+  )
+  data_profile <- predmicror_assist_override_profile(
+    data_profile,
+    task = task,
+    columns = list(
+      time = time,
+      response = response,
+      temperature = temperature,
+      ph = ph,
+      aw = aw,
+      inhibitor = inhibitor
+    )
   )
 
   registry <- predmicror_assist_registry()

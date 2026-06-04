@@ -5,6 +5,7 @@
 * Bundle `inst/shiny/predmicror-assistant/app.R` and extend `predmicror_assistant_app()` with model, root, host, port, and browser arguments plus a fallback app.
 * Add assistant tests for registry metadata, deterministic output, and Shiny app bundling.
 * Add data-aware assistant support for data frames and uploaded `.csv`, `.tsv`, `.xls`, and `.xlsx` files, including automatic profiling, column detection, and data-specific wrapper code.
+* Improve the assistant Shiny app with a card-based layout, separate Answer/Code/Data/Trace views, local Ollama model selection, and manual task/column overrides.
 
 # predmicror 1.3.1
 
