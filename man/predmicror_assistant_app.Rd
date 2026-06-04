@@ -4,13 +4,31 @@
 \alias{predmicror_assistant_app}
 \title{Launch the predmicror assistant Shiny app}
 \usage{
-predmicror_assistant_app()
+predmicror_assistant_app(
+  model = "llama3-groq-tool-use:8b",
+  root = NULL,
+  host = "127.0.0.1",
+  port = NULL,
+  launch.browser = interactive()
+)
+}
+\arguments{
+\item{model}{Ollama model name used by \code{predmicror_assistant()}.}
+
+\item{root}{Optional package root used for assistant context collection.}
+
+\item{host}{Host passed to \code{shiny::runApp()}. Defaults to \code{"127.0.0.1"}.}
+
+\item{port}{Optional port passed to \code{shiny::runApp()}.}
+
+\item{launch.browser}{Logical; whether to launch a browser.}
 }
 \value{
 Runs the Shiny app.
 }
 \description{
-Starts the local assistant app bundled with the package.
+Starts the local assistant app bundled with the package. If the bundled app is
+not available, a small fallback app is created from the installed R functions.
 }
 \examples{
 \dontrun{

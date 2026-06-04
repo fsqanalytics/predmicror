@@ -1,10 +1,12 @@
-#' Assistant for predmicror (local Ollama)
+#' Assistant for predmicror
 #'
-#' Use a local Ollama model to answer questions about predmicror models, check
-#' log scales, and draft `gsl_nls` calls. Requires the `ollama` CLI in PATH.
+#' Answer questions about predmicror models using a deterministic local registry
+#' and, when available, an optional local Ollama model for prose. Model-fitting
+#' code is generated from package metadata and statically checked before being
+#' returned.
 #'
 #' @param query Character question to ask.
-#' @param model Ollama model name.
+#' @param model Ollama model name used when `backend` is `"auto"` or `"ollama"`.
 #' @param root Path to the package root for context collection. Defaults to the
 #'   installed package path when available, otherwise the current working
 #'   directory.
@@ -12,36 +14,76 @@
 #'   context.
 #' @param conversation Optional list or character vector with prior questions
 #'   and answers to include as conversational context.
+#' @param backend Character string. One of `"auto"`, `"ollama"`, or
+#'   `"deterministic"`. `"auto"` uses Ollama when the CLI is available and
+#'   otherwise falls back to deterministic registry-based output.
+#' @param prefer_wrappers Logical; if TRUE, generated fitting examples prefer
+#'   `fit_growth()`, `fit_inactivation()`, and `fit_cardinal()` over direct
+#'   `gslnls::gsl_nls()` calls.
+#' @param verify_code Logical; if TRUE, statically checks generated R code with
+#'   `parse()` and simple model-scale/signature rules.
+#' @param return_trace Logical; if TRUE, returns prompt, backend, candidates,
+#'   generated code, and validation metadata for debugging.
 #'
 #' @return Character response by default; list with answer and context when
-#'   `return_context = TRUE`.
+#'   `return_context = TRUE` or list with trace when `return_trace = TRUE`.
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' predmicror_assistant("How do I fit a Huang model?")
+#' predmicror_assistant("How do I fit a Huang model?", backend = "deterministic")
 #' }
 #'
 predmicror_assistant <- function(query,
                                  model = "llama3-groq-tool-use:8b",
                                  root = NULL,
                                  return_context = FALSE,
-                                 conversation = NULL) {
-  if (!nzchar(Sys.which("ollama"))) {
-    stop("ollama not found in PATH.", call. = FALSE)
+                                 conversation = NULL,
+                                 backend = c("auto", "ollama", "deterministic"),
+                                 prefer_wrappers = TRUE,
+                                 verify_code = TRUE,
+                                 return_trace = FALSE) {
+  backend <- match.arg(backend)
+  if (!is.character(query) || length(query) != 1L || !nzchar(query)) {
+    stop("`query` must be a non-empty character string.", call. = FALSE)
   }
+
   if (is.null(root)) {
     root <- system.file("", package = "predmicror")
     if (!nzchar(root)) {
       root <- getwd()
     }
   }
+
+  registry <- predmicror_assist_registry()
   context <- predmicror_assist_collect_context(query, root = root)
   model_index <- predmicror_assist_model_index(root)
+  registry_index <- predmicror_assist_model_index_from_registry(registry)
+  model_index$entries <- sort(unique(c(model_index$entries, registry_index$entries)))
+  model_index$names <- sort(unique(c(model_index$names, registry_index$names)))
+
   candidates <- predmicror_assist_select_models(query, model_index)
+  if (length(candidates) == 0) {
+    candidates <- predmicror_assist_default_candidates(query, predmicror_assist_query_flags(query), registry)
+  }
   flags <- predmicror_assist_query_flags(query)
   history <- predmicror_assist_format_history(conversation)
+
+  deterministic <- predmicror_assist_deterministic_answer(
+    query = query,
+    candidates = candidates,
+    flags = flags,
+    registry = registry,
+    prefer_wrappers = prefer_wrappers,
+    verify_code = verify_code
+  )
+  candidates <- deterministic$candidates
+
   templates <- predmicror_assist_example_templates(candidates, flags)
+  if (nzchar(deterministic$code)) {
+    templates <- paste(templates, "\n\nVerified registry template:\n", deterministic$code, sep = "")
+  }
   prompt <- predmicror_assist_build_prompt(
     query,
     context,
@@ -51,44 +93,56 @@ predmicror_assistant <- function(query,
     history,
     templates
   )
-  env <- c("TERM=dumb", "NO_COLOR=1", "OLLAMA_NO_SPINNER=1")
-  output <- system2("ollama", c("run", model),
-    input = prompt, stdout = TRUE, stderr = TRUE, env = env
-  )
-  answer <- predmicror_assist_clean_output(paste(output, collapse = "\n"))
-  answer <- predmicror_assist_normalize_response(answer)
-  answer <- predmicror_assist_normalize_text(answer)
-  if (!grepl("```", answer)) {
-    inline_code <- predmicror_assist_extract_inline_code(answer)
-    template_code <- predmicror_assist_code_template(candidates)
-    code_block <- ""
-    if (nzchar(template_code) &&
-        (!nzchar(inline_code) || predmicror_assist_code_uses_examples(inline_code))) {
-      code_block <- template_code
-    } else if (nzchar(inline_code)) {
-      code_block <- inline_code
-    } else if (nzchar(template_code)) {
-      code_block <- template_code
+
+  ollama_available <- nzchar(Sys.which("ollama"))
+  use_ollama <- identical(backend, "ollama") || (identical(backend, "auto") && ollama_available)
+  backend_used <- if (use_ollama && ollama_available) "ollama" else "deterministic"
+  raw_output <- character(0)
+  answer <- deterministic$answer
+
+  if (use_ollama && !ollama_available) {
+    warning("ollama not found in PATH; using deterministic registry-based output.", call. = FALSE)
+  }
+
+  if (use_ollama && ollama_available) {
+    env <- c("TERM=dumb", "NO_COLOR=1", "OLLAMA_NO_SPINNER=1")
+    raw_output <- tryCatch(
+      system2("ollama", c("run", model),
+        input = prompt, stdout = TRUE, stderr = TRUE, env = env
+      ),
+      error = function(e) paste("Ollama call failed:", conditionMessage(e))
+    )
+    llm_answer <- predmicror_assist_clean_output(paste(raw_output, collapse = "\n"))
+    llm_answer <- predmicror_assist_normalize_response(llm_answer)
+    llm_answer <- predmicror_assist_normalize_text(llm_answer)
+    if (nzchar(llm_answer)) {
+      answer <- predmicror_assist_merge_answer_with_code(llm_answer, deterministic)
     }
-    if (nzchar(code_block)) {
-      explanation <- predmicror_assist_strip_inline_code(answer)
-      explanation <- trimws(explanation)
-      if (!nzchar(explanation)) {
-        explanation <- "Here is a complete example."
-      }
-      answer <- paste(
-        explanation,
-        "",
-        "```r",
-        code_block,
-        "```",
-        sep = "\n"
+  }
+
+  if (return_context || return_trace) {
+    out <- list(answer = answer)
+    if (return_context) {
+      out$context <- context
+    }
+    if (return_trace) {
+      out$trace <- list(
+        backend = backend_used,
+        requested_backend = backend,
+        model = model,
+        root = root,
+        candidates = candidates,
+        flags = flags,
+        code = deterministic$code,
+        validation = deterministic$validation,
+        mode = deterministic$mode,
+        prompt = prompt,
+        raw_output = raw_output
       )
     }
+    return(out)
   }
-  if (return_context) {
-    return(list(answer = answer, context = context))
-  }
+
   answer
 }
 
@@ -420,14 +474,14 @@ predmicror_assist_select_models <- function(query, model_index) {
   add_if("\\brosso\\b", "RossoFM")
   add_if("\\bweibull\\b", c("WeibullM", "WeibullMM", "WeibullPH"))
   add_if("\\bgeeraerd\\b", "GeeraerdST")
-  add_if("\\binactivation\\b|\\bsurvival\\b|\\bkill\\b|\\blethal\\b",
+  add_if("\\binactivation\\b|inativ|\\bsurvival\\b|sobreviv|\\bkill\\b|\\blethal\\b",
     c("WeibullM", "WeibullMM", "WeibullPH", "GeeraerdST", "HuangRGS")
   )
   add_if("\\bcardinal\\b", c("CMTI", "CMAW", "CMPH", "CMInh"))
   add_if("\\bph\\b", "CMPH")
   add_if("\\baw\\b|water activity", "CMAW")
-  add_if("\\btemperature\\b|\\btemp\\b", "CMTI")
-  add_if("\\binhibitor\\b|\\bmic\\b|\\binh\\b", "CMInh")
+  add_if("\\btemperature\\b|temperat|\\btemp\\b", "CMTI")
+  add_if("\\binhibitor\\b|inibidor|\\bmic\\b|\\binh\\b", "CMInh")
 
   candidates <- unique(candidates)
   if (length(model_index$names) > 0) {
@@ -452,7 +506,7 @@ predmicror_assist_select_models <- function(query, model_index) {
 predmicror_assist_query_flags <- function(query) {
   q <- tolower(query)
   flags <- character(0)
-  if (grepl("\\bfit\\b|fitting|gsl_nls|estimate|calibrat", q)) {
+  if (grepl("\\bfit\\b|fitting|gsl_nls|estimate|calibrat|ajust|estim", q)) {
     flags <- c(flags, "fit")
   }
   if (grepl("\\bln\\b|natural log", q)) {
@@ -467,10 +521,10 @@ predmicror_assist_query_flags <- function(query) {
   if (grepl("\\bfull\\b", q)) {
     flags <- c(flags, "full")
   }
-  if (grepl("\\binactivation\\b|\\bsurvival\\b|\\bkill\\b", q)) {
+  if (grepl("\\binactivation\\b|inativ|\\bsurvival\\b|sobreviv|\\bkill\\b", q)) {
     flags <- c(flags, "inactivation")
   }
-  if (grepl("\\bgrowth\\b", q)) {
+  if (grepl("\\bgrowth\\b|crescimento", q)) {
     flags <- c(flags, "growth")
   }
   if (grepl("\\bcardinal\\b", q)) {
@@ -589,33 +643,33 @@ predmicror_assist_build_prompt <- function(query, context, model_index, candidat
   if (fit_requested) {
     fit_instructions <- paste(
       "If the user is asking to fit a model, provide a complete R example:",
-      "load data, fit with gsl_nls, run summary(fit), extract fitted values,",
-      "generate predictions on a smooth time grid, and plot observed vs fitted.",
+      "load data, fit with the predmicror wrapper when available, run summary(fit),",
+      "calculate diagnostics, generate predictions on a smooth grid, and plot observed vs fitted.",
       "Keep it in a single fenced R code block for learnr.",
       sep = " "
     )
-    fit_format <- "Include summary(), fitted values, and a plot when fitting.\n"
+    fit_format <- "Include summary(), diagnostics, fitted values, and a plot when fitting.\n"
   }
   dataset_note <- ""
   if (fit_requested) {
     dataset_note <- paste(
       "If you use a built-in dataset, mention its name and that the response",
-      "column is lnN for growth datasets."
+      "column is lnN for growth datasets, logN for wrapper-based inactivation datasets, and sqrtGR for cardinal datasets."
     )
   }
   system_prompt <- paste(
     "You are the predmicror assistant.",
-    "Use ONLY functions listed in the Model Catalog.",
+    "Use ONLY functions listed in the Model Catalog or the verified registry template.",
     "Pick the best matching function(s) based on the question and flags.",
     "If a model family (e.g., Huang) is requested without specifying 'full', 'reduced', or 'no-lag', default to the 'full' variant.",
     "When a cardinal model is requested (e.g., 'cardinal temperature'), prioritize the specific cardinal model based on the input factor (e.g., 'temperature' implies 'CMTI', 'pH' implies 'CMPH').",
     "If the query mentions full/reduced/no-lag, choose FM/RM/NLM variants.",
     "If the question is about growth curves, do not ask for unrelated cardinal inputs.",
-    "If an Example template is available for the selected model, reuse it as the main code block (do not omit steps).",
-    "Provide a gsl_nls call with named arguments and reasonable start values.",
-    "When providing a gsl_nls example, use concrete data loading (e.g., 'data(growthfull)' or 'data(bixina)') from the package when applicable, instead of generic placeholders like 'data <- ...'.",
+    "If a verified registry template is available, reuse it as the main code block (do not omit steps).",
+    "Prefer fit_growth(), fit_inactivation(), and fit_cardinal() with named arguments and reasonable start values; use gslnls::gsl_nls() only when explicitly requested.",
+    "When providing a fitting example, use concrete data loading from the package when applicable, instead of generic placeholders like 'data <- ...'.",
     "If the user does not supply a dataset, default to a relevant package example dataset for the chosen model.",
-    "If you use predmicror growth example datasets (growthfull, growthnolag, growthred), the response column is lnN (natural log). Use lnN on the left-hand side of the formula.",
+    "If you use predmicror growth example datasets (growthfull, growthnolag, growthred), the response column is lnN (natural log). For fit_inactivation(), use logN. For fit_cardinal(), use sqrtGR.",
     "For cardinal models, use sqrtGR as the response and the matching example dataset and column name: CMTI -> salmonella (Temp), CMAW -> aw (aw), CMPH -> ph (pH), CMInh -> inh (Conce).",
     "If you show package loading, use 'library(predmicror)' and do not call library() on model functions.",
     "If you include code, use a single fenced R code block and avoid other code blocks.",

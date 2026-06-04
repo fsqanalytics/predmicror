@@ -1,3 +1,10 @@
+# predmicror 1.3.1.9000
+
+* Improve `predmicror_assistant()` with a deterministic model registry, wrapper-first code generation, static code validation, and `return_trace` diagnostics.
+* Make the assistant fall back to registry-based output when Ollama is unavailable instead of failing immediately.
+* Bundle `inst/shiny/predmicror-assistant/app.R` and extend `predmicror_assistant_app()` with model, root, host, port, and browser arguments plus a fallback app.
+* Add assistant tests for registry metadata, deterministic output, and Shiny app bundling.
+
 # predmicror 1.3.1
 
 * Polish the GitHub README to reflect the current fitting, diagnostics, and model-comparison API.

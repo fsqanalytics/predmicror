@@ -2,20 +2,24 @@
 % Please edit documentation in R/assistant.R
 \name{predmicror_assistant}
 \alias{predmicror_assistant}
-\title{Assistant for predmicror (local Ollama)}
+\title{Assistant for predmicror}
 \usage{
 predmicror_assistant(
   query,
   model = "llama3-groq-tool-use:8b",
   root = NULL,
   return_context = FALSE,
-  conversation = NULL
+  conversation = NULL,
+  backend = c("auto", "ollama", "deterministic"),
+  prefer_wrappers = TRUE,
+  verify_code = TRUE,
+  return_trace = FALSE
 )
 }
 \arguments{
 \item{query}{Character question to ask.}
 
-\item{model}{Ollama model name.}
+\item{model}{Ollama model name used when \code{backend} is \code{"auto"} or \code{"ollama"}.}
 
 \item{root}{Path to the package root for context collection. Defaults to the
 installed package path when available, otherwise the current working
@@ -26,18 +30,35 @@ context.}
 
 \item{conversation}{Optional list or character vector with prior questions
 and answers to include as conversational context.}
+
+\item{backend}{Character string. One of \code{"auto"}, \code{"ollama"}, or
+\code{"deterministic"}. \code{"auto"} uses Ollama when the CLI is available and
+otherwise falls back to deterministic registry-based output.}
+
+\item{prefer_wrappers}{Logical; if TRUE, generated fitting examples prefer
+\code{fit_growth()}, \code{fit_inactivation()}, and \code{fit_cardinal()} over direct
+\code{gslnls::gsl_nls()} calls.}
+
+\item{verify_code}{Logical; if TRUE, statically checks generated R code with
+\code{parse()} and simple model-scale/signature rules.}
+
+\item{return_trace}{Logical; if TRUE, returns prompt, backend, candidates,
+generated code, and validation metadata for debugging.}
 }
 \value{
 Character response by default; list with answer and context when
-\code{return_context = TRUE}.
+\code{return_context = TRUE} or list with trace when \code{return_trace = TRUE}.
 }
 \description{
-Use a local Ollama model to answer questions about predmicror models, check
-log scales, and draft \code{gsl_nls} calls. Requires the \code{ollama} CLI in PATH.
+Answer questions about predmicror models using a deterministic local registry
+and, when available, an optional local Ollama model for prose. Model-fitting
+code is generated from package metadata and statically checked before being
+returned.
 }
 \examples{
 \dontrun{
 predmicror_assistant("How do I fit a Huang model?")
+predmicror_assistant("How do I fit a Huang model?", backend = "deterministic")
 }
 
 }
