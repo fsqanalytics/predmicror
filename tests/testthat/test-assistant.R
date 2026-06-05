@@ -52,7 +52,7 @@ test_that("assistant reads csv files and generates data-aware code", {
   utils::write.csv(dat, path, row.names = FALSE)
 
   result <- predmicror_assistant(
-    "analisa estes dados de inativacao",
+    "analisa estes dados de inactivacao",
     file = path,
     root = ".",
     backend = "deterministic",
@@ -97,6 +97,71 @@ test_that("assistant app has fallback model choices", {
   models <- predmicror:::predmicror_assist_available_ollama_models("example-model")
   expect_true("example-model" %in% models)
   expect_true(length(models) >= 1)
+})
+
+test_that("assistant restart helper handles Ollama stop status", {
+  missing_model <- predmicror:::predmicror_assist_restart_ollama_model("", ollama = "")
+  expect_false(missing_model$ok)
+  expect_match(missing_model$message, "Select an Ollama model", fixed = TRUE)
+
+  missing_ollama <- predmicror:::predmicror_assist_restart_ollama_model("example-model", ollama = "")
+  expect_false(missing_ollama$ok)
+  expect_match(missing_ollama$message, "Ollama is not available", fixed = TRUE)
+
+  fake_runner <- function(command, args, stdout, stderr) {
+    expect_equal(command, "/tmp/ollama")
+    expect_equal(args, c("stop", "example-model"))
+    expect_true(stdout)
+    expect_true(stderr)
+    "stopped"
+  }
+  restarted <- predmicror:::predmicror_assist_restart_ollama_model(
+    "example-model",
+    ollama = "/tmp/ollama",
+    runner = fake_runner
+  )
+  expect_true(restarted$ok)
+  expect_equal(restarted$model, "example-model")
+  expect_match(restarted$message, "fresh LLM session", fixed = TRUE)
+})
+
+test_that("assistant app uses shared UI helpers", {
+  app_file <- system.file("shiny", "predmicror-assistant", "app.R", package = "predmicror")
+  expect_true(file.exists(app_file))
+  app_text <- paste(readLines(app_file, warn = FALSE), collapse = "\n")
+
+  expect_match(app_text, "predmicror_assistant_app_ui", fixed = TRUE)
+  expect_match(app_text, "predmicror_assistant_app_server", fixed = TRUE)
+
+  ui <- predmicror:::predmicror_assistant_app_ui("example-model")
+  ui_text <- paste(capture.output(print(ui)), collapse = "\n")
+  expect_match(ui_text, "File type", fixed = TRUE)
+  expect_match(ui_text, "Load", fixed = TRUE)
+  expect_match(ui_text, "Restart LLM", fixed = TRUE)
+  expect_match(ui_text, "Prompt template", fixed = TRUE)
+  expect_match(ui_text, "Collapse", fixed = TRUE)
+  expect_match(ui_text, "Reset", fixed = TRUE)
+  expect_match(ui_text, 'id="answer"', fixed = TRUE)
+  expect_match(ui_text, 'id="code"', fixed = TRUE)
+
+  answer_html <- predmicror:::predmicror_assistant_render_answer_html("**Strong** recommendation")
+  answer_html_text <- as.character(answer_html)
+  if (requireNamespace("commonmark", quietly = TRUE)) {
+    expect_match(answer_html_text, "<strong>Strong</strong>", fixed = TRUE)
+  } else {
+    expect_match(answer_html_text, "Strong recommendation", fixed = TRUE)
+  }
+
+  code_widget <- predmicror:::predmicror_assistant_render_code_widget("x <- 1")
+  code_widget_text <- paste(capture.output(print(code_widget)), collapse = "\n")
+  if (requireNamespace("shinyAce", quietly = TRUE)) {
+    expect_match(code_widget_text, "shiny-ace", fixed = TRUE)
+  } else {
+    expect_match(code_widget_text, "pm-code-fallback", fixed = TRUE)
+  }
+
+  server_fun <- predmicror:::predmicror_assistant_app_server(root = ".")
+  expect_true(is.function(server_fun))
 })
 
 test_that("assistant generates dynamic growth code when temperature profile is present", {
