@@ -7,7 +7,7 @@
 #'
 #' \code{x}: Water activity
 #'
-#' \code{sqrtGR}: the square root of the growth rate ($h^{-1}$)
+#' \code{sqrtGR}: the square root of the growth rate (\eqn{h^{-1}})
 #'
 #' Users should make sure that the growth rate input is entered after a square root transformation, \code{sqrGR = sqrt(GR)}.
 #'

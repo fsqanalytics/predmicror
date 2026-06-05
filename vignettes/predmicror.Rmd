@@ -147,8 +147,8 @@ $$
 $$
 where:
 
-- $\mu _{max}$: maximum growth rate ($h^{-1}$ or $day^{-1}$) of the studied bacterial strain
-- $\mu _{opt}$: optimum growth rate ($h^{-1}$ or $day^{-1}$) of the studied bacterial strain
+- $\mu _{max}$: maximum growth rate (h^-1 or day^-1) of the studied bacterial strain
+- $\mu _{opt}$: optimum growth rate (h^-1 or day^-1) of the studied bacterial strain
 - $\gamma \left(T\right),\gamma \left(pH\right),\gamma \left(aw\right),\gamma (Inh)$:
 dimensionless functions describing the relative effects of temperature (T), pH, water activity (aw) and different measurable inhibitors (Inh) like undissociated organic acids or $CO_2$. 
 

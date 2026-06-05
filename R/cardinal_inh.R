@@ -7,7 +7,7 @@
 #'
 #' \code{x}: growth inhibitor concentration
 #'
-#' \code{sqrtGR}: the square root of the growth rate ($time^{-1}$)
+#' \code{sqrtGR}: the square root of the growth rate (\eqn{time^{-1}})
 #'
 #' Users should make sure that the growth rate input is entered after a square root transformation, $sqrGR = sqrt(GR)$.
 #'
