@@ -555,27 +555,6 @@ fit_metrics.predmicror_omnibus_fit <- function(object, level = 0, ...) {
 #'   residuals, bias factor, and accuracy factor.
 #' @export
 #'
-#' @examplesIf interactive()
-#' set.seed(1)
-#' dat <- do.call(rbind, lapply(1:4, function(g) {
-#'   Time <- c(1, 2, 4, 6, 8, 10)
-#'   sigma <- 5 + 0.4 * g
-#'   data.frame(
-#'     Condition = g,
-#'     Time = Time,
-#'     Temp = 55 + g,
-#'     logN = WeibullM(Time, Y0 = 7, sigma = sigma, alpha = 1.1) +
-#'       rnorm(length(Time), 0, 0.03)
-#'   )
-#' }))
-#' fit <- fit_omnibus_inactivation(
-#'   dat, primary = "WeibullM", time = "Time", response = "logN",
-#'   group = "Condition", secondary = list(sigma = ~ Temp), random = Y0 ~ 1,
-#'   start = c(Y0 = 7, sigma = 1, sigma.Temp = 0.08, alpha = 1)
-#' )
-#' loo <- validate_omnibus_leave_one_out(fit, group_value = 1)
-#' loo$bias_factor
-#' loo$accuracy_factor
 validate_omnibus_leave_one_out <- function(object, group_value, level = 0, ...) {
   if (!inherits(object, "predmicror_omnibus_fit")) {
     stop("`object` must be a `predmicror_omnibus_fit` object.", call. = FALSE)
