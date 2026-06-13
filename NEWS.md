@@ -1,4 +1,4 @@
-# predmicror 1.3.1.9000
+# predmicror 1.3.2
 
 * Improve `predmicror_assistant()` with a deterministic model registry, wrapper-first code generation, static code validation, and `return_trace` diagnostics.
 * Make the assistant fall back to registry-based output when Ollama is unavailable instead of failing immediately.
