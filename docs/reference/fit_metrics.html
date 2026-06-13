@@ -79,14 +79,15 @@ compatibility.</p></dd>
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
-    <p>A one-row data frame with model metadata, residual diagnostics, and
-information criteria.</p>
+    <p>A one-row data frame with columns: <code>fit</code>, <code>model</code>, <code>type</code>,
+<code>response</code>, <code>response_scale</code>, <code>n</code> (observations), <code>p</code> (parameters),
+<code>SSE</code>, <code>RMSE</code>, <code>MAE</code>, <code>bias</code>, <code>RSE</code>, <code>R2</code>, <code>adj_R2</code>, <code>logLik</code>, <code>AIC</code>,
+<code>BIC</code>, and <code>converged</code>.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_growth.html">fit_growth</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">growthfull</span>,</span></span>
 <span class="r-in"><span>  model <span class="op">=</span> <span class="st">"HuangFM"</span>,</span></span>
@@ -95,7 +96,12 @@ information criteria.</p>
 <span class="r-in"><span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">fit_metrics</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     model   type response response_scale  n p      SSE      RMSE       MAE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 HuangFM growth      lnN            lnN 13 4 1.777041 0.3697235 0.3379108</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>           bias       RSE        R2    adj_R2    logLik     AIC      BIC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 3.909757e-09 0.4443523 0.9982255 0.9973382 -5.511202 21.0224 23.84715</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1      TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

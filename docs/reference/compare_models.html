@@ -79,8 +79,7 @@ objects.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">huang</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_growth.html">fit_growth</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">growthfull</span>,</span></span>
 <span class="r-in"><span>  model <span class="op">=</span> <span class="st">"HuangFM"</span>,</span></span>
@@ -96,7 +95,15 @@ objects.</p></dd>
 <span class="r-in"><span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">compare_models</span><span class="op">(</span>huang <span class="op">=</span> <span class="va">huang</span>, baranyi <span class="op">=</span> <span class="va">baranyi</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       fit     model   type response response_scale  n p      SSE      RMSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1   huang   HuangFM growth      lnN            lnN 13 4 1.777041 0.3697235</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 baranyi BaranyiFM growth      lnN            lnN 13 4 1.842461 0.3764675</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         MAE         bias       RSE        R2    adj_R2    logLik      AIC</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.3379108 3.909757e-09 0.4443523 0.9982255 0.9973382 -5.511202 21.02240</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 0.3414180 2.170706e-07 0.4524576 0.9981602 0.9972403 -5.746195 21.49239</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        BIC converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 23.84715      TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2 24.31714      TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

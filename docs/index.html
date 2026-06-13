@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<title>Fitting Predictive Microbiology Models in R • predmicror</title>
+<title>Fitting Predictive Microbiology Models • predmicror</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -16,9 +16,9 @@
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Fitting Predictive Microbiology Models in R">
-<meta name="description" content="Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data using nonlinear least squares. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models.">
-<meta property="og:description" content="Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data using nonlinear least squares. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models.">
+<script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Fitting Predictive Microbiology Models">
+<meta name="description" content="Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, dynamic, omnibus, and cardinal parameter models to experimental data using nonlinear least squares and related mixed-effects or time-varying workflows. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models. Implemented model families include those described by: Zwietering et al. (1990) &lt;doi:10.1128/AEM.56.6.1875-1881.1990&gt;, Baranyi and Roberts (1994) &lt;doi:10.1016/0168-1605(94)90157-0&gt;, Baranyi and Roberts (1995) &lt;doi:10.1016/0168-1605(94)00121-L&gt;, Buchanan et al. (1997) &lt;doi:10.1006/fmic.1997.0125&gt;, Richards (1959) &lt;doi:10.1093/jxb/10.2.290&gt;, Fang et al. (2012) &lt;doi:10.1111/j.1750-3841.2012.02873.x&gt;, Fang et al. (2013) &lt;doi:10.1016/j.fm.2012.12.005&gt;, Huang (2008) &lt;doi:10.1111/j.1750-3841.2008.00785.x&gt;, Huang (2009) &lt;doi:10.1016/j.jfoodeng.2008.07.011&gt;, Huang (2013) &lt;doi:10.1016/j.foodcont.2012.11.019&gt;, Geeraerd et al. (2005) &lt;doi:10.1016/j.ijfoodmicro.2004.11.038&gt;, van Boekel (2002) &lt;doi:10.1016/S0168-1605(01)00742-5&gt;, Peleg (1999) &lt;doi:10.1016/S0963-9969(99)00081-2&gt;, Mafart et al. (2002) &lt;doi:10.1016/S0168-1605(01)00624-9&gt;, Albert and Mafart (2005) &lt;doi:10.1016/j.ijfoodmicro.2004.10.016&gt;, Rosso et al. (1993) &lt;doi:10.1006/jtbi.1993.1099&gt;, Rosso et al. (1995) &lt;doi:10.1128/AEM.61.2.610-616.1995&gt;, and Rosso et al. (1996) &lt;doi:10.4315/0362-028X-59.9.944&gt;.">
+<meta property="og:description" content="Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, dynamic, omnibus, and cardinal parameter models to experimental data using nonlinear least squares and related mixed-effects or time-varying workflows. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models. Implemented model families include those described by: Zwietering et al. (1990) &lt;doi:10.1128/AEM.56.6.1875-1881.1990&gt;, Baranyi and Roberts (1994) &lt;doi:10.1016/0168-1605(94)90157-0&gt;, Baranyi and Roberts (1995) &lt;doi:10.1016/0168-1605(94)00121-L&gt;, Buchanan et al. (1997) &lt;doi:10.1006/fmic.1997.0125&gt;, Richards (1959) &lt;doi:10.1093/jxb/10.2.290&gt;, Fang et al. (2012) &lt;doi:10.1111/j.1750-3841.2012.02873.x&gt;, Fang et al. (2013) &lt;doi:10.1016/j.fm.2012.12.005&gt;, Huang (2008) &lt;doi:10.1111/j.1750-3841.2008.00785.x&gt;, Huang (2009) &lt;doi:10.1016/j.jfoodeng.2008.07.011&gt;, Huang (2013) &lt;doi:10.1016/j.foodcont.2012.11.019&gt;, Geeraerd et al. (2005) &lt;doi:10.1016/j.ijfoodmicro.2004.11.038&gt;, van Boekel (2002) &lt;doi:10.1016/S0168-1605(01)00742-5&gt;, Peleg (1999) &lt;doi:10.1016/S0963-9969(99)00081-2&gt;, Mafart et al. (2002) &lt;doi:10.1016/S0168-1605(01)00624-9&gt;, Albert and Mafart (2005) &lt;doi:10.1016/j.ijfoodmicro.2004.10.016&gt;, Rosso et al. (1993) &lt;doi:10.1006/jtbi.1993.1099&gt;, Rosso et al. (1995) &lt;doi:10.1128/AEM.61.2.610-616.1995&gt;, and Rosso et al. (1996) &lt;doi:10.4315/0362-028X-59.9.944&gt;.">
 <meta property="og:image" content="https://fsqanalytics.github.io/predmicror/logo.png">
 </head>
 <body>
@@ -71,8 +71,8 @@
 <img src="logo.png" class="logo" alt=""><h1 id="predmicror">predmicror<a class="anchor" aria-label="anchor" href="#predmicror"></a>
 </h1>
 </div>
-<p><a href="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a></p>
-<p><code>predmicror</code> provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data.</p>
+<p><a href="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a> <a href="https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml" class="external-link"><img src="https://github.com/fsqanalytics/predmicror/actions/workflows/pkgdown.yaml/badge.svg" alt="pkgdown"></a> <a href="https://www.gnu.org/licenses/gpl-3.0" class="external-link"><img src="https://img.shields.io/badge/License-GPL%20v3-blue.svg" alt="License: GPL v3"></a></p>
+<p><code>predmicror</code> provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data. It also supports <strong>omnibus</strong> (nonlinear mixed-effects) and <strong>dynamic</strong> (ODE-based time-varying) modelling.</p>
 <p>The package can be used in two complementary ways:</p>
 <ul>
 <li>call the exported model equations directly inside <code><a href="https://rdrr.io/pkg/gslnls/man/gsl_nls.html" class="external-link">gslnls::gsl_nls()</a></code>;</li>
@@ -81,59 +81,14 @@
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>You can install the development version from GitHub:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"devtools"</span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"fsqanalytics/predmicror"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="model-families">Model families<a class="anchor" aria-label="anchor" href="#model-families"></a>
+<h2 id="model-catalogue">Model catalogue<a class="anchor" aria-label="anchor" href="#model-catalogue"></a>
 </h2>
-<p><code>predmicror</code> includes models for three common predictive microbiology workflows.</p>
-<table class="table">
-<colgroup>
-<col width="25%">
-<col width="25%">
-<col width="25%">
-<col width="25%">
-</colgroup>
-<thead><tr class="header">
-<th>Workflow</th>
-<th>Wrapper</th>
-<th>Expected response scale</th>
-<th>Examples</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td>Primary growth</td>
-<td><code><a href="reference/fit_growth.html">fit_growth()</a></code></td>
-<td>natural logarithm, usually <code>lnN</code>
-</td>
-<td>
-<code>HuangFM</code>, <code>BaranyiFM</code>, <code>RossoFM</code>
-</td>
-</tr>
-<tr class="even">
-<td>Microbial inactivation</td>
-<td><code><a href="reference/fit_inactivation.html">fit_inactivation()</a></code></td>
-<td>base-10 logarithm, usually <code>logN</code>
-</td>
-<td>
-<code>WeibullM</code>, <code>WeibullPH</code>, <code>GeeraerdST</code>
-</td>
-</tr>
-<tr class="odd">
-<td>Cardinal parameters</td>
-<td><code><a href="reference/fit_cardinal.html">fit_cardinal()</a></code></td>
-<td>square-root growth rate, usually <code>sqrtGR</code>
-</td>
-<td>
-<code>CMTI</code>, <code>CMPH</code>, <code>CMAW</code>, <code>CMInh</code>
-</td>
-</tr>
-</tbody>
-</table>
-<p>List all models available through the fitting wrappers with:</p>
+<p>List all supported models with:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span>
 <span></span>
@@ -141,9 +96,61 @@
 <span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"growth"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"inactivation"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="reference/predmicror_models.html">predmicror_models</a></span><span class="op">(</span><span class="st">"cardinal"</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="19%">
+<col width="28%">
+<col width="22%">
+<col width="30%">
+</colgroup>
+<thead><tr class="header">
+<th>Workflow</th>
+<th>Wrapper</th>
+<th>Response scale</th>
+<th>Examples</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td>Primary growth</td>
+<td><code><a href="reference/fit_growth.html">fit_growth()</a></code></td>
+<td>natural log (<code>lnN</code>)</td>
+<td>
+<code>HuangFM</code>, <code>BaranyiFM</code>, <code>RossoFM</code>
+</td>
+</tr>
+<tr class="even">
+<td>Microbial inactivation</td>
+<td><code><a href="reference/fit_inactivation.html">fit_inactivation()</a></code></td>
+<td>base-10 log (<code>logN</code>)</td>
+<td>
+<code>WeibullM</code>, <code>GeeraerdST</code>, <code>WeibullPH</code>
+</td>
+</tr>
+<tr class="odd">
+<td>Cardinal parameters</td>
+<td><code><a href="reference/fit_cardinal.html">fit_cardinal()</a></code></td>
+<td>sqrt growth rate (<code>sqrtGR</code>)</td>
+<td>
+<code>CMTI</code>, <code>CMPH</code>, <code>CMAW</code>, <code>CMInh</code>
+</td>
+</tr>
+<tr class="even">
+<td>Dynamic (time-varying)</td>
+<td><code>fit_dynamic_growth/inactivation()</code></td>
+<td>natural log (<code>lnN</code>)</td>
+<td>Huang ODE, Weibull-Peleg ODE</td>
+</tr>
+<tr class="odd">
+<td>Omnibus (mixed-effects)</td>
+<td><code>fit_omnibus_growth/inactivation()</code></td>
+<td>per primary model</td>
+<td>any primary + secondary covariates</td>
+</tr>
+</tbody>
+</table>
 </div>
 <div class="section level2">
-<h2 id="quick-start-fitting-a-primary-growth-model">Quick start: fitting a primary growth model<a class="anchor" aria-label="anchor" href="#quick-start-fitting-a-primary-growth-model"></a>
+<h2 id="quick-start-growth">Quick start: growth<a class="anchor" aria-label="anchor" href="#quick-start-growth"></a>
 </h2>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://fsqanalytics.github.io/predmicror/">predmicror</a></span><span class="op">)</span></span>
@@ -163,69 +170,118 @@
 <span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="diagnostics-and-model-comparison">Diagnostics and model comparison<a class="anchor" aria-label="anchor" href="#diagnostics-and-model-comparison"></a>
+<h2 id="inactivation">Inactivation<a class="anchor" aria-label="anchor" href="#inactivation"></a>
 </h2>
-<p>Fitted models returned by the wrappers are <code>predmicror_fit</code> objects. They support common S3 methods and helper functions for reporting.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="reference/fit_metrics.html">fit_metrics</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">bixina</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">aug</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predmicror_augment.html">predmicror_augment</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">aug</span><span class="op">)</span></span></code></pre></div>
-<p>Compare alternative candidate models with <code><a href="reference/compare_models.html">compare_models()</a></code>:</p>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_inactivation.html">fit_inactivation</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">bixina</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"WeibullM"</span>,</span>
+<span>  time <span class="op">=</span> <span class="st">"Time"</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"lnN"</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">5.6</span>, sigma <span class="op">=</span> <span class="fl">12</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="reference/fit_metrics.html">fit_metrics</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="cardinal-parameter-model">Cardinal parameter model<a class="anchor" aria-label="anchor" href="#cardinal-parameter-model"></a>
+</h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">huang</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_growth.html">fit_growth</a></span><span class="op">(</span></span>
-<span>  <span class="va">growthfull</span>,</span>
-<span>  model <span class="op">=</span> <span class="st">"HuangFM"</span>,</span>
-<span>  time <span class="op">=</span> <span class="st">"Time"</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"lnN"</span>,</span>
-<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">salmonella</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_cardinal.html">fit_cardinal</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">salmonella</span>,</span>
+<span>  model <span class="op">=</span> <span class="st">"CMTI"</span>,</span>
+<span>  x <span class="op">=</span> <span class="va">Temp</span>,</span>
+<span>  response <span class="op">=</span> <span class="va">sqrtGR</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Tmax <span class="op">=</span> <span class="fl">42</span>, Tmin <span class="op">=</span> <span class="fl">1</span>, MUopt <span class="op">=</span> <span class="fl">1</span>, Topt <span class="op">=</span> <span class="fl">37</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">baranyi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_growth.html">fit_growth</a></span><span class="op">(</span></span>
-<span>  <span class="va">growthfull</span>,</span>
-<span>  model <span class="op">=</span> <span class="st">"BaranyiFM"</span>,</span>
-<span>  time <span class="op">=</span> <span class="st">"Time"</span>,</span>
-<span>  response <span class="op">=</span> <span class="st">"lnN"</span>,</span>
-<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/stats/coef.html" class="external-link">coef</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="model-comparison">Model comparison<a class="anchor" aria-label="anchor" href="#model-comparison"></a>
+</h2>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">huang</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_growth.html">fit_growth</a></span><span class="op">(</span><span class="va">growthfull</span>, model <span class="op">=</span> <span class="st">"HuangFM"</span>, time <span class="op">=</span> <span class="st">"Time"</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"lnN"</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">baranyi</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_growth.html">fit_growth</a></span><span class="op">(</span><span class="va">growthfull</span>, model <span class="op">=</span> <span class="st">"BaranyiFM"</span>, time <span class="op">=</span> <span class="st">"Time"</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"lnN"</span>, start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/compare_models.html">compare_models</a></span><span class="op">(</span>HuangFM <span class="op">=</span> <span class="va">huang</span>, BaranyiFM <span class="op">=</span> <span class="va">baranyi</span>, sort_by <span class="op">=</span> <span class="st">"AIC"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
+<h2 id="dynamic-time-varying-environment">Dynamic (time-varying environment)<a class="anchor" aria-label="anchor" href="#dynamic-time-varying-environment"></a>
+</h2>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">profile</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dynamic_profile.html">dynamic_profile</a></span><span class="op">(</span></span>
+<span>  time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">5</span>, <span class="fl">10</span><span class="op">)</span>,</span>
+<span>  temperature <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">12</span>, <span class="fl">20</span>, <span class="fl">25</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">pred</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/predict_dynamic_growth.html">predict_dynamic_growth</a></span><span class="op">(</span></span>
+<span>  profile <span class="op">=</span> <span class="va">profile</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>logN0 <span class="op">=</span> <span class="fl">2</span>, logNmax <span class="op">=</span> <span class="fl">8</span>, a <span class="op">=</span> <span class="fl">0.08</span>, Tmin <span class="op">=</span> <span class="fl">5</span>, lag <span class="op">=</span> <span class="fl">1</span><span class="op">)</span>,</span>
+<span>  times <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">10</span>, length.out <span class="op">=</span> <span class="fl">50</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">pred</span><span class="op">$</span><span class="va">time</span>, <span class="va">pred</span><span class="op">$</span><span class="va">logN</span>, type <span class="op">=</span> <span class="st">"l"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="omnibus-mixed-effects">Omnibus (mixed-effects)<a class="anchor" aria-label="anchor" href="#omnibus-mixed-effects"></a>
+</h2>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Each group (Condition) has its own curve</span></span>
+<span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
+<span>  Condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, each <span class="op">=</span> <span class="fl">7</span><span class="op">)</span>,</span>
+<span>  Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>,</span>
+<span>  lnN <span class="op">=</span> <span class="fu"><a href="reference/HuangNLM.html">HuangNLM</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">6</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span>, Y0 <span class="op">=</span> <span class="fl">2</span>, Ymax <span class="op">=</span> <span class="fl">8</span>, MUmax <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fit_omnibus.html">fit_omnibus_growth</a></span><span class="op">(</span></span>
+<span>  data <span class="op">=</span> <span class="va">dat</span>,</span>
+<span>  primary <span class="op">=</span> <span class="st">"HuangNLM"</span>,</span>
+<span>  time <span class="op">=</span> <span class="st">"Time"</span>,</span>
+<span>  response <span class="op">=</span> <span class="st">"lnN"</span>,</span>
+<span>  group <span class="op">=</span> <span class="st">"Condition"</span>,</span>
+<span>  random <span class="op">=</span> <span class="va">Y0</span> <span class="op">~</span> <span class="fl">1</span>,</span>
+<span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">2</span>, Ymax <span class="op">=</span> <span class="fl">8</span>, MUmax <span class="op">=</span> <span class="fl">0.6</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
 <h2 id="response-scale-conventions">Response scale conventions<a class="anchor" aria-label="anchor" href="#response-scale-conventions"></a>
 </h2>
-<p>The fitting wrappers do not transform the response automatically. Prepare the response variable before fitting:</p>
+<p>The fitting wrappers do <strong>not</strong> transform the response automatically:</p>
 <ul>
-<li>growth models: natural logarithm of microbial concentration, usually <code>lnN</code>;</li>
-<li>inactivation models: base-10 logarithm of microbial concentration, usually <code>logN</code>;</li>
-<li>cardinal models: square root of the growth rate, usually <code>sqrtGR</code>.</li>
+<li>
+<strong>Growth models</strong>: natural logarithm of concentration (<code>lnN</code>)</li>
+<li>
+<strong>Inactivation models</strong>: base-10 logarithm (<code>logN</code>)</li>
+<li>
+<strong>Cardinal models</strong>: square root of growth rate (<code>sqrtGR</code>)</li>
+<li>
+<strong>Dynamic models</strong>: natural logarithm (<code>lnN</code>)</li>
 </ul>
-<p>These conventions are important because parameter estimates depend on the response scale and on the time or environmental units used in the data.</p>
 </div>
 <div class="section level2">
 <h2 id="documentation">Documentation<a class="anchor" aria-label="anchor" href="#documentation"></a>
 </h2>
-<p>More examples are available on the package website:</p>
+<p>Full reference and vignettes:</p>
 <p><a href="https://fsqanalytics.github.io/predmicror/" class="uri">https://fsqanalytics.github.io/predmicror/</a></p>
-<p>Useful articles include:</p>
-<ul>
-<li>model comparison workflows;</li>
-<li>microbial inactivation models;</li>
-<li>cardinal parameter models.</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="reporting-bugs">Reporting bugs<a class="anchor" aria-label="anchor" href="#reporting-bugs"></a>
-</h2>
-<p>Please report bugs and feature requests at:</p>
-<p><a href="https://github.com/fsqanalytics/predmicror/issues" class="external-link uri">https://github.com/fsqanalytics/predmicror/issues</a></p>
 </div>
 <div class="section level2">
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
-<p>To cite <code>predmicror</code>, use:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"predmicror"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="bugs">Bugs<a class="anchor" aria-label="anchor" href="#bugs"></a>
+</h2>
+<p><a href="https://github.com/fsqanalytics/predmicror/issues" class="external-link uri">https://github.com/fsqanalytics/predmicror/issues</a></p>
 </div>
 </div>
   </main><aside class="col-md-3"><div class="links">

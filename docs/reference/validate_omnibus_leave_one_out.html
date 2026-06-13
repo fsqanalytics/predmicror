@@ -79,6 +79,79 @@ prediction of the left-out group.</p></dd>
 residuals, bias factor, and accuracy factor.</p>
     </div>
 
+    <div class="section level2">
+    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">Time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="op">+</span> <span class="fl">0.4</span> <span class="op">*</span> <span class="va">g</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    Condition <span class="op">=</span> <span class="va">g</span>,</span></span>
+<span class="r-in"><span>    Time <span class="op">=</span> <span class="va">Time</span>,</span></span>
+<span class="r-in"><span>    Temp <span class="op">=</span> <span class="fl">55</span> <span class="op">+</span> <span class="va">g</span>,</span></span>
+<span class="r-in"><span>    logN <span class="op">=</span> <span class="fu"><a href="WeibullM.html">WeibullM</a></span><span class="op">(</span><span class="va">Time</span>, Y0 <span class="op">=</span> <span class="fl">7</span>, sigma <span class="op">=</span> <span class="va">sigma</span>, alpha <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">Time</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_omnibus.html">fit_omnibus_inactivation</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="va">dat</span>, primary <span class="op">=</span> <span class="st">"WeibullM"</span>, time <span class="op">=</span> <span class="st">"Time"</span>, response <span class="op">=</span> <span class="st">"logN"</span>,</span></span>
+<span class="r-in"><span>  group <span class="op">=</span> <span class="st">"Condition"</span>, secondary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="op">~</span> <span class="va">Temp</span><span class="op">)</span>, random <span class="op">=</span> <span class="va">Y0</span> <span class="op">~</span> <span class="fl">1</span>,</span></span>
+<span class="r-in"><span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">7</span>, sigma <span class="op">=</span> <span class="fl">1</span>, sigma.Temp <span class="op">=</span> <span class="fl">0.08</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">validate_omnibus_leave_one_out</span><span class="op">(</span><span class="va">fit</span>, group_value <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $group</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> predmicror omnibus fit</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   type: inactivation</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   primary: WeibullM</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   response: logN (log10N)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   group: Condition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   formula: logN ~ WeibullM(Time, Y0, sigma, alpha)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Nonlinear mixed-effects model fit by maximum likelihood</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Model: logN ~ WeibullM(Time, Y0, sigma, alpha) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Data: structure(list(Condition = structure(c(2L, 2L, 2L, 2L, 2L, 2L,  1L, 1L, 1L, 1L, 1L, 1L, 3L, 3L, 3L, 3L, 3L, 3L), levels = c("3",  "2", "4"), class = c("ordered", "factor")), Time = c(1, 2, 4,  6, 8, 10, 1, 2, 4, 6, 8, 10, 1, 2, 4, 6, 8, 10), Temp = c(57,  57, 57, 57, 57, 57, 58, 58, 58, 58, 58, 58, 59, 59, 59, 59, 59,  59), logN = c(6.68162236376677, 6.30834752659853, 5.48720489842949,  4.60076476835948, 3.76557971644166, 2.81946728291791, 6.67191681320917,  6.2702470472557, 5.61190762362015, 4.77763845418162, 3.95173288068617,  3.13262114209126, 6.73575671288993, 6.39858936905395, 5.7002257519511,  4.95006102960119, 4.15701372323355, 3.30353668937129)), row.names = 7:24, class = c("nfnGroupedData",  "nfGroupedData", "groupedData", "data.frame"), formula = logN ~      Time | Condition, FUN = function (x)  max(x, na.rm = TRUE), order.groups = TRUE) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Log-likelihood: 39.58223</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Fixed: list(Y0 = Y0 ~ 1, sigma = sigma ~ Temp, alpha = alpha ~ 1) </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                Y0 sigma.(Intercept)        sigma.Temp             alpha </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         6.9879709       -15.3486585         0.3724932         1.1162938 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Random effects:</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  Formula: Y0 ~ 1 | Condition</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>                   Y0  Residual</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> StdDev: 7.311083e-07 0.0268376</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Observations: 18</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> Number of Groups: 3 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $data</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Condition Time Temp     logN .predicted      .resid</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         1    1   56 6.620974   6.645370 -0.02439589</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2         1    2   56 6.233335   6.245249 -0.01191414</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3         1    4   56 5.319739   5.377828 -0.05808998</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4         1    6   56 4.462332   4.456145  0.00618752</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5         1    8   56 3.461902   3.497354 -0.03545161</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6         1   10   56 2.440331   2.509990 -0.06965871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $observed</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.620974 6.233335 5.319739 4.462332 3.461902 2.440331</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $predicted</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 6.645370 6.245249 5.377828 4.456145 3.497354 2.509990</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $residuals</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] -0.02439589 -0.01191414 -0.05808998  0.00618752 -0.03545161 -0.06965871</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $bias_factor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.008939</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $accuracy_factor</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 1.009405</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+</code></pre></div>
+    </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>
 

@@ -164,22 +164,35 @@ expected by <code><a href="https://rdrr.io/pkg/nlme/man/nlme.html" class="extern
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Condition <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">3</span>, each <span class="op">=</span> <span class="fl">5</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  Time <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span><span class="op">)</span>, <span class="fl">3</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">dat</span><span class="op">$</span><span class="va">logN</span> <span class="op">&lt;-</span> <span class="fu"><a href="WeibullM.html">WeibullM</a></span><span class="op">(</span><span class="va">dat</span><span class="op">$</span><span class="va">Time</span>, Y0 <span class="op">=</span> <span class="fl">7</span>, sigma <span class="op">=</span> <span class="fl">6</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/do.call.html" class="external-link">do.call</a></span><span class="op">(</span><span class="va">rbind</span>, <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span>, <span class="kw">function</span><span class="op">(</span><span class="va">g</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="va">Time</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">6</span>, <span class="fl">8</span>, <span class="fl">10</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">sigma</span> <span class="op">&lt;-</span> <span class="fl">5</span> <span class="op">+</span> <span class="fl">0.4</span> <span class="op">*</span> <span class="va">g</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    Condition <span class="op">=</span> <span class="va">g</span>,</span></span>
+<span class="r-in"><span>    Time <span class="op">=</span> <span class="va">Time</span>,</span></span>
+<span class="r-in"><span>    Temp <span class="op">=</span> <span class="fl">55</span> <span class="op">+</span> <span class="va">g</span>,</span></span>
+<span class="r-in"><span>    logN <span class="op">=</span> <span class="fu"><a href="WeibullM.html">WeibullM</a></span><span class="op">(</span><span class="va">Time</span>, Y0 <span class="op">=</span> <span class="fl">7</span>, sigma <span class="op">=</span> <span class="va">sigma</span>, alpha <span class="op">=</span> <span class="fl">1.1</span><span class="op">)</span> <span class="op">+</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/length.html" class="external-link">length</a></span><span class="op">(</span><span class="va">Time</span><span class="op">)</span>, <span class="fl">0</span>, <span class="fl">0.03</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu">fit_omnibus_inactivation</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  <span class="va">dat</span>,</span></span>
 <span class="r-in"><span>  primary <span class="op">=</span> <span class="st">"WeibullM"</span>,</span></span>
 <span class="r-in"><span>  time <span class="op">=</span> <span class="st">"Time"</span>,</span></span>
 <span class="r-in"><span>  response <span class="op">=</span> <span class="st">"logN"</span>,</span></span>
 <span class="r-in"><span>  group <span class="op">=</span> <span class="st">"Condition"</span>,</span></span>
+<span class="r-in"><span>  secondary <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>sigma <span class="op">=</span> <span class="op">~</span> <span class="va">Temp</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  random <span class="op">=</span> <span class="va">Y0</span> <span class="op">~</span> <span class="fl">1</span>,</span></span>
-<span class="r-in"><span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">7</span>, sigma <span class="op">=</span> <span class="fl">6</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">7</span>, sigma <span class="op">=</span> <span class="fl">1</span>, sigma.Temp <span class="op">=</span> <span class="fl">0.08</span>, alpha <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fit_metrics.html">fit_metrics</a></span><span class="op">(</span><span class="va">fit</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>      model                 type response response_scale  n p       SSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 WeibullM omnibus_inactivation     logN         log10N 24 4 0.0178355</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>        RMSE        MAE         bias       RSE        R2    adj_R2  logLik</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.0272607 0.02180912 4.219951e-09 0.0298626 0.9995866 0.9994995 52.4009</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>         AIC       BIC converged</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 -92.80179 -85.73347      TRUE</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

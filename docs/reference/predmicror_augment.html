@@ -97,8 +97,7 @@ when the response column is available, <code>.model</code>, and <code>.type</cod
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">growthfull</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="fit_growth.html">fit_growth</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">growthfull</span>,</span></span>
 <span class="r-in"><span>  model <span class="op">=</span> <span class="st">"HuangFM"</span>,</span></span>
@@ -107,7 +106,13 @@ when the response column is available, <code>.model</code>, and <code>.type</cod
 <span class="r-in"><span>  start <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Y0 <span class="op">=</span> <span class="fl">0</span>, Ymax <span class="op">=</span> <span class="fl">22</span>, MUmax <span class="op">=</span> <span class="fl">1.7</span>, lag <span class="op">=</span> <span class="fl">5</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fu">predmicror_augment</span><span class="op">(</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   Time    logN     lnN    .fitted     .resid  .model  .type</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1    0 -0.1046 -0.2006 0.04562398 -0.2462240 HuangFM growth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2    2  0.0792  0.1922 0.04562605  0.1465739 HuangFM growth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3    4  0.1212  0.1587 0.05176904  0.1069310 HuangFM growth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4    6  0.7344  1.5290 1.76811761 -0.2391176 HuangFM growth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5    8  2.5531  5.9421 5.47539652  0.4667035 HuangFM growth</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6   10  3.8358  8.8024 9.19423483 -0.3918348 HuangFM growth</span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

@@ -179,11 +179,8 @@ generated code, and validation metadata for debugging.</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
-<span class="r-in"><span><span class="fu">predmicror_assistant</span><span class="op">(</span><span class="st">"How do I fit a Huang model?"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">predmicror_assistant</span><span class="op">(</span><span class="st">"How do I fit a Huang model?"</span>, backend <span class="op">=</span> <span class="st">"deterministic"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">predmicror_assistant</span><span class="op">(</span><span class="st">"Analyse this growth dataset"</span>, file <span class="op">=</span> <span class="st">"growth_data.csv"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">predmicror_assistant</span><span class="op">(</span><span class="st">"How do I fit a Huang model?"</span>, backend <span class="op">=</span> <span class="st">"deterministic"</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "\nSuggested model: `HuangFM` - full Huang primary growth model.\nExpected response scale: `lnN`; example response column: `lnN`.\nI used `fit_growth()` as the main path; direct `gsl_nls()` calls are better left for advanced use.\nGrowth responses should be on the natural logarithm scale (lnN).\n\n```r\ndata(growthfull)\nfit &lt;- fit_growth(\n  data = growthfull,\n  model = \"HuangFM\",\n  time = \"Time\",\n  response = \"lnN\",\n  start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)\n)\nsummary(fit)\nfit_metrics(fit)\naug &lt;- predmicror_augment(fit)\nnew_times &lt;- data.frame(Time = seq(min(growthfull$Time), max(growthfull$Time), length.out = 200))\npred &lt;- predict(fit, newdata = new_times)\nplot(lnN ~ Time, data = growthfull, xlab = \"Time\", ylab = \"ln N\")\nlines(new_times$Time, pred, col = \"blue\", lwd = 2)\npoints(growthfull$Time, aug$.fitted, pch = 16, col = \"grey40\")\n```\nVerification: the code passed static parse() and simple scale/signature checks."</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
