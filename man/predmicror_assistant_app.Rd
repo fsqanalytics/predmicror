@@ -36,8 +36,7 @@ optional manual column overrides, and pass the data profile to
 is created from the installed R functions.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 predmicror_assistant_app()
-}
-
+\dontshow{\}) # examplesIf}
 }

@@ -24,3 +24,7 @@ inside \code{fit_omnibus()}, \code{fit_omnibus_growth()}, or
 \code{fit_omnibus_inactivation()}. It allows a primary-model parameter to be
 described by another parameterised model already available in \code{predmicror}.
 }
+\examples{
+omnibus_secondary("CMTI", x = "Temp")
+omnibus_secondary("CMTI", x = "Temp", transform = "square")
+}

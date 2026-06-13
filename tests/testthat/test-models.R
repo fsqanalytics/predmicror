@@ -41,3 +41,52 @@ test_that("inactivation models are anchored at t = 0", {
   expect_equal(WeibullMM(0, Y0 = 3, Yres = 1, sigma = 2, alpha = 1.5), 3)
   expect_equal(GeeraerdST(0, Y0 = 3, Yres = 1, kmax = 0.2, Sl = 1), 3)
 })
+
+test_that("ZwieteringFM matches expected values", {
+  t <- c(0, 2, 4, 8, 12)
+  result <- ZwieteringFM(t, Y0 = 0, Ymax = 22, MUmax = 2, lag = 5)
+  expect_true(abs(result[1] - 0) < 0.01)
+  expect_true(all(is.finite(result)))
+  expect_true(all(diff(result) >= -1e-10))
+  expect_lte(max(result), 22.01)
+})
+
+test_that("ZwieteringFM can be fitted to growthfull data", {
+  skip_if_not_installed("gslnls")
+  data(growthfull)
+  fit <- gslnls::gsl_nls(lnN ~ ZwieteringFM(Time, Y0, Ymax, MUmax, lag),
+    data = growthfull,
+    start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
+  )
+  expect_true(summary(fit)$convInfo$isConv)
+  est <- coef(fit)
+  expect_true(est["Y0"] > -1 && est["Y0"] < 1)
+  expect_true(est["Ymax"] > 20 && est["Ymax"] < 25)
+})
+
+test_that("BuchananRM can be fitted to growthred data", {
+  skip_if_not_installed("gslnls")
+  data(growthred)
+  fit <- gslnls::gsl_nls(lnN ~ BuchananRM(Time, Y0, MUmax, lag),
+    data = growthred,
+    start = list(Y0 = 0, MUmax = 1.7, lag = 5)
+  )
+  expect_true(summary(fit)$convInfo$isConv)
+  est <- coef(fit)
+  expect_true(est["Y0"] > -1 && est["Y0"] < 1)
+  expect_true(est["MUmax"] > 1 && est["MUmax"] < 3)
+  expect_true(est["lag"] > 3 && est["lag"] < 7)
+})
+
+test_that("RossoFM can be fitted to growthfull data", {
+  skip_if_not_installed("gslnls")
+  data(growthfull)
+  fit <- gslnls::gsl_nls(lnN ~ RossoFM(Time, Y0, Ymax, MUmax, lag),
+    data = growthfull,
+    start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
+  )
+  expect_true(summary(fit)$convInfo$isConv)
+  est <- coef(fit)
+  expect_true(est["Y0"] > -1 && est["Y0"] < 1)
+  expect_true(est["Ymax"] > 18 && est["Ymax"] < 24)
+})

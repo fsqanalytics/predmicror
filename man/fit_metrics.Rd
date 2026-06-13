@@ -19,8 +19,10 @@ fit_metrics(object, ...)
 compatibility.}
 }
 \value{
-A one-row data frame with model metadata, residual diagnostics, and
-information criteria.
+A one-row data frame with columns: \code{fit}, \code{model}, \code{type},
+\code{response}, \code{response_scale}, \code{n} (observations), \code{p} (parameters),
+\code{SSE}, \code{RMSE}, \code{MAE}, \code{bias}, \code{RSE}, \code{R2}, \code{adj_R2}, \code{logLik}, \code{AIC},
+\code{BIC}, and \code{converged}.
 }
 \description{
 \code{fit_metrics()} summarizes goodness-of-fit and information criteria for a
@@ -28,7 +30,6 @@ information criteria.
 in the fitted model.
 }
 \examples{
-\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 data(growthfull)
 fit <- fit_growth(
   data = growthfull,
@@ -38,5 +39,4 @@ fit <- fit_growth(
   start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
 )
 fit_metrics(fit)
-\dontshow{\}) # examplesIf}
 }

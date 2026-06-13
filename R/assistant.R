@@ -43,11 +43,7 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
-#' predmicror_assistant("How do I fit a Huang model?")
 #' predmicror_assistant("How do I fit a Huang model?", backend = "deterministic")
-#' predmicror_assistant("Analyse this growth dataset", file = "growth_data.csv")
-#' }
 #'
 predmicror_assistant <- function(query,
                                  model = "llama3-groq-tool-use:8b",

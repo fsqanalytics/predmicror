@@ -6,6 +6,7 @@
 ^pkgdown$
 ^\.cache$
 ^README\.Rmd$
+^README\.html$
 ^_config\.yml$
 ^\.github$
 ^learnr-integration-report\.md$
@@ -19,3 +20,4 @@
 ^predmicror_1_3_0_vignettes\.zip$
 ^predmicror_1_3_1_docs_overlay$
 ^cran-comments\.md$
+^AGENTS\.md$

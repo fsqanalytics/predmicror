@@ -90,10 +90,6 @@ code is generated from package metadata and statically checked before being
 returned.
 }
 \examples{
-\dontrun{
-predmicror_assistant("How do I fit a Huang model?")
 predmicror_assistant("How do I fit a Huang model?", backend = "deterministic")
-predmicror_assistant("Analyse this growth dataset", file = "growth_data.csv")
-}
 
 }

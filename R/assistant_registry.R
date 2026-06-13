@@ -178,6 +178,20 @@ predmicror_assist_registry <- function() {
     if (is.null(registry[[model]]$fun)) {
       registry[[model]]$fun <- model
     }
+    if (is.null(registry[[model]]$wrapper)) {
+      registry[[model]]$wrapper <- switch(registry[[model]]$type,
+        growth = "fit_growth",
+        inactivation = "fit_inactivation",
+        cardinal = "fit_cardinal",
+        "fit_growth"
+      )
+    }
+    if (is.null(registry[[model]]$x_arg)) {
+      registry[[model]]$x_arg <- switch(registry[[model]]$type,
+        cardinal = "x",
+        "time"
+      )
+    }
     registry[[model]]$model <- model
   }
 
@@ -237,7 +251,8 @@ predmicror_assist_fit_requested <- function(flags, candidates) {
   any(c("fit", "growth", "inactivation", "cardinal") %in% flags) || length(candidates) > 0
 }
 
-predmicror_assist_wrapper_code <- function(spec) {
+predmicror_assist_model_code <- function(spec, style = "wrapper") {
+  style <- match.arg(style, c("wrapper", "direct"))
   new_data <- switch(spec$type,
     cardinal = paste0("new_", tolower(spec$x_col)),
     inactivation = "new_times",
@@ -245,49 +260,50 @@ predmicror_assist_wrapper_code <- function(spec) {
     "new_data"
   )
 
-  c(
-    paste0("data(", spec$dataset, ")"),
-    paste0("fit <- ", spec$wrapper, "("),
-    paste0("  data = ", spec$dataset, ","),
-    paste0("  model = \"", spec$model, "\","),
-    paste0("  ", spec$x_arg, " = \"", spec$x_col, "\","),
-    paste0("  response = \"", spec$response, "\","),
-    paste0("  start = list(", paste(spec$start, collapse = ", "), ")"),
-    ")",
-    "summary(fit)",
-    "fit_metrics(fit)",
-    "aug <- predmicror_augment(fit)",
-    paste0(new_data, " <- data.frame(", spec$x_col, " = seq(min(", spec$dataset, "$", spec$x_col, "), max(", spec$dataset, "$", spec$x_col, "), length.out = 200))"),
-    paste0("pred <- predict(fit, newdata = ", new_data, ")"),
-    paste0("plot(", spec$response, " ~ ", spec$x_col, ", data = ", spec$dataset, ", xlab = \"", spec$x_label, "\", ylab = \"", spec$y_label, "\")"),
-    paste0("lines(", new_data, "$", spec$x_col, ", pred, col = \"blue\", lwd = 2)"),
-    paste0("points(", spec$dataset, "$", spec$x_col, ", aug$.fitted, pch = 16, col = \"grey40\")")
-  )
+  if (style == "wrapper") {
+    c(
+      paste0("data(", spec$dataset, ")"),
+      paste0("fit <- ", spec$wrapper, "("),
+      paste0("  data = ", spec$dataset, ","),
+      paste0("  model = \"", spec$model, "\","),
+      paste0("  ", spec$x_arg, " = \"", spec$x_col, "\","),
+      paste0("  response = \"", spec$response, "\","),
+      paste0("  start = list(", paste(spec$start, collapse = ", "), ")"),
+      ")",
+      "summary(fit)",
+      "fit_metrics(fit)",
+      "aug <- predmicror_augment(fit)",
+      paste0(new_data, " <- data.frame(", spec$x_col, " = seq(min(", spec$dataset, "$", spec$x_col, "), max(", spec$dataset, "$", spec$x_col, "), length.out = 200))"),
+      paste0("pred <- predict(fit, newdata = ", new_data, ")"),
+      paste0("plot(", spec$response, " ~ ", spec$x_col, ", data = ", spec$dataset, ", xlab = \"", spec$x_label, "\", ylab = \"", spec$y_label, "\")"),
+      paste0("lines(", new_data, "$", spec$x_col, ", pred, col = \"blue\", lwd = 2)"),
+      paste0("points(", spec$dataset, "$", spec$x_col, ", aug$.fitted, pch = 16, col = \"grey40\")")
+    )
+  } else {
+    params <- paste(spec$params, collapse = ", ")
+    c(
+      paste0("data(", spec$dataset, ")"),
+      paste0("fit <- gslnls::gsl_nls(", spec$response, " ~ ", spec$fun, "(", spec$x_col, ", ", params, "),"),
+      paste0("  data = ", spec$dataset, ","),
+      paste0("  start = list(", paste(spec$start, collapse = ", "), ")"),
+      ")",
+      "summary(fit)",
+      "fitted_vals <- fitted(fit)",
+      paste0(new_data, " <- data.frame(", spec$x_col, " = seq(min(", spec$dataset, "$", spec$x_col, "), max(", spec$dataset, "$", spec$x_col, "), length.out = 200))"),
+      paste0("pred <- predict(fit, newdata = ", new_data, ")"),
+      paste0("plot(", spec$response, " ~ ", spec$x_col, ", data = ", spec$dataset, ", xlab = \"", spec$x_label, "\", ylab = \"", spec$y_label, "\")"),
+      paste0("lines(", new_data, "$", spec$x_col, ", pred, col = \"blue\", lwd = 2)"),
+      paste0("points(", spec$dataset, "$", spec$x_col, ", fitted_vals, pch = 16, col = \"grey40\")")
+    )
+  }
+}
+
+predmicror_assist_wrapper_code <- function(spec) {
+  predmicror_assist_model_code(spec, "wrapper")
 }
 
 predmicror_assist_direct_code <- function(spec) {
-  new_data <- switch(spec$type,
-    cardinal = paste0("new_", tolower(spec$x_col)),
-    inactivation = "new_times",
-    growth = "new_times",
-    "new_data"
-  )
-  params <- paste(spec$params, collapse = ", ")
-
-  c(
-    paste0("data(", spec$dataset, ")"),
-    paste0("fit <- gslnls::gsl_nls(", spec$response, " ~ ", spec$fun, "(", spec$x_col, ", ", params, "),"),
-    paste0("  data = ", spec$dataset, ","),
-    paste0("  start = list(", paste(spec$start, collapse = ", "), ")"),
-    ")",
-    "summary(fit)",
-    "fitted_vals <- fitted(fit)",
-    paste0(new_data, " <- data.frame(", spec$x_col, " = seq(min(", spec$dataset, "$", spec$x_col, "), max(", spec$dataset, "$", spec$x_col, "), length.out = 200))"),
-    paste0("pred <- predict(fit, newdata = ", new_data, ")"),
-    paste0("plot(", spec$response, " ~ ", spec$x_col, ", data = ", spec$dataset, ", xlab = \"", spec$x_label, "\", ylab = \"", spec$y_label, "\")"),
-    paste0("lines(", new_data, "$", spec$x_col, ", pred, col = \"blue\", lwd = 2)"),
-    paste0("points(", spec$dataset, "$", spec$x_col, ", fitted_vals, pch = 16, col = \"grey40\")")
-  )
+  predmicror_assist_model_code(spec, "direct")
 }
 
 predmicror_assist_generic_code <- function() {

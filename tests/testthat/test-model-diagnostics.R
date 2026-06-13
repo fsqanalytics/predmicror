@@ -86,3 +86,24 @@ test_that("diagnostic helpers reject non-predmicror objects", {
   expect_error(fit_metrics(list()), "predmicror_fit")
   expect_error(compare_models(list(a = list())), "predmicror_fit")
 })
+
+test_that("summary returns a list for predmicror_fit", {
+  obj <- make_diagnostic_fit()
+  s <- summary(obj)
+  expect_type(s, "list")
+  expect_true("sigma" %in% names(s) || "coefficients" %in% names(s))
+})
+
+test_that("predict with newdata returns correct length", {
+  obj <- make_diagnostic_fit()
+  new <- data.frame(Time = c(6, 7, 8))
+  pred <- predict(obj, newdata = new)
+  expect_length(pred, nrow(new))
+  expect_true(all(is.finite(pred)))
+})
+
+test_that("predict returns fitted values when newdata is NULL", {
+  obj <- make_diagnostic_fit()
+  pred <- predict(obj)
+  expect_length(pred, nrow(obj$data))
+})

@@ -4,11 +4,11 @@
 \name{predmicror-package}
 \alias{predmicror}
 \alias{predmicror-package}
-\title{predmicror: Fitting Predictive Microbiology Models in R}
+\title{predmicror: Fitting Predictive Microbiology Models}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, and cardinal parameter models to experimental data using nonlinear least squares. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models.
+Provides predictive microbiology model functions and convenience wrappers for fitting primary growth, microbial inactivation, dynamic, omnibus, and cardinal parameter models to experimental data using nonlinear least squares and related mixed-effects or time-varying workflows. Includes helper functions for extracting fitted values, calculating model diagnostics, and comparing fitted models. Implemented model families include those described by: Zwietering et al. (1990) \doi{10.1128/AEM.56.6.1875-1881.1990}, Baranyi and Roberts (1994) \doi{10.1016/0168-1605(94)90157-0}, Baranyi and Roberts (1995) \doi{10.1016/0168-1605(94)00121-L}, Buchanan et al. (1997) \doi{10.1006/fmic.1997.0125}, Richards (1959) \doi{10.1093/jxb/10.2.290}, Fang et al. (2012) \doi{10.1111/j.1750-3841.2012.02873.x}, Fang et al. (2013) \doi{10.1016/j.fm.2012.12.005}, Huang (2008) \doi{10.1111/j.1750-3841.2008.00785.x}, Huang (2009) \doi{10.1016/j.jfoodeng.2008.07.011}, Huang (2013) \doi{10.1016/j.foodcont.2012.11.019}, Geeraerd et al. (2005) \doi{10.1016/j.ijfoodmicro.2004.11.038}, van Boekel (2002) \doi{10.1016/S0168-1605(01)00742-5}, Peleg (1999) \doi{10.1016/S0963-9969(99)00081-2}, Mafart et al. (2002) \doi{10.1016/S0168-1605(01)00624-9}, Albert and Mafart (2005) \doi{10.1016/j.ijfoodmicro.2004.10.016}, Rosso et al. (1993) \doi{10.1006/jtbi.1993.1099}, Rosso et al. (1995) \doi{10.1128/AEM.61.2.610-616.1995}, and Rosso et al. (1996) \doi{10.4315/0362-028X-59.9.944}.
 }
 \seealso{
 Useful links:

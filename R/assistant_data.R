@@ -338,7 +338,7 @@ predmicror_assist_data_code <- function(spec, profile) {
 
 predmicror_assist_data_loading_lines <- function(source) {
   if (is.null(source) || identical(source$kind, "data")) {
-    return("dat <- your_data_frame")
+    return("# Data was provided as an R object and is available as `dat`.")
   }
   file <- gsub("\\\\", "/", source$file)
   ext <- tolower(tools::file_ext(file))

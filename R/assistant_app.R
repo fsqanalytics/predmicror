@@ -17,10 +17,8 @@
 #' @return Runs the Shiny app.
 #' @export
 #'
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' predmicror_assistant_app()
-#' }
 #'
 predmicror_assistant_app <- function(model = "llama3-groq-tool-use:8b",
                                      root = NULL,

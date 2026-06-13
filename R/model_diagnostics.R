@@ -15,7 +15,7 @@
 #'   when the response column is available, `.model`, and `.type`.
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
 #' data(growthfull)
 #' fit <- fit_growth(
 #'   data = growthfull,
@@ -46,8 +46,12 @@ predmicror_augment.predmicror_fit <- function(object, newdata = NULL, ...) {
     stop("`newdata` must be a data frame.", call. = FALSE)
   }
 
-  if (!object$x %in% names(data)) {
-    stop(sprintf("`newdata` must contain column `%s`.", object$x), call. = FALSE)
+  x_col <- object$x
+  if (is.null(x_col)) {
+    stop("The fitted object does not contain an `x` column reference.", call. = FALSE)
+  }
+  if (!x_col %in% names(data)) {
+    stop(sprintf("`newdata` must contain column `%s`.", x_col), call. = FALSE)
   }
 
   out <- as.data.frame(data)
@@ -91,11 +95,13 @@ as.data.frame.predmicror_fit <- function(x, row.names = NULL, optional = FALSE, 
 #' @param ... Currently unused. Included for future extension and S3
 #'   compatibility.
 #'
-#' @return A one-row data frame with model metadata, residual diagnostics, and
-#'   information criteria.
+#' @return A one-row data frame with columns: `fit`, `model`, `type`,
+#'   `response`, `response_scale`, `n` (observations), `p` (parameters),
+#'   `SSE`, `RMSE`, `MAE`, `bias`, `RSE`, `R2`, `adj_R2`, `logLik`, `AIC`,
+#'   `BIC`, and `converged`.
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
 #' data(growthfull)
 #' fit <- fit_growth(
 #'   data = growthfull,
@@ -181,7 +187,7 @@ fit_metrics.predmicror_fit <- function(object, ...) {
 #' @return A data frame with one row per fitted model.
 #' @export
 #'
-#' @examplesIf interactive()
+#' @examples
 #' data(growthfull)
 #' huang <- fit_growth(
 #'   growthfull,
@@ -220,6 +226,8 @@ compare_models <- function(..., sort_by = c("AIC", "BIC", "RMSE", "MAE", "none")
       fit_names[[i]] <- paste0("fit", i)
     }
   }
+
+  fit_names <- make.unique(fit_names, sep = "")
 
   rows <- lapply(seq_along(fits), function(i) {
     .predmicror_check_fit_object(fits[[i]])

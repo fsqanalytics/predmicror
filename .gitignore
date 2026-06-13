@@ -11,3 +11,13 @@ predmicror_1_2_1_cleanup_hotfix/
 predmicror_1_3_0_vignettes/
 predmicror_1_3_0_vignettes.zip
 predmicror_1_3_1_docs_overlay/
+
+# Local build/check artifacts
+.Rcheck/
+*.Rcheck/
+*.tar.gz
+README.html
+.cache/
+AGENTS.md
+.agents/
+.codex/

@@ -36,7 +36,6 @@ columns containing fitted values and residuals. It is intentionally lightweight
 and does not require the \code{broom} package.
 }
 \examples{
-\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 data(growthfull)
 fit <- fit_growth(
   data = growthfull,
@@ -46,5 +45,4 @@ fit <- fit_growth(
   start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
 )
 head(predmicror_augment(fit))
-\dontshow{\}) # examplesIf}
 }

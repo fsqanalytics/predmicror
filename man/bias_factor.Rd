@@ -20,3 +20,9 @@ A numeric scalar.
 bias and accuracy factors commonly used in predictive microbiology model
 validation.
 }
+\examples{
+observed <- c(7.0, 6.0, 5.0)
+predicted <- c(7.1, 5.9, 5.2)
+bias_factor(observed, predicted)
+accuracy_factor(observed, predicted)
+}

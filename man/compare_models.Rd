@@ -22,7 +22,6 @@ fitted models. It is useful when choosing between alternative primary growth,
 inactivation, or cardinal models fitted to the same response scale.
 }
 \examples{
-\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 data(growthfull)
 huang <- fit_growth(
   growthfull,
@@ -39,5 +38,4 @@ baranyi <- fit_growth(
   start = list(Y0 = 0, Ymax = 22, MUmax = 1.7, lag = 5)
 )
 compare_models(huang = huang, baranyi = baranyi)
-\dontshow{\}) # examplesIf}
 }
