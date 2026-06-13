@@ -555,7 +555,7 @@ fit_metrics.predmicror_omnibus_fit <- function(object, level = 0, ...) {
 #'   residuals, bias factor, and accuracy factor.
 #' @export
 #'
-#' @examples
+#' @examplesIf interactive()
 #' set.seed(1)
 #' dat <- do.call(rbind, lapply(1:4, function(g) {
 #'   Time <- c(1, 2, 4, 6, 8, 10)

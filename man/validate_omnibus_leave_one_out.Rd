@@ -24,6 +24,7 @@ residuals, bias factor, and accuracy factor.
 Validate an omnibus fit by leaving out one group
 }
 \examples{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 set.seed(1)
 dat <- do.call(rbind, lapply(1:4, function(g) {
   Time <- c(1, 2, 4, 6, 8, 10)
@@ -44,4 +45,5 @@ fit <- fit_omnibus_inactivation(
 loo <- validate_omnibus_leave_one_out(fit, group_value = 1)
 loo$bias_factor
 loo$accuracy_factor
+\dontshow{\}) # examplesIf}
 }
