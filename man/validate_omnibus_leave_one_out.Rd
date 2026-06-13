@@ -41,5 +41,7 @@ fit <- fit_omnibus_inactivation(
   group = "Condition", secondary = list(sigma = ~ Temp), random = Y0 ~ 1,
   start = c(Y0 = 7, sigma = 1, sigma.Temp = 0.08, alpha = 1)
 )
-validate_omnibus_leave_one_out(fit, group_value = 1)
+loo <- validate_omnibus_leave_one_out(fit, group_value = 1)
+loo$bias_factor
+loo$accuracy_factor
 }

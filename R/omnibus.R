@@ -573,7 +573,9 @@ fit_metrics.predmicror_omnibus_fit <- function(object, level = 0, ...) {
 #'   group = "Condition", secondary = list(sigma = ~ Temp), random = Y0 ~ 1,
 #'   start = c(Y0 = 7, sigma = 1, sigma.Temp = 0.08, alpha = 1)
 #' )
-#' validate_omnibus_leave_one_out(fit, group_value = 1)
+#' loo <- validate_omnibus_leave_one_out(fit, group_value = 1)
+#' loo$bias_factor
+#' loo$accuracy_factor
 validate_omnibus_leave_one_out <- function(object, group_value, level = 0, ...) {
   if (!inherits(object, "predmicror_omnibus_fit")) {
     stop("`object` must be a `predmicror_omnibus_fit` object.", call. = FALSE)
