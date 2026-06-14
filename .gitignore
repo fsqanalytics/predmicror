@@ -18,6 +18,3 @@ predmicror_1_3_1_docs_overlay/
 *.tar.gz
 README.html
 .cache/
-AGENTS.md
-.agents/
-.codex/
